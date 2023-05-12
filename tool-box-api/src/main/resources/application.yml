@@ -1,0 +1,6 @@
+server:
+  port: 19080
+spring:
+  application:
+    # 服务名
+    name: toolboxApi
