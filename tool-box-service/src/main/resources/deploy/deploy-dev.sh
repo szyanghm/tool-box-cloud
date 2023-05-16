@@ -4,7 +4,7 @@ PORT=19081
 
 SERVER_NAME=tool-box-service.jar
 
-AT=prod
+AT=dev
 
 CONF_PATH=./conf/application.yml,./conf/application-dev.yml
 
