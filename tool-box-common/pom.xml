@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.tool.box</groupId>
-		<artifactId>tool-box-cloud</artifactId>
+		<artifactId>mini-tool-box</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>com.tool.box</groupId>
