@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PORT=19081
+PORT=19881
 
 SERVER_NAME=tool-box-service.jar
 
@@ -30,7 +30,8 @@ start(){
     else
         echo -n "Starting $SERVER_NAME..."
 
-		java -Xms1024m -Xmx1024m  -Dserver.port=$PORT -Dloader.path=./lib/ -jar $SERVER_NAME --spring.profiles.active=$AT --spring.config.location=$CONF_PATH --publicKey=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKtjXqIZD7PaJPYoKiArTIFc74OakbplY/Iu7pr1atcP5f0Dm8Ot3TiUoQEbxX6u5ivIHclwKYe/PEWAJl4WYl0CAwEAAQ==  >/dev/null 2>&1 &
+		java -Xms1024m -Xmx1024m  -Dserver.port=$PORT -Dloader.path=./lib/ -jar $SERVER_NAME --spring.profiles.active=$AT --spring.config.location=$CONF_PATH --publicKey=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKtjXqIZD7PaJPYoKiArTIFc74OakbplY/Iu7pr1atcP5f0Dm8Ot3TiUoQEbxX6u5ivIHclwKYe/PEWAJl4WYl0CAwEAAQ==
+		 # >/dev/null 2>&1 &
         
         check_pid
         if [ $server_pid -ne 0 ]; then

@@ -1,11 +1,24 @@
 spring:
   application:
     # 服务名
-    name: ToolBoxService
-  profiles:
-    active: dev
-logging:
-  config: classpath:logback-dev.xml
-  file:
-    path: D:\my_project\project\tool-box-cloud\logs\
+    name: tool-box-service
+  #  profiles:
+  #    active: dev
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-dev.yml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        namespace: a48fbc8e-8558-4383-be24-5d70c0a62869
+        group: TOOL_BOX_SERVICE_GROUP
+    config:
+      server-addr: 127.0.0.1:8848
+      namespace: a48fbc8e-8558-4383-be24-5d70c0a62869
+      group: TOOL_BOX_SERVICE_GROUP
+      file-extension: yaml
+      refresh-enabled: true
 
