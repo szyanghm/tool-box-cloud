@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @Date 2023/5/24 17:37
  * @Version 1.0
  */
-@FeignClient(value = "tool-box-service", path = "/test")
+@FeignClient(name = "tool-box-service", path = "/test")
 public interface TestConsumer {
 
     @PostMapping(value = "/post")

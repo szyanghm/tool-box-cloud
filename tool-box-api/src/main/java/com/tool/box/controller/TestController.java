@@ -25,6 +25,7 @@ public class TestController {
 
     @PostMapping(value = "/post")
     public void test() {
+        log.info("1111111111111111111");
         testConsumer.test();
     }
 
