@@ -17,9 +17,10 @@
     <description>Demo project for Spring Boot</description>
 
     <modules>
+        <module>tool-box-common</module>
+        <module>tool-box-contract</module>
         <module>tool-box-service</module>
         <module>tool-box-api</module>
-        <module>tool-box-common</module>
     </modules>
     <properties>
         <spring-cloud.version>2021.0.7</spring-cloud.version>
@@ -35,6 +36,14 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-loadbalancer</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
