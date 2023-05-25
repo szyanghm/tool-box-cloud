@@ -16,8 +16,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class MybatisPlusConfig {
+
     @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+    public static MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
@@ -27,7 +28,7 @@ public class MybatisPlusConfig {
      * 相当于顶部的： {@code @MapperScan("com.baomidou.springboot.mapper*")} 这里可以扩展，比如使用配置文件来配置扫描Mapper的路径
      */
     @Bean
-    public MapperScannerConfigurer mapperScannerConfigurer() {
+    public static MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer scannerConfigurer = new MapperScannerConfigurer();
         scannerConfigurer.setBasePackage("com.tool.box.mapper*");
         return scannerConfigurer;
