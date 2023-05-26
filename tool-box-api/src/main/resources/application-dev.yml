@@ -1,4 +1,4 @@
-server:
-  port: 19080
-  servlet:
-    context-path: /api
+logging:
+  config: classpath:logback-dev.xml
+  file:
+    path: D:\my_project\project\tool-box-cloud\logs\tool-box-api-logs\

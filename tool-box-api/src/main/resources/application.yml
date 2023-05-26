@@ -1,3 +1,7 @@
+server:
+  port: 19080
+  servlet:
+    context-path: /api
 spring:
   application:
     # 服务名

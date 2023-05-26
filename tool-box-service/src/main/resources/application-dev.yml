@@ -1,5 +1,3 @@
-server:
-  port: 19081
 spring:
   #数据库配置
   datasource:
@@ -60,4 +58,4 @@ decorator:
 logging:
   config: classpath:logback-dev.xml
   file:
-    path: D:\my_project\project\tool-box-cloud\logs\
+    path: D:\my_project\project\tool-box-cloud\logs\tool-box-service-logs\
