@@ -1,0 +1,27 @@
+server:
+  port: 19080
+  servlet:
+    context-path: /auth
+spring:
+  application:
+    # 服务名
+    name: tool-box-auth
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-dev.yml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        namespace: a48fbc8e-8558-4383-be24-5d70c0a62869
+        group: ${nacos_discovery_group}
+      config:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        namespace: a48fbc8e-8558-4383-be24-5d70c0a62869
+        group: TOOL_BOX_API_GROUP
+        file-extension: yaml
+        refresh-enabled: true
