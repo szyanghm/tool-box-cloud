@@ -19,6 +19,7 @@
     <modules>
         <module>tool-box-common</module>
         <module>tool-box-contract</module>
+        <module>tool-box-auth</module>
         <module>tool-box-service</module>
         <module>tool-box-api</module>
     </modules>
@@ -97,6 +98,21 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- 连接池使用commons-pool2(必须添加) -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
