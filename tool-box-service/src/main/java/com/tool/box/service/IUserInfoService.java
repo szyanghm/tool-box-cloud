@@ -1,7 +1,8 @@
 package com.tool.box.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tool.box.model.Test;
+import com.tool.box.base.UserInfo;
+import com.tool.box.model.User;
 
 /**
  * <p>
@@ -11,6 +12,8 @@ import com.tool.box.model.Test;
  * @author v_haimiyang
  * @since 2023-04-20
  */
-public interface ITestService extends IService<Test> {
+public interface IUserInfoService {
 
+
+    UserInfo getUserInfo(String account);
 }
