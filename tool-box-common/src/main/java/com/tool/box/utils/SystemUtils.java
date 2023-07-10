@@ -4,6 +4,9 @@ package com.tool.box.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 系统工具类
  *
@@ -30,5 +33,20 @@ public class SystemUtils {
             }
         }
         return value;
+    }
+
+    /**
+     * @param str   需分割的字符串
+     * @param split 分隔符如：&和;
+     * @return 分割后的map对象
+     */
+    public static Map<String, String> getMapData(String str, String split) {
+        String[] arr = str.split(split);
+        Map<String, String> dataMap = new HashMap<>(16);
+        for (int i = 0; i < arr.length; i++) {
+            String[] strArr = arr[i].split("=");
+            dataMap.put(strArr[0], strArr[1]);
+        }
+        return dataMap;
     }
 }

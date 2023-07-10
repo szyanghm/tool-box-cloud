@@ -1,6 +1,6 @@
 package com.tool.box.controller;
 
-import com.tool.box.feign.TestConsumer;
+import com.tool.box.feign.UserInfoConsumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +21,12 @@ import javax.annotation.Resource;
 public class TestController {
 
     @Resource
-    private TestConsumer testConsumer;
+    private UserInfoConsumer testConsumer;
 
     @PostMapping(value = "/post")
     public void test() {
         log.info("1111111111111111111");
-        testConsumer.test();
+        testConsumer.getUserInfo("");
     }
 
 }

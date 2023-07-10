@@ -35,6 +35,14 @@ public class DateUtils {
         }
     }
 
+    public static String format(Date date, String pattern) {
+        if (date == null) {
+            return "";
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(date);
+    }
+
     /**
      * Date转时间戳
      *
@@ -84,7 +92,7 @@ public class DateUtils {
      * @return
      */
     public static String getCurrentDateTime() {
-        return getCurrentTime(DEFAULT_DATE_PATTERN);
+        return format(new Date(), DEFAULT_DATE_PATTERN);
     }
 
     /**

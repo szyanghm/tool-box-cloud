@@ -9,6 +9,8 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -22,7 +24,7 @@ import java.util.Set;
  * @Date 2023/7/5 16:13
  * @Version 1.0
  */
-public class ApiUsernamePasswordRealm extends AuthorizingRealm {
+public class UserRealm extends AuthorizingRealm {
 
     @Resource
     private UserInfoConsumer userInfoConsumer;
@@ -49,5 +51,11 @@ public class ApiUsernamePasswordRealm extends AuthorizingRealm {
                 userInfo.getPassword(),
                 ByteSource.Util.bytes(userInfo.getSalt()),
                 getName());
+    }
+
+    public static void main(String[] args) {
+        String password = new SimpleHash(Sha256Hash.ALGORITHM_NAME, "123456", ByteSource.Util.bytes("tool"), 1024).toBase64();
+        System.out.println(password);
+
     }
 }

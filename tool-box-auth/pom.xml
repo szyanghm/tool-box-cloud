@@ -31,10 +31,15 @@
             <artifactId>tool-box-contract</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.crazycake</groupId>-->
+<!--            <artifactId>shiro-redis</artifactId>-->
+<!--            <version>3.1.0</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>me.sdevil507</groupId>
+            <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring-boot-web-starter</artifactId>
-            <version>1.2.0</version>
+            <version>1.11.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
