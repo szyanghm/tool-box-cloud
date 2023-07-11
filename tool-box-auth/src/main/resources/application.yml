@@ -18,7 +18,7 @@ spring:
         max-idle: 8
         min-idle: 0
         max-wait: 100ms
-    timeout: 30000
+    timeout: 300
   cloud:
     nacos:
       discovery:

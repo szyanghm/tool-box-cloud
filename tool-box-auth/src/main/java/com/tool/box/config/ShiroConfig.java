@@ -2,11 +2,13 @@ package com.tool.box.config;
 
 import com.tool.box.cache.RedisCacheManager;
 import com.tool.box.shiro.EnhanceSessionManager;
+import com.tool.box.shiro.RedisSessionDAO;
 import com.tool.box.shiro.UserRealm;
 import com.tool.box.utils.SystemUtils;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.mgt.SessionsSecurityManager;
+import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -38,6 +40,7 @@ public class ShiroConfig {
         return new RedisCacheManager();
     }
 
+
     // 配置自定义Realm
     @Bean
     public UserRealm userRealm() {
@@ -51,6 +54,29 @@ public class ShiroConfig {
         userRealm.setAuthorizationCachingEnabled(true);
         userRealm.setCredentialsMatcher(credentialsMatcher()); //配置使用哈希密码匹配
         return userRealm;
+    }
+
+//    /**
+//     * RedisSessionDAO shiro sessionDao层的实现 通过redis
+//     * 使用的是shiro-redis开源插件
+//     */
+//    @Bean
+//    public RedisSessionDAO redisSessionDAO() {
+//        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+//        redisSessionDAO.setRedisManager(redisManager());
+//        return redisSessionDAO;
+//    }
+
+    /**
+     * 提供sessionDao实现
+     *
+     * @return sessionDAO
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public AbstractSessionDAO sessionDAO() {
+        AbstractSessionDAO sessionDAO = new RedisSessionDAO();
+        return sessionDAO;
     }
 
     // 配置url过滤器
@@ -93,6 +119,8 @@ public class ShiroConfig {
     @ConditionalOnMissingBean
     public DefaultWebSessionManager defaultWebSessionManager() {
         DefaultWebSessionManager enhanceSessionManager = new EnhanceSessionManager();
+        // 设置sessionDao(可以选择具体session存储方式)
+        enhanceSessionManager.setSessionDAO(sessionDAO());
         return enhanceSessionManager;
     }
 
