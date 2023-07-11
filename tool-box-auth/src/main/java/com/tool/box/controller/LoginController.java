@@ -46,6 +46,7 @@ public class LoginController {
         return ResultVO.success(map);
     }
 
+
     @PostMapping(value = "/loginOut")
     public ResultVO loginOut() {
         //addLoginRecord(getLoginUserId(), request);  // 记录登录信息
