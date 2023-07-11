@@ -13,6 +13,7 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 
 import javax.annotation.Resource;
@@ -51,6 +52,17 @@ public class UserRealm extends AuthorizingRealm {
                 userInfo.getPassword(),
                 ByteSource.Util.bytes(userInfo.getSalt()),
                 getName());
+    }
+
+    /**
+     * 根据principal凭证清除缓存中授权信息
+     *
+     * @param principal 主要凭证
+     */
+    public void clearCachedAuthorizationInfo(Object principal) {
+        SimplePrincipalCollection principals = new SimplePrincipalCollection(principal, getName());
+        clearCachedAuthorizationInfo(principals);
+        clearCachedAuthenticationInfo(principals);
     }
 
     public static void main(String[] args) {

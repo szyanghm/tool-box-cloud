@@ -52,6 +52,7 @@ public class ShiroConfig {
         userRealm.setAuthenticationCachingEnabled(true);
         // 开启授权缓存
         userRealm.setAuthorizationCachingEnabled(true);
+
         userRealm.setCredentialsMatcher(credentialsMatcher()); //配置使用哈希密码匹配
         return userRealm;
     }
