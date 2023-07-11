@@ -49,6 +49,7 @@ public class LoginController {
 
     @PostMapping(value = "/loginOut")
     public ResultVO loginOut() {
+        SecurityUtils.getSubject().logout();
         //addLoginRecord(getLoginUserId(), request);  // 记录登录信息
         HashMap<String, String> map = new HashMap<>();
         map.put("access_token", "222222222222222222222222");  // 模拟登录令牌

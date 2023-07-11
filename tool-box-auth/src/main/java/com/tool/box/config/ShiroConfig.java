@@ -110,6 +110,7 @@ public class ShiroConfig {
     public SessionsSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(userRealm());
+        securityManager.setSessionManager(defaultWebSessionManager());
         // securityManager.setCacheManager(redisCacheManager());
         return securityManager;
     }
@@ -119,6 +120,10 @@ public class ShiroConfig {
     @ConditionalOnMissingBean
     public DefaultWebSessionManager defaultWebSessionManager() {
         DefaultWebSessionManager enhanceSessionManager = new EnhanceSessionManager();
+        // 会话过期删除会话
+        enhanceSessionManager.setDeleteInvalidSessions(true);
+        // 定时检查失效的session
+        enhanceSessionManager.setSessionValidationSchedulerEnabled(true);
         // 设置sessionDao(可以选择具体session存储方式)
         enhanceSessionManager.setSessionDAO(sessionDAO());
         return enhanceSessionManager;
