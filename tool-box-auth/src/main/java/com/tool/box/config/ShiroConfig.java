@@ -7,12 +7,15 @@ import com.tool.box.shiro.UserRealm;
 import com.tool.box.utils.SystemUtils;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.apache.shiro.mgt.SessionsSecurityManager;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
+import org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator;
+import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +41,43 @@ public class ShiroConfig {
     @Bean
     public RedisCacheManager redisCacheManager() {
         return new RedisCacheManager();
+    }
+
+    /**
+     * 会话ID生成器
+     *
+     * @return JavaUuidSessionIdGenerator
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public SessionIdGenerator sessionIdGenerator() {
+        return new JavaUuidSessionIdGenerator();
+    }
+
+    /**
+     * 开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
+     * 配置以下两个bean(DefaultAdvisorAutoProxyCreator和AuthorizationAttributeSourceAdvisor)即可实现此功能
+     *
+     * @return
+     */
+    @Bean
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        advisorAutoProxyCreator.setProxyTargetClass(true);
+        return advisorAutoProxyCreator;
+    }
+
+    /**
+     * 开启aop注解支持
+     *
+     * @param securityManager
+     * @return
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        return authorizationAttributeSourceAdvisor;
     }
 
 
@@ -77,6 +117,7 @@ public class ShiroConfig {
     @ConditionalOnMissingBean
     public AbstractSessionDAO sessionDAO() {
         AbstractSessionDAO sessionDAO = new RedisSessionDAO();
+        sessionDAO.setSessionIdGenerator(sessionIdGenerator());
         return sessionDAO;
     }
 
@@ -106,15 +147,28 @@ public class ShiroConfig {
         return credentialsMatcher;
     }
 
-    // 配置security并设置userReaml，避免xxxx required a bean named 'authorizer' that could not be found.的报错
+//    // 配置security并设置userReaml，避免xxxx required a bean named 'authorizer' that could not be found.的报错
+//    @Bean
+//    public SessionsSecurityManager securityManager() {
+//        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+//        securityManager.setRealm(userRealm());
+//        securityManager.setSessionManager(defaultWebSessionManager());
+//        securityManager.setCacheManager(redisCacheManager());
+//        // securityManager.setCacheManager(redisCacheManager());
+//        return securityManager;
+//    }
+
+    /**
+     * 创建安全管理器
+     */
     @Bean
-    public SessionsSecurityManager securityManager() {
-        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(userRealm());
-        securityManager.setSessionManager(defaultWebSessionManager());
-        securityManager.setCacheManager(redisCacheManager());
-        // securityManager.setCacheManager(redisCacheManager());
-        return securityManager;
+    public DefaultWebSecurityManager defaultWebSecurityManager() {
+        DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
+        //自定义Realm
+        defaultWebSecurityManager.setRealm(userRealm());
+        //自定义session管理器
+        defaultWebSecurityManager.setSessionManager(defaultWebSessionManager());
+        return defaultWebSecurityManager;
     }
 
 
