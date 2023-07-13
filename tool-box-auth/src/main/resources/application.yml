@@ -36,6 +36,8 @@ spring:
         file-extension: yaml
         refresh-enabled: true
 shiro:
+  session:
+    timeOut: 3000
   loginUrl: /login
   successUrl: /
   sessionManager:

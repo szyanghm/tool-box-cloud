@@ -2,6 +2,8 @@ package com.tool.box.base;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 登录用户信息
  *
@@ -10,7 +12,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class UserInfo {
+public class UserInfo implements Serializable {
 
     /**
      * 账号

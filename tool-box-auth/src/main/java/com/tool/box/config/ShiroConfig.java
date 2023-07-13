@@ -3,6 +3,7 @@ package com.tool.box.config;
 import com.tool.box.cache.RedisCacheManager;
 import com.tool.box.shiro.EnhanceSessionManager;
 import com.tool.box.shiro.RedisSessionDAO;
+import com.tool.box.shiro.ShiroSessionProperties;
 import com.tool.box.shiro.UserRealm;
 import com.tool.box.utils.SystemUtils;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -16,6 +17,7 @@ import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +39,8 @@ public class ShiroConfig {
 
     @Value("${shiro.filter.chain.definitions}")
     private String definitions;
+    @Autowired
+    private ShiroSessionProperties shiroSessionProperties;
 
     @Bean
     public RedisCacheManager redisCacheManager() {
@@ -70,13 +74,11 @@ public class ShiroConfig {
     /**
      * 开启aop注解支持
      *
-     * @param securityManager
-     * @return
      */
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        authorizationAttributeSourceAdvisor.setSecurityManager(defaultWebSecurityManager());
         return authorizationAttributeSourceAdvisor;
     }
 
@@ -168,6 +170,7 @@ public class ShiroConfig {
         defaultWebSecurityManager.setRealm(userRealm());
         //自定义session管理器
         defaultWebSecurityManager.setSessionManager(defaultWebSessionManager());
+        defaultWebSecurityManager.setCacheManager(redisCacheManager());
         return defaultWebSecurityManager;
     }
 
@@ -178,6 +181,7 @@ public class ShiroConfig {
         DefaultWebSessionManager enhanceSessionManager = new EnhanceSessionManager();
         // 会话过期删除会话
         enhanceSessionManager.setDeleteInvalidSessions(true);
+        enhanceSessionManager.setGlobalSessionTimeout(shiroSessionProperties.getTimeOut() * 60000L);
         // 定时检查失效的session
         enhanceSessionManager.setSessionValidationSchedulerEnabled(true);
         // 设置sessionDao(可以选择具体session存储方式)
