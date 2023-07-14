@@ -6,9 +6,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
@@ -22,7 +22,7 @@ public class ShiroLogoutFilter extends LogoutFilter {
     /**
      * redis使用模板
      */
-    @Autowired
+    @Resource(name = "redisTemplateForCache")
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
