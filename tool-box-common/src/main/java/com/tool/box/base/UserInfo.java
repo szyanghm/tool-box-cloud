@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Data
 public class UserInfo implements Serializable {
 
+
     /**
      * 账号
      */

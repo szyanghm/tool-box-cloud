@@ -3,8 +3,9 @@ package com.tool.box.cache;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+
+import javax.annotation.Resource;
 
 /**
  * shiro的redis缓存管理
@@ -18,7 +19,7 @@ public class RedisCacheManager implements CacheManager {
     /**
      * redis使用模板
      */
-    @Autowired
+    @Resource(name = "redisTemplateForCache")
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
