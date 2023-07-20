@@ -11,6 +11,7 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator;
 import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
@@ -59,27 +60,51 @@ public class ShiroConfig {
     }
 
     /**
-     * 开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
-     * 配置以下两个bean(DefaultAdvisorAutoProxyCreator和AuthorizationAttributeSourceAdvisor)即可实现此功能
+     * Shiro生命周期处理器</br>
+     * LifecycleBeanPostProcessor用于在实现了Initializable接口的Shiro bean初始化时调用Initializable接口回调，
+     * 在实现了Destroyable接口的Shiro bean销毁时调用 Destroyable接口回调。
+     * 如UserRealm就实现了Initializable，而DefaultSecurityManager实现了Destroyable。
      *
-     * @return
+     * @return LifecycleBeanPostProcessor
      */
     @Bean
-    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        advisorAutoProxyCreator.setProxyTargetClass(true);
-        return advisorAutoProxyCreator;
+    @ConditionalOnMissingBean
+    public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
     }
 
+    //endregion
+
+    //region shiro AOP支持
+
     /**
-     * 开启aop注解支持
+     * DefaultAdvisorAutoProxyCreator是用来扫描上下文，寻找所有的Advisor(通知器）
+     * 将这些Advisor应用到所有符合切入点的Bean中
+     * 所以必须在lifecycleBeanPostProcessor创建之后创建
      *
+     * @return DefaultAdvisorAutoProxyCreator
      */
     @Bean
+    @ConditionalOnMissingBean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
+        creator.setProxyTargetClass(true);
+        return creator;
+    }
+
+
+    /**
+     * 提供shiro权限注解支持
+     * 该通知器用于匹配加了认证注解的类与方法
+     *
+     * @return AuthorizationAttributeSourceAdvisor
+     */
+    @Bean
+    @ConditionalOnMissingBean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(defaultWebSecurityManager());
-        return authorizationAttributeSourceAdvisor;
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(defaultWebSecurityManager());
+        return advisor;
     }
 
 
@@ -98,17 +123,6 @@ public class ShiroConfig {
         userRealm.setCredentialsMatcher(credentialsMatcher()); //配置使用哈希密码匹配
         return userRealm;
     }
-
-//    /**
-//     * RedisSessionDAO shiro sessionDao层的实现 通过redis
-//     * 使用的是shiro-redis开源插件
-//     */
-//    @Bean
-//    public RedisSessionDAO redisSessionDAO() {
-//        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
-//        redisSessionDAO.setRedisManager(redisManager());
-//        return redisSessionDAO;
-//    }
 
     /**
      * 提供sessionDao实现
@@ -149,17 +163,6 @@ public class ShiroConfig {
         return credentialsMatcher;
     }
 
-//    // 配置security并设置userReaml，避免xxxx required a bean named 'authorizer' that could not be found.的报错
-//    @Bean
-//    public SessionsSecurityManager securityManager() {
-//        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-//        securityManager.setRealm(userRealm());
-//        securityManager.setSessionManager(defaultWebSessionManager());
-//        securityManager.setCacheManager(redisCacheManager());
-//        // securityManager.setCacheManager(redisCacheManager());
-//        return securityManager;
-//    }
-
     /**
      * 创建安全管理器
      */
@@ -181,7 +184,7 @@ public class ShiroConfig {
         DefaultWebSessionManager enhanceSessionManager = new EnhanceSessionManager();
         // 会话过期删除会话
         enhanceSessionManager.setDeleteInvalidSessions(true);
-        enhanceSessionManager.setGlobalSessionTimeout(shiroSessionProperties.getTimeOut() * 60000L);
+        enhanceSessionManager.setGlobalSessionTimeout(shiroSessionProperties.getTimeOut() * 6000L);
         // 定时检查失效的session
         enhanceSessionManager.setSessionValidationSchedulerEnabled(true);
         // 设置sessionDao(可以选择具体session存储方式)

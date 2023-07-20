@@ -37,7 +37,7 @@ spring:
         refresh-enabled: true
 shiro:
   session:
-    timeOut: 3000
+    timeOut: 1
   loginUrl: /login
   successUrl: /
   sessionManager:
