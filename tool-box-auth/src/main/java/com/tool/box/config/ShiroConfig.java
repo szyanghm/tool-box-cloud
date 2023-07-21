@@ -137,7 +137,9 @@ public class ShiroConfig {
         return sessionDAO;
     }
 
-    // 配置url过滤器
+    /**
+     * 注入配置url过滤器
+     */
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         Map<String, String> map = SystemUtils.getMapData(definitions, ";");
@@ -153,7 +155,11 @@ public class ShiroConfig {
         return chainDefinition;
     }
 
-    // 设置用于匹配密码的CredentialsMatcher
+    /**
+     * 设置用于匹配密码的CredentialsMatcher
+     *
+     * @return credentialsMatcher
+     */
     @Bean
     public HashedCredentialsMatcher credentialsMatcher() {
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
