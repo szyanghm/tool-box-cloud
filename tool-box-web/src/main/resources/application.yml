@@ -1,7 +1,5 @@
 server:
   port: 19080
-  servlet:
-    context-path: /toolbox
 spring:
   main:
     allow-bean-definition-overriding: true
@@ -11,6 +9,16 @@ spring:
   config:
     import:
       - optional:nacos:${spring.application.name}-dev.yml
+  redis:
+    host: localhost
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: 100ms
+    timeout: 30000
   cloud:
     nacos:
       discovery:
@@ -27,6 +35,16 @@ spring:
         group: TOOL_BOX_WEB_GROUP
         file-extension: yaml
         refresh-enabled: true
+shiro:
+  session:
+    timeOut: 1
+  loginUrl: /login
+  successUrl: /
+  sessionManager:
+    sessionIdCookieEnabled: true
+  filter:
+    chain:
+      definitions: /**=authc;/druid/**=anon;/login=anon;/test=anon;
 jwt:
   secret: adsfadfdsfd
   expire: 60000

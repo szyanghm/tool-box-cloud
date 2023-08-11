@@ -1,6 +1,7 @@
 package com.tool.box.feign;
 
 import com.tool.box.common.Contents;
+import feign.Logger;
 import feign.RequestInterceptor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,17 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Component
 public class FeignConfig {
+    @Bean
+    public Logger.Level feignLogLevel(){
+        /**
+         *   日志级别：
+         *   NONE（不记录日志 (默认)）
+         *   BASIC（只记录请求方法和URL以及响应状态代码和执行时间）
+         *   HEADERS（记录请求和应答的头的基本信息）
+         *   FULL（记录请求和响应的头信息，正文和元数据）
+         */
+        return Logger.Level.FULL;
+    }
 
     @Bean
     public RequestInterceptor requestInterceptor() {
