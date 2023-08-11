@@ -1,8 +1,6 @@
 package com.tool.box.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.tool.box.base.UserInfo;
-import com.tool.box.model.User;
+import com.tool.box.base.LoginUser;
 
 /**
  * <p>
@@ -15,5 +13,11 @@ import com.tool.box.model.User;
 public interface IUserInfoService {
 
 
-    UserInfo getUserInfo(String account);
+    /**
+     * 根据用户账户查询登录用户信息-用于登录校验
+     *
+     * @param account 用户账户
+     * @return 登录用户信息
+     */
+    LoginUser getLoginUser(String account);
 }

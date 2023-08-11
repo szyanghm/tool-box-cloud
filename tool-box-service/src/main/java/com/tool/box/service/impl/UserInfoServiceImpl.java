@@ -1,12 +1,17 @@
 package com.tool.box.service.impl;
 
+import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
 import com.tool.box.model.User;
+import com.tool.box.service.IPermissionsService;
 import com.tool.box.service.IUserInfoService;
 import com.tool.box.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 测试表 服务实现类
@@ -19,19 +24,23 @@ public class UserInfoServiceImpl implements IUserInfoService {
 
     @Resource
     private IUserService userService;
+    @Resource
+    private IPermissionsService permissionsService;
 
     @Override
-    public UserInfo getUserInfo(String account) {
-        UserInfo userInfo = new UserInfo();
+    public LoginUser getLoginUser(String account) {
+        LoginUser loginUser = new LoginUser();
         User user = userService.getByAccount(account);
         if (user == null) {
             return null;
         }
-        userInfo.setAccount(user.getAccount());
-        userInfo.setName(user.getName());
-        userInfo.setPassword(user.getPassword());
-        userInfo.setRole(user.getRole());
-        userInfo.setSalt(user.getSalt());
-        return userInfo;
+        Set<String> set = permissionsService.getPermissions(loginUser.getRole());
+        loginUser.setAccount(user.getAccount());
+        loginUser.setName(user.getName());
+        loginUser.setPassword(user.getPassword());
+        loginUser.setRole(user.getRole());
+        loginUser.setSalt(user.getSalt());
+        loginUser.setPermissions(new ArrayList<>(set));
+        return loginUser;
     }
 }

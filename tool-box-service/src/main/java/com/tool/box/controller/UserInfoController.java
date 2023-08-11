@@ -1,6 +1,6 @@
 package com.tool.box.controller;
 
-import com.tool.box.base.UserInfo;
+import com.tool.box.base.LoginUser;
 import com.tool.box.service.IPermissionsService;
 import com.tool.box.service.IUserInfoService;
 import com.tool.box.vo.ResultVO;
@@ -24,16 +24,15 @@ import java.util.Set;
 @RestController
 @RequestMapping("/user")
 public class UserInfoController {
-
     @Resource
     private IUserInfoService userInfoService;
     @Resource
     private IPermissionsService permissionsService;
 
-    @PostMapping(value = "/getUser")
-    public ResultVO<UserInfo> getUserInfo(@RequestParam("account") String account) {
-        UserInfo userInfo = userInfoService.getUserInfo(account);
-        return ResultVO.success(userInfo);
+    @PostMapping(value = "/getLoginUser")
+    public ResultVO<LoginUser> getLoginUser(@RequestParam("account") String account) {
+        LoginUser loginUser = userInfoService.getLoginUser(account);
+        return ResultVO.success(loginUser);
     }
 
 
