@@ -1,6 +1,8 @@
 package com.tool.box.utils;
 
 
+import com.tool.box.base.LoginUser;
+import com.tool.box.base.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,4 +51,20 @@ public class SystemUtils {
         }
         return dataMap;
     }
+
+    /**
+     * 将LoginUser信息复制到UserInfo
+     *
+     * @param loginUser 登录用户信息
+     * @return UserInfo
+     */
+    public static UserInfo getUserInfo(LoginUser loginUser) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setRole(loginUser.getRole());
+        userInfo.setSalt(loginUser.getSalt());
+        userInfo.setName(loginUser.getName());
+        userInfo.setAccount(loginUser.getAccount());
+        return userInfo;
+    }
+
 }

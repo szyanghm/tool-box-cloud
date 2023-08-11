@@ -39,5 +39,9 @@ public class User extends BaseModel<User> {
      * 密码加盐
      */
     private String salt;
+    /**
+     * 0未锁定/1锁定
+     */
+    private int status;
 
 }

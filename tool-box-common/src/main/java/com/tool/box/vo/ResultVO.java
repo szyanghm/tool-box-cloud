@@ -7,6 +7,7 @@ import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -16,9 +17,9 @@ import lombok.experimental.Accessors;
  * @Date 2023/6/28 14:28
  * @Version 1.0
  */
-@AllArgsConstructor
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
+@AllArgsConstructor
 @Accessors(chain = true)
 public class ResultVO<T> {
 
@@ -37,12 +38,12 @@ public class ResultVO<T> {
         this.time = DateUtils.getCurrentDateTime();
     }
 
-    public ResultVO(ErrorType errorType, T data) {
-        this.code = errorType.getCode();
-        this.msg = errorType.getMsg();
-        this.data = data;
-        this.time = DateUtils.getCurrentDateTime();
-    }
+//    public ResultVO(ErrorType errorType, T data) {
+//        this.code = errorType.getCode();
+//        this.msg = errorType.getMsg();
+//        this.data = data;
+//        this.time = DateUtils.getCurrentDateTime();
+//    }
 
 
     /**
@@ -65,7 +66,7 @@ public class ResultVO<T> {
      * @param code
      * @param msg
      */
-    private ResultVO(Integer code, String msg) {
+    public ResultVO(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
         this.time = DateUtils.getCurrentDateTime();

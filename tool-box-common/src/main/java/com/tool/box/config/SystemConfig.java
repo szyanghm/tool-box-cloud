@@ -1,7 +1,9 @@
 package com.tool.box.config;
 
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @Author v_haimiyang
@@ -9,14 +11,23 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-@Configuration
 public class SystemConfig {
 
-//    private static String definitions;
-//
-//    @Value("shiro.filter.chain.definitions")
-//    public static String getDefinitions() {
-//        return definitions;
-//    }
+    public static String secret;
+
+    public static Integer expire;
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    @Value("${jwt.expire}")
+    private String jwtExpire;
+
+
+    @PostConstruct
+    public void init() {
+        secret = this.jwtSecret;
+        expire = Integer.parseInt(this.jwtExpire);
+    }
 
 }

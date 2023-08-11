@@ -31,15 +31,20 @@ public enum SystemCodeEnum implements ErrorType {
     ARGUMENT_NOT_VALID(120000, "请求参数校验不通过"),
     INVALID_TOKEN(120001, "无效token"),
 
+    TOKEN_EXCEPTION(120002, "token 异常 认证失败"),
+
     DUPLICATE_PRIMARY_KEY(130000, "唯一键冲突"),
 
     USER_CHECK_FAILED(600001, "user check failed"),
 
     USER_ALREADY_EXISTS(600002, "用户已存在"),
+    USER_DOES_NOT_EXIST(600003,"用户不存在"),
 
-    USER_LOCK_ING(600003, "user is lock...."),
+    USER_LOCK_ING(600004, "user is lock...."),
 
-    USER_NOT_PERMISSIONS(600004, "用户无权限"),
+    USER_NOT_PERMISSIONS(600005, "用户无权限"),
+
+    INSUFFICIENT_ACCESS_TO_RESOURCES(600006,"访问资源权限不足！"),
 
     USER_EXISTS(300001, "user Already exists"),
 
@@ -63,7 +68,9 @@ public enum SystemCodeEnum implements ErrorType {
     DELETE_ERROR(8002, "删除失败！"),
     UPDATE_ERROR(8003, "更新失败！"),
 
-    PASSWORD_ERROR(4003, "账号或者密码不正确！");
+    PASSWORD_ERROR(4003, "账号或者密码不正确！"),
+    ;
+
 
     /**
      * 错误类型码
