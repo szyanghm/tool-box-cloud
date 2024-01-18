@@ -36,15 +36,11 @@ spring:
         file-extension: yaml
         refresh-enabled: true
 shiro:
-  session:
-    timeOut: 1
-  loginUrl: /login
-  successUrl: /
-  sessionManager:
-    sessionIdCookieEnabled: true
   filter:
     chain:
-      definitions: /**=authc;/druid/**=anon;/login=anon;/test=anon;
+      #true开启拦截，false关闭拦截
+      enabled: true
+      definitions: /druid/**=anon;/login=anon;/test=anon;/**=jwtFilter
 jwt:
   secret: adsfadfdsfd
   expire: 60000

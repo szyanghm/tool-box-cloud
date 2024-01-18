@@ -20,4 +20,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public User getByAccount(String account) {
         return baseMapper.selectOne(new QueryWrapper<User>().lambda().eq(User::getAccount, account));
     }
+
+    @Override
+    public String getPassword(String account) {
+        return baseMapper.getPassword(account);
+    }
+
+
 }

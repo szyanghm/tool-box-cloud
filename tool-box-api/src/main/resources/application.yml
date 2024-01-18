@@ -1,5 +1,5 @@
 server:
-  port: 19080
+  port: 19880
   servlet:
     context-path: /api
 spring:
@@ -9,6 +9,8 @@ spring:
   config:
     import:
       - optional:nacos:${spring.application.name}-dev.yml
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       discovery:

@@ -3,10 +3,10 @@
 <mapper namespace="com.tool.box.mapper.PermissionsMapper">
 
     <select id="getPermissions" resultType="java.lang.String">
-        SELECT trp.permissions_code
+        SELECT DISTINCT trp.permissions_code
         FROM t_role tr
                  LEFT JOIN t_role_permissions trp ON trp.role_code = tr.role_code
         WHERE tr.is_delete = 0
-          AND trp.is_delete = 0
+          AND trp.is_delete = 0 and tr.role_code = #{role}
     </select>
 </mapper>

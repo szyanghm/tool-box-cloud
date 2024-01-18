@@ -1,31 +1,37 @@
 package com.tool.box.config;
 
-import com.tool.box.cache.RedisCacheManager;
-import com.tool.box.shiro.EnhanceSessionManager;
-import com.tool.box.shiro.RedisSessionDAO;
-import com.tool.box.shiro.ShiroSessionProperties;
-import com.tool.box.shiro.UserRealm;
-import com.tool.box.utils.SystemUtils;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
-import org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator;
-import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
+import com.tool.box.common.Contents;
+import com.tool.box.filter.JwtFilter;
+import com.tool.box.shiro.CustomShiroFilterFactoryBean;
+import com.tool.box.shiro.ShiroRealm;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
-import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
-import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.crazycake.shiro.IRedisManager;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisClusterManager;
+import org.crazycake.shiro.RedisManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisCluster;
 
+import javax.annotation.Resource;
+import javax.servlet.Filter;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * shiro配置
@@ -34,30 +40,15 @@ import java.util.Map;
  * @Date 2023/7/7 10:03
  * @Version 1.0
  */
-@Component
+@Slf4j
 @Configuration
 public class ShiroConfig {
 
-    @Value("${shiro.filter.chain.definitions}")
-    private String definitions;
-    @Autowired
-    private ShiroSessionProperties shiroSessionProperties;
+    @Resource
+    private SystemConfig systemConfig;
 
-    @Bean
-    public RedisCacheManager redisCacheManager() {
-        return new RedisCacheManager();
-    }
-
-    /**
-     * 会话ID生成器
-     *
-     * @return JavaUuidSessionIdGenerator
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public SessionIdGenerator sessionIdGenerator() {
-        return new JavaUuidSessionIdGenerator();
-    }
+    @Resource
+    private LettuceConnectionFactory lettuceConnectionFactory;
 
     /**
      * Shiro生命周期处理器</br>
@@ -72,10 +63,6 @@ public class ShiroConfig {
     public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
-
-    //endregion
-
-    //region shiro AOP支持
 
     /**
      * DefaultAdvisorAutoProxyCreator是用来扫描上下文，寻找所有的Advisor(通知器）
@@ -101,101 +88,104 @@ public class ShiroConfig {
      */
     @Bean
     @ConditionalOnMissingBean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
+            DefaultWebSecurityManager defaultWebSecurityManager) {
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
-        advisor.setSecurityManager(defaultWebSecurityManager());
+        advisor.setSecurityManager(defaultWebSecurityManager);
         return advisor;
     }
 
-
-    // 配置自定义Realm
-    @Bean
-    public UserRealm userRealm() {
-        UserRealm userRealm = new UserRealm();
-        userRealm.setCacheManager(redisCacheManager());
-        // 开启全局缓存
-        userRealm.setCachingEnabled(true);
-        // 开启认证缓存
-        userRealm.setAuthenticationCachingEnabled(true);
-        // 开启授权缓存
-        userRealm.setAuthorizationCachingEnabled(true);
-
-        userRealm.setCredentialsMatcher(credentialsMatcher()); //配置使用哈希密码匹配
-        return userRealm;
+    /**
+     * cacheManager 缓存 redis实现
+     * 使用的是shiro-redis开源插件
+     *
+     * @return redis缓存管理器
+     */
+    public RedisCacheManager redisCacheManager() {
+        log.info("===============(1)创建缓存管理器RedisCacheManager");
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setRedisManager(redisManager());
+        //redis中针对不同用户缓存(此处的id需要对应user实体中的id字段,用于唯一标识)
+        redisCacheManager.setPrincipalIdFieldName("account");
+        //用户权限信息缓存时间
+        redisCacheManager.setExpire(2000);
+        return redisCacheManager;
     }
 
     /**
-     * 提供sessionDao实现
+     * 配置shiro redisManager
+     * 使用的是shiro-redis开源插件
      *
-     * @return sessionDAO
+     * @return redis管理器
      */
     @Bean
-    @ConditionalOnMissingBean
-    public AbstractSessionDAO sessionDAO() {
-        AbstractSessionDAO sessionDAO = new RedisSessionDAO();
-        sessionDAO.setSessionIdGenerator(sessionIdGenerator());
-        return sessionDAO;
+    public IRedisManager redisManager() {
+        log.info("===============(2)创建RedisManager,连接Redis..");
+        IRedisManager manager;
+        // redis 单机支持，在集群为空，或者集群无机器时候使用 add by jzyadmin@163.com
+        if (lettuceConnectionFactory.getClusterConfiguration() == null
+                || lettuceConnectionFactory.getClusterConfiguration().getClusterNodes().isEmpty()) {
+            RedisManager redisManager = new RedisManager();
+            redisManager.setHost(lettuceConnectionFactory.getHostName() + ":" + lettuceConnectionFactory.getPort());
+            redisManager.setDatabase(lettuceConnectionFactory.getDatabase());
+            redisManager.setTimeout(0);
+            if (StringUtils.isNotBlank(lettuceConnectionFactory.getPassword())) {
+                redisManager.setPassword(lettuceConnectionFactory.getPassword());
+            }
+            manager = redisManager;
+        } else {
+            // redis集群支持，优先使用集群配置
+            RedisClusterManager redisManager = new RedisClusterManager();
+            Set<HostAndPort> portSet = new HashSet<>();
+            lettuceConnectionFactory.getClusterConfiguration().getClusterNodes().forEach(node
+                    -> portSet.add(new HostAndPort(node.getHost(), node.getPort())));
+            if (StringUtils.isNotBlank(lettuceConnectionFactory.getPassword())) {
+                JedisCluster jedisCluster = new JedisCluster(portSet, Contents.NUM_2000, Contents.NUM_2000
+                        , Contents.NUM_5, lettuceConnectionFactory.getPassword(), new GenericObjectPoolConfig<>());
+                redisManager.setPassword(lettuceConnectionFactory.getPassword());
+                redisManager.setJedisCluster(jedisCluster);
+            } else {
+                JedisCluster jedisCluster = new JedisCluster(portSet);
+                redisManager.setJedisCluster(jedisCluster);
+            }
+            manager = redisManager;
+        }
+        return manager;
     }
+
 
     /**
      * 注入配置url过滤器
-     */
-    @Bean
-    public ShiroFilterChainDefinition shiroFilterChainDefinition() {
-        Map<String, String> map = SystemUtils.getMapData(definitions, ";");
-        DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
-//        chainDefinition.addPathDefinition("/captcha", "anon");
-//        chainDefinition.addPathDefinition("/logout", "anon");
-//        chainDefinition.addPathDefinition("/layuiadmin/**", "anon");
-//        chainDefinition.addPathDefinition("/druid/**", "anon");
-//        chainDefinition.addPathDefinition("/api/**", "anon");
-//        chainDefinition.addPathDefinition("/login", "anon");
-//        chainDefinition.addPathDefinition("/**", "authc");
-        chainDefinition.addPathDefinitions(map);
-        return chainDefinition;
-    }
-
-    /**
-     * 设置用于匹配密码的CredentialsMatcher
      *
-     * @return credentialsMatcher
+     * @return shiro过滤器工厂
      */
-    @Bean
-    public HashedCredentialsMatcher credentialsMatcher() {
-        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
-        credentialsMatcher.setHashAlgorithmName(Sha256Hash.ALGORITHM_NAME);  // 散列算法，这里使用更安全的sha256算法
-        credentialsMatcher.setStoredCredentialsHexEncoded(false);  // 数据库存储的密码字段使用HEX还是BASE64方式加密
-        credentialsMatcher.setHashIterations(1024);  // 散列迭代次数
-        return credentialsMatcher;
+    @Bean("shiroFilterFactoryBean")
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
+        CustomShiroFilterFactoryBean shiroFilterFactoryBean = new CustomShiroFilterFactoryBean();
+        Map<String, Filter> filterMap = new HashMap<>();
+        filterMap.put(Contents.JWT_FILTER, new JwtFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(systemConfig.definitionsMap);
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+        return shiroFilterFactoryBean;
     }
 
     /**
      * 创建安全管理器
      */
-    @Bean
-    public DefaultWebSecurityManager defaultWebSecurityManager() {
+    @Bean("securityManager")
+    public DefaultWebSecurityManager defaultWebSecurityManager(ShiroRealm shiroRealm) {
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
         //自定义Realm
-        defaultWebSecurityManager.setRealm(userRealm());
-        //自定义session管理器
-        defaultWebSecurityManager.setSessionManager(defaultWebSessionManager());
+        defaultWebSecurityManager.setRealm(shiroRealm);
         defaultWebSecurityManager.setCacheManager(redisCacheManager());
+        //关闭shiro自带的session
+        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        defaultWebSecurityManager.setSubjectDAO(subjectDAO);
         return defaultWebSecurityManager;
-    }
-
-
-    @Bean
-    @ConditionalOnMissingBean
-    public DefaultWebSessionManager defaultWebSessionManager() {
-        DefaultWebSessionManager enhanceSessionManager = new EnhanceSessionManager();
-        // 会话过期删除会话
-        enhanceSessionManager.setDeleteInvalidSessions(true);
-        enhanceSessionManager.setGlobalSessionTimeout(shiroSessionProperties.getTimeOut() * 60000L);
-        // 定时检查失效的session
-        enhanceSessionManager.setSessionValidationSchedulerEnabled(true);
-        // 设置sessionDao(可以选择具体session存储方式)
-        enhanceSessionManager.setSessionDAO(sessionDAO());
-        return enhanceSessionManager;
     }
 
 }

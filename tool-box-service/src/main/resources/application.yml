@@ -25,7 +25,4 @@ spring:
         group: TOOL_BOX_SERVICE_GROUP
         file-extension: yaml
         refresh-enabled: true
-jwt:
-  secret: adsfadfdsfd
-  expire: 60000
 

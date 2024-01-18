@@ -22,12 +22,8 @@ import java.util.Set;
 public class PermissionsServiceImpl extends ServiceImpl<PermissionsMapper, Permissions> implements IPermissionsService {
 
     @Override
-    public Set<String> getPermissions(String role) {
-        List<String> list = baseMapper.getPermissions(role);
-        if (list == null || list.size() == 0) {
-            throw new InternalApiException(SystemCodeEnum.USER_NOT_PERMISSIONS);
-        }
-        return new HashSet<>(list);
+    public List<String> getPermissions(String role) {
+        return baseMapper.getPermissions(role);
     }
 
 }

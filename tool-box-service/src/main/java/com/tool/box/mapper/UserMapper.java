@@ -13,4 +13,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper extends BaseMapper<User> {
 
+    /**
+     * 根据用户账号查询密码
+     *
+     * @param account 用户账号
+     * @return 密码
+     */
+    String getPassword(String account);
+
 }

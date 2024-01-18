@@ -4,6 +4,7 @@ import com.sun.jmx.snmp.Timestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,15 +15,38 @@ import java.util.Date;
  * @Date 2023/6/28 14:29
  * @Version 1.0
  */
-public class DateUtils {
+public class DateUtils extends PropertyEditorSupport {
 
     private static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
     public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String yyyyMMddHHmmss = "yyyyMMddHHmmss";
     private static final String DEFAULT_TIME_PATTERN = "HH:mm:ss";
 
     private static String[] parsePatterns = {"yyyy-MM-dd", "yyyy年MM月dd日",
             "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy/MM/dd",
             "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyyMMdd"};
+
+    public static ThreadLocal<SimpleDateFormat> yyyymmddhhmmss = ThreadLocal.withInitial(()
+            -> new SimpleDateFormat(yyyyMMddHHmmss));
+
+    public static ThreadLocal<SimpleDateFormat> threadLocal_default_date_pattern = ThreadLocal.withInitial(()
+            -> new SimpleDateFormat(DEFAULT_DATE_PATTERN));
+
+    /**
+     * 日期转换为字符串
+     *
+     * @param date    日期
+     * @param dateSdf 日期格式
+     * @return 字符串
+     */
+    public static String format(Date date, SimpleDateFormat dateSdf) {
+        synchronized (dateSdf) {
+            if (null == date) {
+                return null;
+            }
+            return dateSdf.format(date);
+        }
+    }
 
     public static Date parseDate(String string, String[] parsePatterns) {
         if (string == null) {
@@ -33,6 +57,26 @@ public class DateUtils {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * 日期转换为字符串
+     *
+     * @param dateSdf 日期格式
+     * @return 字符串
+     */
+    public static String format(SimpleDateFormat dateSdf) {
+        synchronized (dateSdf) {
+            Date date = getDate();
+            if (null == date) {
+                return null;
+            }
+            return dateSdf.format(date);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(format(yyyymmddhhmmss.get()));
     }
 
     public static String format(Date date, String pattern) {
@@ -51,6 +95,30 @@ public class DateUtils {
      */
     public static long getTime(Date date) {
         return date.getTime();
+    }
+
+    /**
+     * 日期转换为字符串
+     *
+     * @param format 日期格式
+     * @return 字符串
+     */
+    public static String getDate(String format) {
+        Date date = new Date();
+        if (null == date) {
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(date);
+    }
+
+    /**
+     * 当前日期
+     *
+     * @return 系统当前时间
+     */
+    public static Date getDate() {
+        return new Date();
     }
 
     /**

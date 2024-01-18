@@ -39,9 +39,9 @@ public class FeignConfig {
                 return;
             }
             HttpServletRequest request = attributes.getRequest();
-            String token= request.getHeader(Contents.TOKEN);
+            String token= request.getHeader(Contents.X_ACCESS_TOKEN);
             if (StringUtils.isNotBlank(token)) {
-                requestTemplate.header(Contents.TOKEN, token);
+                requestTemplate.header(Contents.X_ACCESS_TOKEN, token);
             }
         };
     }

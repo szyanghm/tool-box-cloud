@@ -7,8 +7,9 @@ import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.util.Objects;
 
 /**
  * 公共返回
@@ -18,7 +19,6 @@ import lombok.experimental.Accessors;
  * @Version 1.0
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
 public class ResultVO<T> {
@@ -31,6 +31,12 @@ public class ResultVO<T> {
     private String time;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
+
+    public ResultVO() {
+        this.code = SUCCESSFUL_CODE;
+        this.msg = SUCCESSFUL_MSG;
+        this.time = DateUtils.getCurrentDateTime();
+    }
 
     public ResultVO(ErrorType errorType) {
         this.code = errorType.getCode();
@@ -87,18 +93,18 @@ public class ResultVO<T> {
      * @param data
      * @return Result
      */
-    public static ResultVO success(Object data) {
-        return new ResultVO<>(SUCCESSFUL_CODE, SUCCESSFUL_MSG, data);
+    public static <T> ResultVO<T> success(T data) {
+        return new ResultVO<T>(SUCCESSFUL_CODE, SUCCESSFUL_MSG, data);
     }
 
 
     /**
-     * 系统异常类没有返回数据
+     * 操作失败
      *
      * @return Result
      */
-    public static ResultVO fail() {
-        return new ResultVO(SystemCodeEnum.SYSTEM_ERROR);
+    public static  <T> ResultVO<T> fail() {
+        return new ResultVO(SystemCodeEnum.OPERATE_ERROR);
     }
 
     /**
@@ -108,6 +114,10 @@ public class ResultVO<T> {
      */
     public static ResultVO error(SystemCodeEnum errorEnum) {
         return new ResultVO(errorEnum);
+    }
+
+    public static boolean isSuccess(Integer code) {
+        return Objects.equals(code, SystemCodeEnum.OK.getCode());
     }
 
     @JsonIgnore

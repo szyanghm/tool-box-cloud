@@ -1,0 +1,95 @@
+spring:
+  #数据库配置
+  datasource:
+    # 数据库监控
+    druid:
+      stat-view-servlet:
+        enabled: true
+        login-username: admin
+        login-password: 123456
+        allow:
+      web-stat-filter:
+        enabled: true
+    dynamic:
+      druid:
+        initial-size: 5
+        min-idle: 6
+        max-active: 20
+        max-wait: 60000
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        validation-query: SELECT 1 FROM DUAL
+        test-on-borrow: false
+        test-on-return: false
+        max-pool-prepared-statement-per-connection-size: -1
+        pool-prepared-statements: false
+        filters: stat,wall,slf4j
+        #connection_properties: druid.stat.mergeSql=true;slowSqlMillis=5000
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      strict: false #严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      datasource:
+        master:
+          url: jdbc:mysql://localhost:3306/tool_box_task
+          username: root
+          password: ENC(izNjfkbpvgE3u9EtfACFoZPo2ssq8uiDtmxe1KyRQ3Cth7tw2+jMd0UGchZzppz4CASyA9d5VljpP1z92Z5yaw==)
+          driver-class-name: com.mysql.jdbc.Driver # 3.2.0开始支持SPI可省略此配置
+          public-key: ${publicKey}
+  quartz:
+    job-store-type: jdbc
+    #    initialize-schema: embedded
+    #定时任务启动开关，true-开  false-关
+    auto-startup: true
+    #延迟1秒启动定时任务
+    startup-delay: 1s
+    #启动时更新己存在的Job
+    overwrite-existing-jobs: true
+    jdbc:
+      initialize-schema: embedded
+    #      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MyScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: qrtz_
+            isClustered: true
+            misfireThreshold: 12000
+            clusterCheckinInterval: 15000
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  global-config:
+    db-config:
+      #全局默认主键类型
+      id-type: ASSIGN_ID
+      table-underline: true
+      logic-delete-field: is_delete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      table-prefix: t_
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+shiro:
+  filter:
+    chain:
+      #true开启拦截，false关闭拦截
+      enabled: false
+      definitions: /login = anon
+
+jwt:
+  secret: adsfadfdsfd
+  expire: 60000
+
+logging:
+  config: classpath:logback-dev.xml
+  file:
+    path: D:\my_project\project\tool-box-cloud\logs\tool-box-task-logs\

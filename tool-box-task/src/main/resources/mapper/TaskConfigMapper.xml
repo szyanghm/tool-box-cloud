@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tool.box.mapper.TaskConfigMapper">
+
+    <sql id="getJobTaskListSql">
+        SELECT
+            tc.id AS taskId,
+            tc.task_name,
+            tc.cron,
+            tc.repeat_count,
+            tc.start_date,
+            tc.end_date,
+            tc.parameter,
+            tc.type,
+            tc.interval_time,
+            tc.interval_time_unit,
+            qj.group_name,
+            qj.job_group,
+            qj.class_path,
+            qj.method_name,
+            qj.description,
+            tc.remarks,
+            tc.state
+        FROM
+            t_task_config tc
+            LEFT JOIN t_quartz_job qj ON tc.job_id = qj.id
+        WHERE
+            tc.is_delete = 0
+          AND qj.is_delete = 0
+          AND (
+                tc.end_date IS NULL
+                OR (
+                        tc.end_date IS NOT NULL
+                        AND tc.end_date > NOW()
+                    )
+            )
+    </sql>
+
+    <select id="findJobTaskList" resultType="com.tool.box.common.QuartzJobTask">
+        <include refid="getJobTaskListSql"></include>
+        AND tc.state in
+        <foreach collection="states" item="state" open="(" separator="," close=")">
+            #{state}
+        </foreach>
+    </select>
+    <select id="getJobTask" resultType="com.tool.box.common.QuartzJobTask">
+        <include refid="getJobTaskListSql"></include>
+        <if test="id !=null and id !=''">
+            AND tc.id = #{id}
+        </if>
+    </select>
+</mapper>

@@ -20,6 +20,6 @@ public interface IPermissionsService extends IService<Permissions> {
      * @param role 角色
      * @return 权限集合
      */
-    Set<String> getPermissions(String role);
+    List<String> getPermissions(String role);
 
 }

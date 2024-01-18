@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tool.box.mapper.QuartzJobTaskMapper">
+
+    <select id="findJobTaskList" resultType="com.tool.box.common.QuartzJobTask" parameterType="java.lang.String">
+        SELECT
+            tc.id AS taskId,
+            tc.task_name,
+            tc.cron,
+            tc.repeat_count,
+            tc.start_date,
+            tc.end_date,
+            tc.parameter,
+            tc.type,
+            tc.interval_time,
+            tc.interval_time_unit,
+            qj.group_name,
+            qj.job_group,
+            qj.class_path,
+            qj.method_name,
+            qj.description,
+            tc.remarks,
+            tc.state
+        FROM
+        t_task_config tc
+        LEFT JOIN t_quartz_job qj ON tc.job_id = qj.id
+        WHERE
+        tc.is_delete = 0
+        AND qj.is_delete = 0
+        AND (
+            tc.end_date IS NULL
+            OR (
+            tc.end_date IS NOT NULL
+            AND tc.end_date > NOW()
+            )
+        )
+        AND tc.state in ('R','S')
+        AND qj.group_name = #{groupName}
+    </select>
+
+    <update id="updateTaskConfig" parameterType="com.tool.box.dto.TaskMsgDTO">
+        UPDATE t_task_config
+        SET task_msg = #{dto.taskMsg}
+        WHERE id = #{dto.id}
+    </update>
+</mapper>

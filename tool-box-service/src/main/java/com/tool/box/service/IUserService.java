@@ -22,4 +22,14 @@ public interface IUserService extends IService<User> {
      */
     User getByAccount(String account);
 
+
+    /**
+     * 根据用户账号查询密码
+     *
+     * @param account 用户账号
+     * @return 密码
+     */
+    String getPassword(String account);
+
+
 }

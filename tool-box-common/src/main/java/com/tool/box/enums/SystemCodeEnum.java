@@ -19,7 +19,15 @@ public enum SystemCodeEnum implements ErrorType {
     OK(2000, "处理成功"),
 
     SYSTEM_ERROR(-1, "系统异常"),
+    OPERATE_ERROR(5500, "操作失败"),
+    TASK_START_EXCEPTION(6000, "定时任务启动异常"),
 
+    TASK_CREATE_EXCEPTION(6001, "创建定时任务失败"),
+    TASK_DEL_EXCEPTION(6002, "删除定时任务失败"),
+    TASK_PARAMETER_EXCEPTION(6003, "定时任务参数异常"),
+    TASK_REFRESH_EXCEPTION(6004, "定时任务刷新异常"),
+    TASK_CRON_ERROR(6005, "定时任务表达式错误"),
+    TASK_FEIGN_SERVICE_FAIL(6006, "service服务未启动，定时任务初始化调度器失败"),
     SYSTEM_BUSY(100001, "系统繁忙,请稍候再试"),
 
     FEIGN_DECODE_ERROR(110401, "feign远程调用异常"),
@@ -38,13 +46,27 @@ public enum SystemCodeEnum implements ErrorType {
     USER_CHECK_FAILED(600001, "user check failed"),
 
     USER_ALREADY_EXISTS(600002, "用户已存在"),
-    USER_DOES_NOT_EXIST(600003,"用户不存在"),
+    USER_DOES_NOT_EXIST(600003, "用户不存在"),
+    ACCOUNT_OR_PASSWORD_ERROR(600004, "账号或者密码不正确!"),
+    PASSWORD_ERROR(600005, "密码错误,请重新输入!"),
 
-    USER_LOCK_ING(600004, "user is lock...."),
+    PASSWORD_ENCRYPT_FAILED(600006, "密码加密失败!"),
 
-    USER_NOT_PERMISSIONS(600005, "用户无权限"),
+    PASSWORD_DECRYPT_FAILED(600007, "密码解密失败!"),
 
-    INSUFFICIENT_ACCESS_TO_RESOURCES(600006,"访问资源权限不足！"),
+    USER_LOCK_ING(600008, "user is lock...."),
+
+    USER_NOT_PERMISSIONS(600009, "用户无权限"),
+
+    INSUFFICIENT_ACCESS_TO_RESOURCES(600010, "访问资源权限不足!"),
+
+    SECURITY_MANAGER_NOT_CONFIGURED(600011, "SecurityManager property must be set."),
+
+    WEB_SECURITY_MANAGER_NOT_IMPLEMENTED(600012, "The security manager does not implement the WebSecurityManager interface."),
+
+    USER_LOGIN_EXPIRED(600013, "登录已过期，请重新登录"),
+
+    LOGIN_OUT_FAIL(600020, "退出登录失败，token为空"),
 
     USER_EXISTS(300001, "user Already exists"),
 
@@ -60,15 +82,15 @@ public enum SystemCodeEnum implements ErrorType {
 
     NORMAL_MESSAGE(100086, "Normal message"),
 
-    FLOW_DEPLOY_ERROR(5001, "流程部署失败！"),
-    FLOW_START_ERROR(5002, "流程启动失败！"),
+    FLOW_DEPLOY_ERROR(5001, "流程部署失败!"),
+    FLOW_START_ERROR(5002, "流程启动失败!"),
     FLOW_TASK_COMPLETE_ERROR(5002, "任务完成失败！"),
 
-    QUERY_ERROR(8001, "查询失败！"),
-    DELETE_ERROR(8002, "删除失败！"),
-    UPDATE_ERROR(8003, "更新失败！"),
+    QUERY_ERROR(8001, "查询失败!"),
+    DELETE_ERROR(8002, "删除失败!"),
+    UPDATE_ERROR(8003, "更新失败!"),
 
-    PASSWORD_ERROR(4003, "账号或者密码不正确！"),
+
     ;
 
 

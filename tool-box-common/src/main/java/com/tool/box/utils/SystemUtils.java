@@ -1,12 +1,14 @@
 package com.tool.box.utils;
 
 
-import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
+import com.tool.box.common.Contents;
+import com.tool.box.enums.SystemCodeEnum;
+import com.tool.box.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -42,29 +44,52 @@ public class SystemUtils {
      * @param split 分隔符如：&和;
      * @return 分割后的map对象
      */
-    public static Map<String, String> getMapData(String str, String split) {
-        String[] arr = str.split(split);
-        Map<String, String> dataMap = new HashMap<>(16);
-        for (int i = 0; i < arr.length; i++) {
-            String[] strArr = arr[i].split("=");
+    public static Map<String, String> getMapData(Boolean enabled, String str, String split) {
+        Map<String, String> dataMap = new LinkedHashMap<>(16);
+        if (!enabled) {
+            dataMap.put(Contents.SLASH_BIT2, Contents.anon);
+            return dataMap;
+        }
+        if (str.contains(split)) {
+            String[] arr = str.split(split);
+            for (String s : arr) {
+                String[] strArr = s.split(Contents.EQUALS_SIGN);
+                dataMap.put(strArr[0], strArr[1]);
+            }
+        } else {
+            String[] strArr = str.split(Contents.EQUALS_SIGN);
             dataMap.put(strArr[0], strArr[1]);
         }
+        //放行swagger相关访问
+        dataMap.put("/swagger-ui/**", Contents.anon);
+        dataMap.put("/swagger-resources/**", Contents.anon);
+        dataMap.put("/v3/**", Contents.anon);
+        dataMap.put("/error/**", Contents.anon);
+        dataMap.put(Contents.DRUID_SLASH_BIT2, Contents.anon);
+        dataMap.put(Contents.SLASH_BIT2, Contents.authc);
+        dataMap.put(Contents.SLASH_BIT2, Contents.JWT_FILTER);
         return dataMap;
     }
 
+    public static String getMsg(SystemCodeEnum systemCodeEnum, String msg) {
+        return systemCodeEnum.getMsg() + "==>>:" + msg;
+    }
+
     /**
-     * 将LoginUser信息复制到UserInfo
+     * 将User信息复制到UserInfo
      *
-     * @param loginUser 登录用户信息
+     * @param user 用户信息
      * @return UserInfo
      */
-    public static UserInfo getUserInfo(LoginUser loginUser) {
+    public static UserInfo getUserInfo(User user) {
         UserInfo userInfo = new UserInfo();
-        userInfo.setRole(loginUser.getRole());
-        userInfo.setSalt(loginUser.getSalt());
-        userInfo.setName(loginUser.getName());
-        userInfo.setAccount(loginUser.getAccount());
+        userInfo.setAccount(user.getAccount());
+        userInfo.setName(user.getName());
+        userInfo.setRole(user.getRole());
+        userInfo.setSalt(user.getSalt());
+        userInfo.setStatus(user.getStatus());
         return userInfo;
     }
+
 
 }

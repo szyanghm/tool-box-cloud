@@ -21,6 +21,7 @@
         <module>tool-box-contract</module>
         <module>tool-box-auth</module>
         <module>tool-box-service</module>
+        <module>tool-box-task</module>
         <module>tool-box-api</module>
         <module>tool-box-web</module>
     </modules>
@@ -110,6 +111,11 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->

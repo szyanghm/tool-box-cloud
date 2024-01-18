@@ -1,3 +1,13 @@
+shiro:
+  filter:
+    chain:
+      #true开启拦截，false关闭拦截
+      enabled: true
+      definitions: /login = anon
+jwt:
+  secret: adsfadfdsfd
+  expire: 60000
+
 logging:
   config: classpath:logback-dev.xml
   file:

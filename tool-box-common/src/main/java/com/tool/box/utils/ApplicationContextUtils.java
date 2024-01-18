@@ -3,12 +3,16 @@ package com.tool.box.utils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
+ * 通过上下文反射获取bean
+ *
  * @Author v_haimiyang
  * @Date 2023/7/7 11:38
  * @Version 1.0
  */
+@Component
 public class ApplicationContextUtils implements ApplicationContextAware {
 
     private static ApplicationContext context;

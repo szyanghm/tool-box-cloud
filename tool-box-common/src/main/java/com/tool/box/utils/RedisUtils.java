@@ -1,7 +1,9 @@
 package com.tool.box.utils;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -9,14 +11,15 @@ import java.util.concurrent.TimeUnit;
  * @Date 2023/8/10 17:15
  * @Version 1.0
  */
+@Component
 public class RedisUtils {
-
 
     private StringRedisTemplate redisTemplate;
 
-    public RedisUtils(StringRedisTemplate redisTemplate) {
+    public RedisUtils(StringRedisTemplate redisTemplate){
         this.redisTemplate = redisTemplate;
     }
+
 
     /**
      * 写入缓存
@@ -56,6 +59,10 @@ public class RedisUtils {
 
     public String get(String key) {
         return redisTemplate.opsForValue().get(key);
+    }
+
+    public Boolean del(String key){
+        return redisTemplate.delete(key);
     }
 
 }

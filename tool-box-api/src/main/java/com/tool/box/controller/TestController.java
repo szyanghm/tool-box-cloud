@@ -1,15 +1,10 @@
 package com.tool.box.controller;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
-import com.tool.box.feign.UserInfoConsumer;
+import com.tool.box.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
-import java.util.HashMap;
 
 /**
  * 测试-控制器
@@ -23,22 +18,27 @@ import java.util.HashMap;
 @RequestMapping("/test")
 public class TestController {
 
-    @Resource
-    private UserInfoConsumer testConsumer;
 
     @PostMapping(value = "/post")
     public void test() {
+        try {
+
+//            Object object = ApplicationContextUtils.getBean("TestController");
+//            System.out.println(object.getClass().getName());
+            Class<?> clazz = Class.forName("com.tool.box.quartz.QuartzJobFactory");
+
+            //获取首字母小写类名
+//            String simpleName = clazz.getSimpleName();
+//            String firstLowerName = simpleName.substring(0, 1).toLowerCase()
+//                    + simpleName.substring(1);
+            Object bean = ApplicationContextUtils.getBean(clazz);
+            System.out.println(bean.getClass().getName());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         log.info("1111111111111111111");
-        testConsumer.getUserInfo("");
     }
 
-    public static void main(String[] args) {
-        //链式构建请求
-        String result2 = HttpRequest.post("localhost:19081/api")
-                .header("token", "B547E0B832FBCBAB3D1E5D6A7AD60C07")//头信息，多个头信息多次调用此方法即可
-                .timeout(20000)//超时，毫秒
-                .execute().body();
-        System.out.println(result2);
-    }
+
 
 }
