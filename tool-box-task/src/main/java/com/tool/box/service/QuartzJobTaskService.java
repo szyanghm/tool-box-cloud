@@ -53,6 +53,7 @@ public class QuartzJobTaskService {
      * @return 新增结果
      */
     public ResultVO<?> add(TaskConfigDTO dto) {
+
         if (CommonEnum.REPEAT.getValue().equals(dto.getType())) {
             if (StringUtils.isBlank(dto.getCron())) {
                 String cron = QuartzJobUtils.createCronExpression(dto);
