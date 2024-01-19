@@ -1,5 +1,6 @@
 package com.tool.box.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tool.box.dto.QuartzJobDTO;
@@ -7,6 +8,7 @@ import com.tool.box.mapper.QuartzJobMapper;
 import com.tool.box.model.QuartzJob;
 import com.tool.box.service.IQuartzJobService;
 import com.tool.box.vo.ResultVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,11 @@ public class QuartzJobServiceImpl
     public ResultVO<?> add(QuartzJobDTO dto) {
         QuartzJob job = new QuartzJob();
         BeanUtils.copyProperties(dto, job);
-        if (baseMapper.insert(job) > 0) {
+        job.setParameter(JSONObject.toJSONString(dto.getParameter()));
+        if (StringUtils.isNotBlank(dto.getId())) {
+            job.setId(Long.valueOf(dto.getId()));
+        }
+        if (this.saveOrUpdate(job)) {
             return ResultVO.success();
         }
         return ResultVO.fail();

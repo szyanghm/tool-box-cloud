@@ -5,10 +5,11 @@ import com.tool.box.dto.TaskConfigDTO;
 import com.tool.box.service.IQuartzJobService;
 import com.tool.box.service.QuartzJobTaskService;
 import com.tool.box.vo.ResultVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -21,7 +22,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @RestController
-@RequestMapping("/task")
+@Api(value = "定时任务控制器")
 public class QuartzJobTaskController {
 
     @Resource
@@ -36,6 +37,7 @@ public class QuartzJobTaskController {
      * @return 新增结果
      */
     @PostMapping(value = "/addQuartzJob")
+    @ApiOperation(value = "新增定时任务模块", notes = "2000成功/5500失败")
     public ResultVO<?> addQuartzJob(@RequestBody QuartzJobDTO dto) {
         return quartzJobService.add(dto);
     }

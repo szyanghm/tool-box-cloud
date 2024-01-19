@@ -1,7 +1,7 @@
 package com.tool.box.service;
 
 import com.tool.box.common.QuartzJobTask;
-import com.tool.box.config.SystemConfig;
+import com.tool.box.config.TaskConfiguration;
 import com.tool.box.dto.TaskConfigDTO;
 import com.tool.box.dto.TaskMsgDTO;
 import com.tool.box.enums.CommonEnum;
@@ -36,7 +36,7 @@ public class QuartzJobTaskService {
     @Resource
     private QuartzJobTaskConsumer quartzJobTaskConsumer;
     @Resource
-    private SystemConfig systemConfig;
+    private TaskConfiguration configuration;
 
     /**
      * 初始化启动所有的Job
@@ -83,7 +83,13 @@ public class QuartzJobTaskService {
      */
     public void refreshAllJobs() {
         try {
-            List<QuartzJobTask> list = quartzJobTaskConsumer.findJobTaskList(systemConfig.applicationName);
+            String applicationName = configuration.applicationName;
+            if (!configuration.taskEnabled) {
+                quartzJobUtils.schedulerDeleteAll(applicationName);
+                log.error(applicationName + SystemCodeEnum.TASK_NOT_ENABLED.getMsg());
+                return;
+            }
+            List<QuartzJobTask> list = quartzJobTaskConsumer.findJobTaskList(applicationName);
             quartzJobUtils.refreshAllJobs(list);
         } catch (Exception e) {
             log.error(SystemCodeEnum.TASK_FEIGN_SERVICE_FAIL.getMsg());
@@ -101,7 +107,11 @@ public class QuartzJobTaskService {
             TaskMsgDTO dto = new TaskMsgDTO();
             dto.setId(String.valueOf(taskConfig.getId()));
             dto.setTaskMsg(taskConfig.getTaskMsg());
-            quartzJobTaskConsumer.updateTaskConfig(dto);
+            try {
+                quartzJobTaskConsumer.updateTaskConfig(dto);
+            } catch (Exception e) {
+                log.error(SystemCodeEnum.TASK_FEIGN_SERVICE_FAIL.getMsg());
+            }
         }
     }
 }

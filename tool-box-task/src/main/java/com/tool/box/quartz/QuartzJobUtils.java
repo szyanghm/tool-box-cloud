@@ -8,12 +8,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tool.box.common.Contents;
 import com.tool.box.common.QuartzJobTask;
+import com.tool.box.config.TaskConfiguration;
 import com.tool.box.dto.BaseTaskHeadDTO;
 import com.tool.box.dto.TaskConfigDTO;
 import com.tool.box.enums.*;
 import com.tool.box.exception.InternalApiException;
 import com.tool.box.model.TaskConfig;
 import com.tool.box.utils.ApplicationContextUtils;
+import com.tool.box.utils.SystemUtils;
 import com.tool.box.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +41,8 @@ public class QuartzJobUtils {
 
     @Resource
     private Scheduler scheduler;
-
+    @Resource
+    private TaskConfiguration configuration;
 
     /**
      * Quartz任务核心方法
@@ -75,31 +78,9 @@ public class QuartzJobUtils {
             log.info("暂无可需要重启的定时任务");
             return;
         }
-        synchronized (log) {
-            try {
-                //只允许一个线程进入操作
-                Set<JobKey> set = scheduler.getJobKeys(GroupMatcher.anyGroup());
-                scheduler.pauseJobs(GroupMatcher.anyGroup());
-                for (JobKey jobKey : set) {
-                    //暂停所有JOB
-                    scheduler.unscheduleJob(TriggerKey.triggerKey(jobKey.getName(), jobKey.getGroup()));
-                    //删除从数据库中注册的所有JOB
-                    scheduler.deleteJob(jobKey);
-                }
-                for (QuartzJobTask job : list) {
-                    //从数据库中注册的所有JOB
-                    JobDataMap map = getJobDataMap(job);
-                    JobKey jobKey = getJobKey(job);
-                    JobDetail jobDetail = getJobDetail(jobKey, job.getDescription(), map);
-                    // 将trigger和 jobDetail 加入这个调度
-                    scheduler.scheduleJob(jobDetail, getTrigger(job));
-                    // 启动scheduler
-                    scheduler.start();
-                }
-            } catch (SchedulerException e) {
-                log.error(e.getMessage());
-                throw new InternalApiException(SystemCodeEnum.TASK_REFRESH_EXCEPTION);
-            }
+        schedulerDeleteAll(configuration.applicationName);
+        for (QuartzJobTask job : list) {
+            execute(job);
         }
     }
 
@@ -121,9 +102,10 @@ public class QuartzJobUtils {
         }
     }
 
-    public JobKey getJobKey(QuartzJobTask job) {
-        return JobKey.jobKey(job.getGroupName() + job.getTaskId(), job.getJobGroup());
+    public static JobKey getJobKey(QuartzJobTask job) {
+        return JobKey.jobKey(SystemUtils.getGroupName(job), job.getJobGroup());
     }
+
 
     /**
      * 从数据库中注册的所有JOB
@@ -131,7 +113,7 @@ public class QuartzJobUtils {
      * @param job 任务对象
      * @return 需要注册的JobDataMap
      */
-    public JobDataMap getJobDataMap(QuartzJobTask job) {
+    public static JobDataMap getJobDataMap(QuartzJobTask job) {
         JobDataMap map = new JobDataMap();
         map.put("taskId", job.getTaskId());
         map.put("groupName", job.getGroupName());
@@ -142,7 +124,6 @@ public class QuartzJobUtils {
         map.put("methodName", job.getMethodName());
         map.put("classPath", job.getClassPath());
         map.put("state", job.getState());
-        log.info("classPath:{}", job.getClassPath());
         return map;
     }
 
@@ -154,7 +135,7 @@ public class QuartzJobUtils {
      * @param map         任务对象
      * @return 注册后的JobDetail
      */
-    public JobDetail getJobDetail(JobKey jobKey, String description, JobDataMap map) {
+    public static JobDetail getJobDetail(JobKey jobKey, String description, JobDataMap map) {
         String className = StrUtil.concat(true, "com.tool.box.quartz."
                 , String.valueOf(map.get("jobGroup")));
         log.info("执行业务job类:{}", className);
@@ -178,7 +159,7 @@ public class QuartzJobUtils {
      * @param job 任务对象信息
      * @return Job的触发器, 执行规则
      */
-    public Trigger getTrigger(QuartzJobTask job) {
+    public static Trigger getTrigger(QuartzJobTask job) {
         TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger();
         triggerBuilder.withIdentity(job.getGroupName() + job.getTaskId(), job.getJobGroup());
         if (job.getStartDate() != null) {
@@ -325,22 +306,16 @@ public class QuartzJobUtils {
      */
     public static String createCronExpression(TaskConfigDTO cron) {
         Date date = cron.getStartDate();
-        // 获取小时（24小时制）
-        int hour = date.getHours();
-        // 获取分钟
-        int minute = date.getMinutes();
-        // 获取秒数
-        int second = date.getSeconds();
         StringBuilder cronExp = new StringBuilder();
         if (null == cron.getIntervalTimeUnit()) {
             System.out.println("执行周期未配置");//执行周期未配置
         }
         //秒
-        cronExp.append(second).append(" ");
+        cronExp.append(date.getSeconds()).append(" ");
         //分
-        cronExp.append(minute).append(" ");
+        cronExp.append(date.getMinutes()).append(" ");
         //小时
-        cronExp.append(hour).append(" ");
+        cronExp.append(date.getHours()).append(" ");
         //每天
         if (TimeUnitEnum.DAY.getValue().equals(cron.getIntervalTimeUnit())) {
             cronExp.append("* ");//日
@@ -446,66 +421,30 @@ public class QuartzJobUtils {
         return cronExp.toString();
     }
 
-
     /**
-     * 添加定时任务
+     * 按分组，停止删除定时任务
      *
-     * @param jobClassName
-     * @param cronExpression
-     * @param parameter
+     * @param groupName 分组名
      */
-    private void schedulerAdd(String id, String jobClassName, String cronExpression, String parameter) {
-        try {
-            // 启动调度器
-            scheduler.start();
-
-            // 构建job信息
-            JobDetail jobDetail = JobBuilder.newJob(getClass(jobClassName).getClass()).withIdentity(id).usingJobData("parameter", parameter).build();
-
-            // 表达式调度构建器(即任务执行的时间)
-            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
-
-            // 按新的cronExpression表达式构建一个新的trigger
-            CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(id).withSchedule(scheduleBuilder).build();
-
-            scheduler.scheduleJob(jobDetail, trigger);
-        } catch (Exception e) {
-            throw new InternalApiException(SystemCodeEnum.TASK_CREATE_EXCEPTION);
+    public void schedulerDeleteAll(String groupName) {
+        synchronized (log) {
+            try {
+                //只允许一个线程进入操作
+                Set<JobKey> set = scheduler.getJobKeys(GroupMatcher.anyGroup());
+                scheduler.pauseJobs(GroupMatcher.anyGroup());
+                for (JobKey jobKey : set) {
+                    if (jobKey.getName().contains(groupName)) {
+                        //暂停所有JOB
+                        scheduler.unscheduleJob(TriggerKey.triggerKey(jobKey.getName(), jobKey.getGroup()));
+                        //删除从数据库中注册的所有JOB
+                        scheduler.deleteJob(jobKey);
+                    }
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                throw new InternalApiException(SystemCodeEnum.TASK_DEL_EXCEPTION);
+            }
         }
     }
 
-    /**
-     * 删除定时任务
-     *
-     * @param id
-     */
-    private void schedulerDelete(String id) {
-        try {
-            scheduler.pauseTrigger(TriggerKey.triggerKey(id));
-            scheduler.unscheduleJob(TriggerKey.triggerKey(id));
-            scheduler.deleteJob(JobKey.jobKey(id));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new InternalApiException(SystemCodeEnum.TASK_DEL_EXCEPTION);
-        }
-    }
-
-
-    private static Job getClass(String classname) throws Exception {
-        Class<?> class1 = Class.forName(classname);
-        return (Job) class1.newInstance();
-    }
-
-    public static void main(String[] args) {
-        TaskConfigDTO cron = new TaskConfigDTO();
-        cron.setIntervalTimeUnit(TimeUnitEnum.YEAR.getValue());
-        cron.setStartDate(new Date());
-        Integer[] dayOfWeeks = {2, 3};
-        Integer[] m = {3};
-        cron.setDayOfWeeks(dayOfWeeks);
-        cron.setDayOfMonths(dayOfWeeks);
-        cron.setMonths(m);
-        String str = createCronExpression(cron);
-        System.out.println(str);
-    }
 }

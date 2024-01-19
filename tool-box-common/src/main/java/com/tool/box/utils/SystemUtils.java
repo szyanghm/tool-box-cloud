@@ -3,6 +3,7 @@ package com.tool.box.utils;
 
 import com.tool.box.base.UserInfo;
 import com.tool.box.common.Contents;
+import com.tool.box.common.QuartzJobTask;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.model.User;
 import lombok.extern.slf4j.Slf4j;
@@ -69,6 +70,20 @@ public class SystemUtils {
         dataMap.put(Contents.SLASH_BIT2, Contents.authc);
         dataMap.put(Contents.SLASH_BIT2, Contents.JWT_FILTER);
         return dataMap;
+    }
+
+    /**
+     * 拼接JobKey的name
+     *
+     * @param job 任务对象
+     * @return JobKey的name
+     */
+    public static String getGroupName(QuartzJobTask job) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(job.getGroupName());
+        sb.append("_");
+        sb.append(job.getTaskId());
+        return sb.toString();
     }
 
     public static String getMsg(SystemCodeEnum systemCodeEnum, String msg) {

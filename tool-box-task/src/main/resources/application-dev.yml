@@ -84,11 +84,11 @@ shiro:
       #true开启拦截，false关闭拦截
       enabled: false
       definitions: /login = anon
-
 jwt:
   secret: adsfadfdsfd
   expire: 60000
-
+task:
+  enabled: false
 logging:
   config: classpath:logback-dev.xml
   file:

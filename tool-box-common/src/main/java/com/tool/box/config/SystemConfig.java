@@ -33,16 +33,6 @@ public class SystemConfig {
      */
     public static Map<String, String> definitionsMap;
 
-    /**
-     * 服务名
-     */
-    public static String applicationName;
-
-    @Value("${spring.application.name}")
-    public void getApplicationName(String applicationName) {
-        SystemConfig.applicationName = applicationName;
-    }
-
     @Value("${shiro.filter.chain.enabled}")
     public void getEnabled(Boolean enabled) {
         SystemConfig.enabled = enabled;

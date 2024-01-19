@@ -27,7 +27,8 @@ public enum SystemCodeEnum implements ErrorType {
     TASK_PARAMETER_EXCEPTION(6003, "定时任务参数异常"),
     TASK_REFRESH_EXCEPTION(6004, "定时任务刷新异常"),
     TASK_CRON_ERROR(6005, "定时任务表达式错误"),
-    TASK_FEIGN_SERVICE_FAIL(6006, "service服务未启动，定时任务初始化调度器失败"),
+    TASK_FEIGN_SERVICE_FAIL(6006, "远程调用service服务失败，定时任务初始化调度器失败"),
+    TASK_NOT_ENABLED(6007, "服务，关闭定时任务服务"),
     SYSTEM_BUSY(100001, "系统繁忙,请稍候再试"),
 
     FEIGN_DECODE_ERROR(110401, "feign远程调用异常"),
