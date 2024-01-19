@@ -36,7 +36,6 @@ spring:
           public-key: ${publicKey}
   quartz:
     job-store-type: jdbc
-    #    initialize-schema: embedded
     #定时任务启动开关，true-开  false-关
     auto-startup: true
     #延迟1秒启动定时任务
@@ -84,12 +83,13 @@ shiro:
       #true开启拦截，false关闭拦截
       enabled: false
       definitions: /login = anon
+
 jwt:
   secret: adsfadfdsfd
   expire: 60000
 task:
-  enabled: false
+  enabled: true
 logging:
   config: classpath:logback-dev.xml
   file:
-    path: D:\my_project\project\tool-box-cloud\logs\tool-box-task-logs\
+    path: D:\my_project\project\mini-tool-box\logs\tool-box-task-logs\

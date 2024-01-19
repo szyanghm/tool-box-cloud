@@ -40,9 +40,9 @@ spring:
           password: ENC(izNjfkbpvgE3u9EtfACFoZPo2ssq8uiDtmxe1KyRQ3Cth7tw2+jMd0UGchZzppz4CASyA9d5VljpP1z92Z5yaw==)
           driver-class-name: com.mysql.jdbc.Driver # 3.2.0开始支持SPI可省略此配置
           public-key: ${publicKey}
-  redis:
+    redis:
     database: 0
-    host: localhost
+    host: 127.0.0.1
     port: 6379
     password:
     jedis:
@@ -76,7 +76,7 @@ shiro:
     chain:
       #true开启拦截，false关闭拦截
       enabled: true
-      definitions: /login = anon
+      definitions: /login = anon;/job/** = anon
 jwt:
   secret: adsfadfdsfd
   expire: 60000
@@ -90,4 +90,4 @@ decorator:
 logging:
   config: classpath:logback-dev.xml
   file:
-    path: D:\my_project\project\tool-box-cloud\logs\tool-box-service-logs\
+    path: D:\my_project\project\mini-tool-box\logs\tool-box-service-logs\
