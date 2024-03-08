@@ -35,10 +35,10 @@ public class DecodeConfiguration {
 
     @Bean
     public Decoder decoder() {
-        return new FeignResultDecoder();
+        return new FeignDecoder();
     }
 
-    public static class FeignResultDecoder implements Decoder {
+    public static class FeignDecoder implements Decoder {
         @Override
         public Object decode(Response response, Type type) {
             try {
@@ -52,6 +52,7 @@ public class DecodeConfiguration {
                 if (ObjectUtil.isEmpty(resultVO.getData())) {
                     return "处理成功";
                 }
+                response.headers();
                 return JSONObject.parseObject(JSONObject.toJSONString(resultVO.getData()), type);
             } catch (Exception e) {
                 throw new InternalApiException(SystemCodeEnum.FEIGN_DECODE_ERROR);

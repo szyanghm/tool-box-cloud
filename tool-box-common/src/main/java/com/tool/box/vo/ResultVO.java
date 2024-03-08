@@ -44,12 +44,12 @@ public class ResultVO<T> {
         this.time = DateUtils.getCurrentDateTime();
     }
 
-//    public ResultVO(ErrorType errorType, T data) {
-//        this.code = errorType.getCode();
-//        this.msg = errorType.getMsg();
-//        this.data = data;
-//        this.time = DateUtils.getCurrentDateTime();
-//    }
+    public ResultVO(ErrorType errorType, T data) {
+        this.code = errorType.getCode();
+        this.msg = errorType.getMsg();
+        this.data = data;
+        this.time = DateUtils.getCurrentDateTime();
+    }
 
 
     /**
@@ -103,7 +103,7 @@ public class ResultVO<T> {
      *
      * @return Result
      */
-    public static  <T> ResultVO<T> fail() {
+    public static <T> ResultVO<T> fail() {
         return new ResultVO(SystemCodeEnum.OPERATE_ERROR);
     }
 
@@ -114,6 +114,15 @@ public class ResultVO<T> {
      */
     public static ResultVO error(SystemCodeEnum errorEnum) {
         return new ResultVO(errorEnum);
+    }
+
+    /**
+     * 系统异常类没有返回数据
+     *
+     * @return Result
+     */
+    public static <T> ResultVO<T> error(SystemCodeEnum errorEnum, T t) {
+        return new ResultVO(errorEnum, t);
     }
 
     public static boolean isSuccess(Integer code) {

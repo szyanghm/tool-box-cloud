@@ -24,17 +24,13 @@ public class User extends BaseModel<User> {
      */
     private String account;
     /**
-     * 名称
-     */
-    private String name;
-    /**
      * 密码
      */
     private String password;
     /**
      * 角色
      */
-    private String role;
+    private String roleCode;
     /**
      * 密码加盐
      */

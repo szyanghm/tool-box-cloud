@@ -22,13 +22,6 @@ public interface CommonAPI {
      */
     LoginUser getLoginUser(String account);
 
-    /**
-     * 根据账号查询用户信息
-     *
-     * @param account 用户账号
-     * @return 用户登录信息
-     */
-    UserInfo getUserInfo(String account);
 
     /**
      * 根据角色查询权限

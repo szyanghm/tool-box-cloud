@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -18,7 +19,8 @@ import java.util.Date;
 public class DateUtils extends PropertyEditorSupport {
 
     private static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
-    public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
     public static final String yyyyMMddHHmmss = "yyyyMMddHHmmss";
     private static final String DEFAULT_TIME_PATTERN = "HH:mm:ss";
 
@@ -160,7 +162,7 @@ public class DateUtils extends PropertyEditorSupport {
      * @return
      */
     public static String getCurrentDateTime() {
-        return format(new Date(), DEFAULT_DATE_PATTERN);
+        return format(new Date(), DATE_TIME_PATTERN);
     }
 
     /**

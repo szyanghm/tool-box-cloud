@@ -17,7 +17,7 @@ public interface IUserInfoService {
 
 
     /**
-     * 根据用户账户查询登录用户信息-用于登录校验（包含密码）
+     * 根据用户账户查询登录用户信息-用于登录校验
      *
      * @param account 用户账户
      * @return 登录用户信息
@@ -25,10 +25,10 @@ public interface IUserInfoService {
     LoginUser getLoginUser(String account);
 
     /**
-     * 根据用户账户查询登录用户信息-用于登录校验(不包含密码)
+     * 根据用户账户查询登录用户信息
      *
      * @param account 用户账户
-     * @return 登录用户信息
+     * @return 用户信息
      */
     UserInfo getUserInfo(String account);
 
@@ -36,8 +36,8 @@ public interface IUserInfoService {
      * 登录
      *
      * @param dto 登录参数
-     * @return 登录用户信息
+     * @return token登录凭证
      */
-    ResultVO login(LoginDTO dto);
+    ResultVO<?> login(LoginDTO dto);
 
 }

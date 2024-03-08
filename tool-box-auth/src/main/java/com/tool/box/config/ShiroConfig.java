@@ -4,6 +4,7 @@ import com.tool.box.common.Contents;
 import com.tool.box.filter.JwtFilter;
 import com.tool.box.shiro.CustomShiroFilterFactoryBean;
 import com.tool.box.shiro.ShiroRealm;
+import com.tool.box.utils.SystemUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -45,10 +46,9 @@ import java.util.Set;
 public class ShiroConfig {
 
     @Resource
-    private SystemConfig systemConfig;
-
-    @Resource
     private LettuceConnectionFactory lettuceConnectionFactory;
+    @Resource
+    private SystemConfig systemConfig;
 
     /**
      * Shiro生命周期处理器</br>
@@ -165,7 +165,8 @@ public class ShiroConfig {
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put(Contents.JWT_FILTER, new JwtFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(systemConfig.definitionsMap);
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(SystemUtils.getMapData(systemConfig.enabled
+                , systemConfig.definitions, Contents.SEMICOLON));
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         return shiroFilterFactoryBean;
     }

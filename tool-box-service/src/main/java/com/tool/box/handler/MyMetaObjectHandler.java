@@ -2,9 +2,9 @@ package com.tool.box.handler;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.tool.box.base.LocalProvider;
 import com.tool.box.base.UserInfo;
 import com.tool.box.common.Contents;
-import com.tool.box.common.LocalProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;

@@ -447,4 +447,18 @@ public class QuartzJobUtils {
         }
     }
 
+    /**
+     * @Description:关闭所有定时任务
+     */
+    public void shutdownJobs() {
+        try {
+            if (!scheduler.isShutdown()) {
+                scheduler.shutdown();
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new InternalApiException(SystemCodeEnum.TASK_NOT_ENABLED);
+        }
+    }
+
 }

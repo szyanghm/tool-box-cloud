@@ -1,4 +1,0 @@
-logging:
-  config: classpath:logback-dev.xml
-  file:
-    path: D:\my_project\project\tool-box-cloud\logs\tool-box-web-logs\

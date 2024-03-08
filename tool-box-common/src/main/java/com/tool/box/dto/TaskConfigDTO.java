@@ -1,6 +1,7 @@
 package com.tool.box.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tool.box.common.Contents;
 import com.tool.box.common.validata.EnumValue;
 import com.tool.box.utils.DateUtils;
 import lombok.Data;
@@ -51,14 +52,14 @@ public class TaskConfigDTO {
     /**
      * 任务执行开始时间（时，分，秒）
      */
-    @JsonFormat(timezone = "GMT+8", pattern = DateUtils.DEFAULT_DATE_PATTERN)
-    @DateTimeFormat(pattern = DateUtils.DEFAULT_DATE_PATTERN)
+    @JsonFormat(timezone = Contents.GMT8, pattern = DateUtils.DATE_TIME_PATTERN)
+    @DateTimeFormat(pattern = DateUtils.DATE_TIME_PATTERN)
     private Date startDate;
     /**
      * 任务执行结束时间
      */
-    @JsonFormat(timezone = "GMT+8", pattern = DateUtils.DEFAULT_DATE_PATTERN)
-    @DateTimeFormat(pattern = DateUtils.DEFAULT_DATE_PATTERN)
+    @JsonFormat(timezone = Contents.GMT8, pattern = DateUtils.DATE_TIME_PATTERN)
+    @DateTimeFormat(pattern = DateUtils.DATE_TIME_PATTERN)
     private Date endDate;
     /**
      * 执行次数（和执行时间二选一）

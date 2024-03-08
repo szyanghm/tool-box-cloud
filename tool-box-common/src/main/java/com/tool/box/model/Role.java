@@ -6,8 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-
 /**
  * 角色表
  *
@@ -19,9 +17,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @ToString
 @TableName("t_role")
-public class Role implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Role extends BaseModel<Role> {
 
     private String roleCode;
 

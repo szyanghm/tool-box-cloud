@@ -1,7 +1,7 @@
 package com.tool.box.shiro;
 
 import com.tool.box.api.CommonAPI;
-import com.tool.box.base.UserInfo;
+import com.tool.box.base.LoginUser;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
 import com.tool.box.jwt.JwtToken;
@@ -58,11 +58,11 @@ public class ShiroRealm extends AuthorizingRealm {
             throw new InternalApiException(SystemCodeEnum.TOKEN_EXCEPTION);
         }
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        UserInfo sysUser = (UserInfo) principalCollection.getPrimaryPrincipal();
+        LoginUser loginUser = (LoginUser) principalCollection.getPrimaryPrincipal();
         // 角色
         Set<String> roles = new HashSet<>();
-        roles.add(sysUser.getRole());
-        List<String> permissions = commonAPI.getPermissions(sysUser.getRole());
+        roles.add(loginUser.getRoleCode());
+        List<String> permissions = commonAPI.getPermissions(loginUser.getRoleCode());
         authorizationInfo.setRoles(roles);
         authorizationInfo.setStringPermissions(new HashSet<>(permissions));
         log.info("===============Shiro权限认证成功==============");
@@ -78,8 +78,8 @@ public class ShiroRealm extends AuthorizingRealm {
             throw new InternalApiException(SystemCodeEnum.TOKEN_EXCEPTION);
         }
         // 校验token有效性
-        UserInfo userInfo = tokenUtils.checkJwtTokenRefresh(token);
-        return new SimpleAuthenticationInfo(userInfo, token, getName());
+        LoginUser loginUser = tokenUtils.checkJwtTokenRefresh(token);
+        return new SimpleAuthenticationInfo(loginUser, token, getName());
     }
 
 

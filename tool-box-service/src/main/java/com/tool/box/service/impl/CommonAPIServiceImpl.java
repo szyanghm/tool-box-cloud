@@ -2,7 +2,6 @@ package com.tool.box.service.impl;
 
 import com.tool.box.api.CommonAPI;
 import com.tool.box.base.LoginUser;
-import com.tool.box.base.UserInfo;
 import com.tool.box.service.IPermissionsService;
 import com.tool.box.service.IUserInfoService;
 import org.springframework.stereotype.Service;
@@ -29,11 +28,6 @@ public class CommonAPIServiceImpl implements CommonAPI {
     @Override
     public LoginUser getLoginUser(String account) {
         return userInfoService.getLoginUser(account);
-    }
-
-    @Override
-    public UserInfo getUserInfo(String account) {
-        return userInfoService.getUserInfo(account);
     }
 
     @Override

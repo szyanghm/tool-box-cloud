@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tool.box.mapper.UserDetailMapper">
+
+    <select id="getByAccount" resultType="com.tool.box.base.UserInfo" parameterType="java.lang.String">
+        select
+            tud.`account` ,
+            tu.role_code,
+            tud.`full_name`,
+            tud.`gender`,
+            tud.`birthday`,
+            tud.`height`,
+            tud.`phone`,
+            tud.`is_house`,
+            tud.`is_car`,
+            tud.`we_chat`,
+            tud.`home_address`,
+            tud.`office_address`
+        from
+            t_user_detail tud
+                inner join t_user tu on
+                tud.account = tu.account
+        where
+            tu.is_delete = 0
+          and tud.is_delete = 0
+          and tud.account = #{account}
+    </select>
+</mapper>

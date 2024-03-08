@@ -15,7 +15,11 @@ public class Contents {
     public final static int NUM_1 = 1;
     public final static int NUM_5 = 5;
     public final static int NUM_2000 = 2000;
-    public static final String AUTHORITY = "authority";
+
+    /**
+     * 北京时区
+     */
+    public static final String GMT8 = "GMT+8";
     /**
      * token登录key
      */
@@ -24,6 +28,10 @@ public class Contents {
      * 登录用户Token令牌缓存KEY前缀
      */
     public static String PREFIX_USER_TOKEN = "prefix_user_token:";
+    /**
+     * 登录用户Token令牌缓存时间KEY前缀
+     */
+    public static String PREFIX_USER_TOKEN_TIME = "prefix_user_token_time:";
     /**
      * 符号：左花括号 }
      */

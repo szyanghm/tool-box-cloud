@@ -5,7 +5,7 @@
 
 	<parent>
 		<groupId>com.tool.box</groupId>
-		<artifactId>mini-tool-box</artifactId>
+		<artifactId>tool-box-cloud</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
@@ -23,12 +23,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.tool.box</groupId>
-			<artifactId>tool-box-common</artifactId>
+			<artifactId>tool-box-contract</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.tool.box</groupId>
-			<artifactId>tool-box-contract</artifactId>
+			<artifactId>tool-box-auth</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

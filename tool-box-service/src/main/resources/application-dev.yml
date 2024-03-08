@@ -90,4 +90,4 @@ decorator:
 logging:
   config: classpath:logback-dev.xml
   file:
-    path: D:\my_project\project\mini-tool-box\logs\tool-box-service-logs\
+    path: D:\my_project\project\tool-box-cloud\logs\tool-box-service-logs\

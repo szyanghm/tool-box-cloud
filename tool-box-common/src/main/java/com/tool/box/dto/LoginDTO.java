@@ -3,6 +3,7 @@ package com.tool.box.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 登录-DTO
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotBlank;
  * @Version 1.0
  */
 @Data
+@NotNull(message = "请求参数为空")
 public class LoginDTO {
 
     @NotBlank(message = "用户账号不能为空!")

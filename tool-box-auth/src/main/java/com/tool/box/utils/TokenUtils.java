@@ -1,7 +1,7 @@
 package com.tool.box.utils;
 
 import com.tool.box.api.CommonAPI;
-import com.tool.box.base.UserInfo;
+import com.tool.box.base.LoginUser;
 import com.tool.box.common.Contents;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
@@ -30,7 +30,14 @@ public class TokenUtils {
     @Resource
     private CommonAPI commonAPI;
 
-    private final static long EXPIRE_TIME_2 = JwtUtils.EXPIRE_TIME * 2 / 1000;
+    /**
+     * token续期的时间(token每7天进行一次续期)
+     */
+    public static final long EXPIRE_TIME = (7 * 12) * 60 * 60;
+    /**
+     * token刷新的时间(Token有效期为14天)
+     */
+    private final static long EXPIRE_TIME_2 = EXPIRE_TIME * 2;
 
     /**
      * 将token和用户账号写入redis缓存设置时效时间
@@ -40,6 +47,22 @@ public class TokenUtils {
      */
     public void setToken(String token, String account) {
         redisUtil.set(Contents.PREFIX_USER_TOKEN + account, token, EXPIRE_TIME_2);
+        redisUtil.set(Contents.PREFIX_USER_TOKEN_TIME + account, account, EXPIRE_TIME);
+    }
+
+    /**
+     * 计算token续期
+     *
+     * @param account 用户账号
+     * @return true有效/false失效
+     */
+    public Boolean verifyExpired(String account) {
+        String str = redisUtil.get(Contents.PREFIX_USER_TOKEN_TIME + account);
+        if (StringUtils.isBlank(str)) {
+            //到7天就开始续期
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -68,7 +91,10 @@ public class TokenUtils {
      * @param token 登录凭证
      * @return 用户信息
      */
-    public UserInfo checkJwtTokenRefresh(String token) {
+    public LoginUser checkJwtTokenRefresh(String token) {
+        if (!JwtUtils.verify(token)) {
+            throw new InternalApiException(SystemCodeEnum.INVALID_TOKEN);
+        }
         String account;
         try {
             // 解密获得username，用于和数据库进行对比
@@ -84,25 +110,21 @@ public class TokenUtils {
         if (StringUtils.isBlank(authToken)) {
             throw new InternalApiException(SystemCodeEnum.USER_LOGIN_EXPIRED);
         }
-        UserInfo userInfo;
+        LoginUser loginUser = JwtUtils.getToken(authToken);
         // 拿到了，校验token有效性
-        if (!JwtUtils.verify(authToken)) {
-            //jwt过期重新刷新token更新redis缓存
-            userInfo = commonAPI.getUserInfo(account);
-            String newToken = JwtUtils.createToken(userInfo);
+        if (!this.verifyExpired(account)) {
             //token续期
-            this.setToken(newToken, userInfo.getAccount());
+            this.setToken(authToken, account);
             log.debug("——————————用户在线操作，更新token保证不掉线—————————jwtTokenRefresh——————— " + token);
         } else {
-            userInfo = JwtUtils.getToken(authToken);
-            if (userInfo == null) {
+            if (loginUser == null) {
                 throw new InternalApiException(SystemCodeEnum.USER_DOES_NOT_EXIST);
             }
-            if (userInfo.getStatus() != 0) {
+            if (loginUser.getStatus() != 0) {
                 throw new InternalApiException(SystemCodeEnum.USER_LOCK_ING);
             }
         }
-        return userInfo;
+        return loginUser;
     }
 
 }

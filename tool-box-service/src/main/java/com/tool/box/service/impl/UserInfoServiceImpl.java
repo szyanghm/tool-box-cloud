@@ -4,9 +4,11 @@ import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
 import com.tool.box.dto.LoginDTO;
 import com.tool.box.enums.SystemCodeEnum;
+import com.tool.box.exception.InternalApiException;
 import com.tool.box.jwt.JwtToken;
 import com.tool.box.model.User;
 import com.tool.box.service.IPermissionsService;
+import com.tool.box.service.IUserDetailService;
 import com.tool.box.service.IUserInfoService;
 import com.tool.box.service.IUserService;
 import com.tool.box.utils.JwtUtils;
@@ -33,37 +35,27 @@ public class UserInfoServiceImpl implements IUserInfoService {
     @Resource
     private IUserService userService;
     @Resource
+    private IUserDetailService userDetailService;
+    @Resource
     private IPermissionsService permissionsService;
 
     @Override
     public LoginUser getLoginUser(String account) {
-        LoginUser loginUser = new LoginUser();
         User user = userService.getByAccount(account);
         if (user == null) {
-            return null;
-        }
-        List<String> list = permissionsService.getPermissions(user.getRole());
-        loginUser.setAccount(user.getAccount());
-        loginUser.setName(user.getName());
-        loginUser.setPassword(user.getPassword());
-        loginUser.setRole(user.getRole());
-        loginUser.setSalt(user.getSalt());
-        loginUser.setStatus(user.getStatus());
-        loginUser.setPermissions(list);
-        return loginUser;
-    }
-
-    @Override
-    public UserInfo getUserInfo(String account) {
-        User user = userService.getByAccount(account);
-        if (user == null) {
-            return null;
+            throw new InternalApiException(SystemCodeEnum.USER_DOES_NOT_EXIST);
         }
         return SystemUtils.getUserInfo(user);
     }
 
     @Override
-    public ResultVO login(LoginDTO dto) {
+    public UserInfo getUserInfo(String account) {
+        UserInfo userInfo = userDetailService.getByAccount(account);
+        return userInfo;
+    }
+
+    @Override
+    public ResultVO<?> login(LoginDTO dto) {
         User user = userService.getByAccount(dto.getAccount());
         if (user == null) {
             return ResultVO.error(SystemCodeEnum.USER_DOES_NOT_EXIST);
@@ -74,10 +66,10 @@ public class UserInfoServiceImpl implements IUserInfoService {
         if (!user.getPassword().equals(dto.getPassword())) {
             return ResultVO.error(SystemCodeEnum.PASSWORD_ERROR);
         }
-        UserInfo userInfo = SystemUtils.getUserInfo(user);
-        String token = JwtUtils.createToken(userInfo);
+        LoginUser loginUser = SystemUtils.getUserInfo(user);
+        String token = JwtUtils.createToken(loginUser);
         // 设置超时时间
-        tokenUtils.setToken(token, userInfo.getAccount());
+        tokenUtils.setToken(token, loginUser.getAccount());
         SecurityUtils.getSubject().login(new JwtToken(token));
         return ResultVO.success(token);
     }

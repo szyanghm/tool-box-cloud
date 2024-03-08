@@ -20,6 +20,10 @@ public enum SystemCodeEnum implements ErrorType {
 
     SYSTEM_ERROR(-1, "系统异常"),
     OPERATE_ERROR(5500, "操作失败"),
+
+    CONTENT_TYPE_ERROR(40001,"Content-Type设置错误"),
+    REQUEST_METHOD_ERROR(40002,"请求方式错误"),
+    REQUEST_PARAMETER_ERROR(40003,"请求参数错误"),
     TASK_START_EXCEPTION(6000, "定时任务启动异常"),
 
     TASK_CREATE_EXCEPTION(6001, "创建定时任务失败"),
@@ -41,6 +45,8 @@ public enum SystemCodeEnum implements ErrorType {
     INVALID_TOKEN(120001, "无效token"),
 
     TOKEN_EXCEPTION(120002, "token 异常 认证失败"),
+
+    TOKEN_EXPIRED_EXCEPTION(120003, "jwt token 过期"),
 
     DUPLICATE_PRIMARY_KEY(130000, "唯一键冲突"),
 

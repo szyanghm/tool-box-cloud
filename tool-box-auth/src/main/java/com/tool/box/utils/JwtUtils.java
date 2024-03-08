@@ -4,7 +4,7 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.tool.box.base.UserInfo;
+import com.tool.box.base.LoginUser;
 import com.tool.box.config.SystemConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,24 +20,17 @@ import java.util.Date;
 public class JwtUtils {
 
     /**
-     * Token有效期为7天（Token在reids中缓存时间为两倍）
-     */
-    public static final long EXPIRE_TIME = (7 * 12) * 60 * 60 * 1000;
-
-    /**
      * 生成token
      *
-     * @param userInfo 用户信息
+     * @param loginUser 用户信息
      * @return 加密的token
      */
-    public static String createToken(UserInfo userInfo) {
+    public static String createToken(LoginUser loginUser) {
         JWTSigner signer = JWTSignerUtil.hs256(getSecretKey());
-        Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
         return JWT.create()
                 .setIssuedAt(new Date())
-                .setExpiresAt(date)
-                .setPayload("user", JSONObject.toJSONString(userInfo))
-                .setSubject(userInfo.getAccount())
+                .setPayload("user", JSONObject.toJSONString(loginUser))
+                .setSubject(loginUser.getAccount())
                 .setKey(getSecretKey())
                 .sign(signer);
     }
@@ -58,11 +51,11 @@ public class JwtUtils {
      * @param token 登录凭证
      * @return 用户信息
      */
-    public static UserInfo getToken(String token) {
+    public static LoginUser getToken(String token) {
         JWT jwt = JWT.of(token).setKey(getSecretKey());
         String user = (String) jwt.getPayload("user");
         log.info("token中的用户信息:" + user);
-        return JSONObject.parseObject(user, UserInfo.class);
+        return JSONObject.parseObject(user, LoginUser.class);
     }
 
     /**

@@ -1,11 +1,7 @@
 package com.tool.box.config;
 
-import com.tool.box.common.Contents;
-import com.tool.box.utils.SystemUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Map;
 
 /**
  * 获取系统配置
@@ -27,11 +23,10 @@ public class SystemConfig {
      * true拦截/false不拦截
      */
     public static Boolean enabled;
-
     /**
      * shiro拦截url
      */
-    public static Map<String, String> definitionsMap;
+    public static String definitions;
 
     @Value("${shiro.filter.chain.enabled}")
     public void getEnabled(Boolean enabled) {
@@ -50,7 +45,8 @@ public class SystemConfig {
 
     @Value("${shiro.filter.chain.definitions}")
     public void getDefinitions(String definitions) {
-        SystemConfig.definitionsMap = SystemUtils.getMapData(enabled, definitions, Contents.SEMICOLON);
+        SystemConfig.definitions = definitions;
     }
+
 
 }
