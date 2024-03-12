@@ -1,5 +1,6 @@
 package com.tool.box.feign.result;
 
+import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
 import com.tool.box.decode.NotBreakerConfiguration;
 import com.tool.box.vo.ResultVO;
@@ -22,4 +23,6 @@ public interface UserInfoConsumer {
     @PostMapping(value = "/getUserInfo")
     ResultVO<UserInfo> getUserInfo(@RequestParam("account") String account);
 
+    @PostMapping(value = "/getLoginUser")
+    LoginUser getLoginUser(@RequestParam("account") String account);
 }

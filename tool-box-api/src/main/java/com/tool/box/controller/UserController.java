@@ -1,8 +1,11 @@
 package com.tool.box.controller;
 
+import com.tool.box.common.Contents;
 import com.tool.box.feign.result.UserInfoConsumer;
 import com.tool.box.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +31,12 @@ public class UserController {
     @GetMapping(value = "/getUser")
     public ResultVO getUser(@RequestParam("account") String account) {
         return userInfoConsumer.getUserInfo(account);
+    }
+
+    @GetMapping(value = "/save")
+    @RequiresPermissions(value = {Contents.OP_WRITE_ADD, Contents.OP_WRITE_UPDATE}, logical = Logical.OR)
+    public ResultVO save() {
+        return ResultVO.success(1);
     }
 
 

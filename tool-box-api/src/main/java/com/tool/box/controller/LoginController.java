@@ -1,19 +1,14 @@
 package com.tool.box.controller;
 
-import com.tool.box.base.LocalProvider;
-import com.tool.box.base.UserInfo;
 import com.tool.box.common.Contents;
 import com.tool.box.dto.LoginDTO;
-import com.tool.box.feign.DecodeConsumer;
+import com.tool.box.feign.result.PermissionsConsumer;
 import com.tool.box.feign.result.LoginConsumer;
 import com.tool.box.utils.JwtUtils;
 import com.tool.box.utils.TokenUtils;
 import com.tool.box.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
@@ -41,7 +36,7 @@ public class LoginController {
     private TokenUtils tokenUtils;
 
     @Resource
-    private DecodeConsumer userInfoConsumer;
+    private PermissionsConsumer userInfoConsumer;
     @Resource
     private LoginConsumer resultUserInfoConsumer;
 
@@ -73,15 +68,5 @@ public class LoginController {
         SecurityUtils.getSubject().logout();
         return ResultVO.success();
     }
-
-    @RequiresRoles(value = {"admin"}, logical = Logical.AND)
-    @RequiresPermissions(value = {"op:read"})
-    @PostMapping(value = "/getUserInfo")
-    public ResultVO getUserInfo() {
-        UserInfo userInfo = LocalProvider.getUser();
-        return ResultVO.success(userInfo);
-    }
-
-
 
 }

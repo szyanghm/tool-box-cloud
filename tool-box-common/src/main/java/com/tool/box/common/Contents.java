@@ -72,5 +72,17 @@ public class Contents {
      * jwt拦截器
      */
     public static final String JWT_FILTER = "jwtFilter";
+    /**
+     * 权限:新增
+     */
+    public static final String OP_WRITE_ADD = "op:write:add";
+    /**
+     * 权限:更新
+     */
+    public static final String OP_WRITE_UPDATE = "op:write:update";
+    /**
+     * 权限:查看
+     */
+    public static final String OP_READ = "op:read";
 
 }

@@ -1,6 +1,7 @@
 package com.tool.box.enums;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
+import com.tool.box.common.Contents;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,17 +16,25 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CommonEnum implements IEnum<String> {
 
+    /**
+     * 任务状态
+     */
     R("R", "开启"),
     S("S", "暂停"),
     P("P", "关闭"),
+
     /**
      * 任务类型
      */
-    REPEAT("repeat","循环"),
+    REPEAT("repeat", "循环"),
+    NOT_REPEAT("not_repeat", "次数"),
+
     /**
-     * 任务类型
+     * 角色权限
      */
-    NOT_REPEAT("not_repeat","次数"),
+    OP_WRITE_ADD(Contents.OP_WRITE_ADD, "新增"),
+    OP_WRITE_UPDATE(Contents.OP_WRITE_UPDATE, "更新"),
+    OP_READ(Contents.OP_READ, "查看"),
     ;
 
     private String value;

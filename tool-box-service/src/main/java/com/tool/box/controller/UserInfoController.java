@@ -1,5 +1,6 @@
 package com.tool.box.controller;
 
+import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
 import com.tool.box.service.IUserInfoService;
 import com.tool.box.vo.ResultVO;
@@ -30,6 +31,11 @@ public class UserInfoController {
     public ResultVO<UserInfo> getUserInfo(@RequestParam("account") String account) {
         UserInfo userInfo = userInfoService.getUserInfo(account);
         return ResultVO.success(userInfo);
+    }
+
+    @PostMapping(value = "/getLoginUser")
+    public LoginUser getLoginUser(@RequestParam("account") String account) {
+        return userInfoService.getLoginUser(account);
     }
 
 }
