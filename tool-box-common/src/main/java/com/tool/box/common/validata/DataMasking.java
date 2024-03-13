@@ -10,6 +10,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 自定义脱敏注解
+ *
  * @Author v_haimiyang
  * @Date 2024/3/13 10:57
  * @Version 1.0
