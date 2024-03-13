@@ -2,17 +2,19 @@ package com.tool.box.utils;
 
 
 import com.tool.box.base.LoginUser;
-import com.tool.box.base.UserInfo;
 import com.tool.box.common.Contents;
 import com.tool.box.common.QuartzJobTask;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -122,6 +124,17 @@ public class SystemUtils {
             }
         }
         return sw.toString();
+    }
+
+    /**
+     * 根据AOP @Before的方法参数获取Method
+     *
+     * @param joinPoint @Before的方法参数
+     * @return 方法对象
+     */
+    public static Method getCurrentMethod(JoinPoint joinPoint) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        return signature.getMethod();
     }
 
     /**

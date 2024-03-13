@@ -80,7 +80,7 @@ public class WebLogAspect {
         }
         String url = request.getRequestURL().toString();
         if (!url.contains("login") && CollectionUtil.isNotEmpty(params)) {
-            Method method = getCurrentMethod(joinPoint);
+            Method method = SystemUtils.getCurrentMethod(joinPoint);
             //当需要新增和更新权限的时候才需要进行校验
             RequiresPermissions permissions = method.getAnnotation(RequiresPermissions.class);
             if (permissions != null) {
@@ -105,11 +105,6 @@ public class WebLogAspect {
                 }
             }
         }
-    }
-
-    private Method getCurrentMethod(JoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        return signature.getMethod();
     }
 
     /**
