@@ -1,9 +1,7 @@
 package com.tool.box.service;
 
 import com.tool.box.api.CommonAPI;
-import com.tool.box.base.LoginUser;
 import com.tool.box.feign.result.PermissionsConsumer;
-import com.tool.box.feign.result.UserInfoConsumer;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,14 +18,7 @@ import java.util.List;
 public class CommonAPIServiceImpl implements CommonAPI {
 
     @Resource
-    private UserInfoConsumer userInfoConsumer;
-    @Resource
     private PermissionsConsumer permissionsConsumer;
-
-    @Override
-    public LoginUser getLoginUser(String account) {
-        return userInfoConsumer.getLoginUser(account);
-    }
 
     @Override
     public List<String> getPermissions(String role) {
