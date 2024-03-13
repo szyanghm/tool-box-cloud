@@ -1,8 +1,5 @@
 package com.tool.box.api;
 
-import com.tool.box.base.LoginUser;
-import com.tool.box.base.UserInfo;
-
 import java.util.List;
 
 /**
@@ -13,15 +10,6 @@ import java.util.List;
  * @Version 1.0
  */
 public interface CommonAPI {
-
-    /**
-     * 根据账号查询用户信息
-     *
-     * @param account 用户账号
-     * @return 用户登录信息
-     */
-    LoginUser getLoginUser(String account);
-
 
     /**
      * 根据角色查询权限
