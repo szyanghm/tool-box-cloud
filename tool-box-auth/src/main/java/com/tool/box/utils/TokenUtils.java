@@ -1,6 +1,5 @@
 package com.tool.box.utils;
 
-import com.tool.box.api.CommonAPI;
 import com.tool.box.base.LoginUser;
 import com.tool.box.common.Contents;
 import com.tool.box.enums.SystemCodeEnum;
@@ -26,9 +25,6 @@ public class TokenUtils {
     @Lazy
     @Resource
     private RedisUtils redisUtil;
-    @Lazy
-    @Resource
-    private CommonAPI commonAPI;
 
     /**
      * token续期的时间(token每7天进行一次续期)
