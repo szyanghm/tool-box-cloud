@@ -1,6 +1,7 @@
 package com.tool.box.aspect;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
@@ -140,31 +141,32 @@ public class WebLogAspect {
             Method method = SystemUtils.getCurrentMethod(joinPoint);
             //当需要新增和更新权限的时候才需要进行校验
             RequiresPermissions permissions = method.getAnnotation(RequiresPermissions.class);
-            if (permissions != null) {
-                String[] arr = permissions.value();
-                List<String> list = Arrays.asList(arr);
-                //获取token
-                String token = request.getHeader(Contents.X_ACCESS_TOKEN);
-                //获取当前运行环境
-                String profile = systemConfig.getEnvironment().getRequiredProperty(Contents.PROFILE);
-                if (!systemConfig.enabled && DataStatic.profileDataList.contains(profile)
-                        && StringUtils.isBlank(token)) {
-                    token = tokenUtils.getAuthToken(Contents.ADMIN);
-                }
-                synchronized (this) {
-                    //通过token获取上一次的参数
-                    String backParams = redisUtils.get(token);
-                    //当前请求参数
-                    String currentParams = SecureUtil.md5(JSONObject.toJSONString(params));
-                    //参数对比
-                    if (!currentParams.equals(backParams)
-                            && (list.contains(Contents.OP_WRITE_ADD) || list.contains(Contents.OP_WRITE_UPDATE))) {
-                        //将token作为key,缓存请求参数
-                        redisUtils.set(token, currentParams, 2L);
-                    } else {
-                        //参数重复表示重复提交
-                        throw new InternalApiException(SystemCodeEnum.SYSTEM_BUSY_RESUBMIT);
-                    }
+            if (ObjectUtil.isNull(permissions)) {
+                return;
+            }
+            String[] arr = permissions.value();
+            List<String> list = Arrays.asList(arr);
+            //获取token
+            String token = request.getHeader(Contents.X_ACCESS_TOKEN);
+            //获取当前运行环境
+            String profile = systemConfig.getEnvironment().getRequiredProperty(Contents.PROFILE);
+            if (!systemConfig.enabled && DataStatic.profileDataList.contains(profile)
+                    && StringUtils.isBlank(token)) {
+                token = tokenUtils.getAuthToken(Contents.ADMIN);
+            }
+            synchronized (this) {
+                //通过token获取上一次的参数
+                String backParams = redisUtils.get(token);
+                //当前请求参数
+                String currentParams = SecureUtil.md5(JSONObject.toJSONString(params));
+                //参数对比
+                if (!currentParams.equals(backParams)
+                        && (list.contains(Contents.OP_WRITE_ADD) || list.contains(Contents.OP_WRITE_UPDATE))) {
+                    //将token作为key,缓存请求参数
+                    redisUtils.set(token, currentParams, 2L);
+                } else {
+                    //参数重复表示重复提交
+                    throw new InternalApiException(SystemCodeEnum.SYSTEM_BUSY_RESUBMIT);
                 }
             }
         }
