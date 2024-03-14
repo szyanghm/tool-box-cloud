@@ -56,7 +56,7 @@ public class WebLogAspect {
     Map<Object, Object> params = Maps.newLinkedHashMap();
 
     /**
-     * 以 controller 包下定义的所有请求为切入点,排除扫码定时任务
+     * 以 controller 包下定义的所有请求为切入点,排除扫描定时任务控制器
      */
     @Pointcut("execution(public * com.tool.box.controller..*.*(..)) && !within(com.tool.box.controller.JobController)")
     public void webLog() {
