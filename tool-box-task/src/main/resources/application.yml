@@ -9,9 +9,11 @@ spring:
   application:
     # 服务名
     name: tool-box-task
+  profiles:
+    active: dev
   config:
     import:
-      - optional:nacos:${spring.application.name}-dev.yml
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
   cloud:
     nacos:
       discovery:
