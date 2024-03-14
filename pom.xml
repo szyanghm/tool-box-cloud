@@ -20,6 +20,7 @@
         <module>tool-box-common</module>
         <module>tool-box-contract</module>
         <module>tool-box-auth</module>
+        <module>tool-box-quartz</module>
         <module>tool-box-service</module>
         <module>tool-box-task</module>
         <module>tool-box-api</module>
