@@ -2,6 +2,8 @@ package com.tool.box.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tool.box.common.Contents;
+import com.tool.box.common.validata.DataMasking;
+import com.tool.box.enums.DataMaskingTypeEnum;
 import com.tool.box.utils.DateUtils;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -44,6 +46,7 @@ public class UserInfo implements Serializable {
     private Integer height;
 
     @ApiModelProperty("手机号码")
+    @DataMasking(type = DataMaskingTypeEnum.MOBILE_PHONE)
     private String phone;
 
     @ApiModelProperty("是否有房(N否/Y是)")

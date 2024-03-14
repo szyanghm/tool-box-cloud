@@ -86,5 +86,9 @@ public class Contents {
      * 超管账号
      */
     public static final String ADMIN = "admin";
+    /**
+     * 环境配置key
+     */
+    public static final String PROFILE = "spring.profiles.active";
 
 }

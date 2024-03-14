@@ -1,5 +1,6 @@
 package com.tool.box.controller;
 
+import com.tool.box.base.UserInfo;
 import com.tool.box.common.Contents;
 import com.tool.box.feign.result.UserInfoConsumer;
 import com.tool.box.vo.ResultVO;
@@ -29,7 +30,7 @@ public class UserController {
     private UserInfoConsumer userInfoConsumer;
 
     @GetMapping(value = "/getUser")
-    public ResultVO getUser(@RequestParam("account") String account) {
+    public ResultVO<UserInfo> getUser(@RequestParam("account") String account) {
         return userInfoConsumer.getUserInfo(account);
     }
 
