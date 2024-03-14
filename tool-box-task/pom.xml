@@ -23,18 +23,8 @@
     <dependencies>
         <dependency>
             <groupId>com.tool.box</groupId>
-            <artifactId>tool-box-common</artifactId>
+            <artifactId>tool-box-quartz</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.tool.box</groupId>
-            <artifactId>tool-box-contract</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <!-- quartz依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
     </dependencies>
 

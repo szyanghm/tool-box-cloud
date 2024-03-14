@@ -4,6 +4,7 @@ import com.tool.box.dto.QuartzJobDTO;
 import com.tool.box.dto.TaskConfigDTO;
 import com.tool.box.service.IQuartzJobService;
 import com.tool.box.service.QuartzJobTaskService;
+import com.tool.box.service.TaskService;
 import com.tool.box.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,9 @@ public class QuartzJobTaskController {
     @Resource
     private QuartzJobTaskService quartzJobTaskService;
 
+    @Resource
+    private TaskService taskService;
+
     /**
      * 新增定时任务模块
      *
@@ -50,12 +54,12 @@ public class QuartzJobTaskController {
      */
     @PostMapping(value = "/addTask")
     public ResultVO<?> addTask(@RequestBody TaskConfigDTO dto) {
-        return quartzJobTaskService.add(dto);
+        return taskService.add(dto);
     }
 
     @PostMapping(value = "/refresh")
     public void refreshJobs() {
-        quartzJobTaskService.refreshJobs();
+        taskService.refreshJobs();
     }
 
     @PostMapping(value = "/refreshAll")

@@ -1,7 +1,5 @@
 package com.tool.box.common;
 
-import com.tool.box.enums.TimeUnitEnum;
-
 /**
  * 标准常量
  *
@@ -84,5 +82,9 @@ public class Contents {
      * 权限:查看
      */
     public static final String OP_READ = "op:read";
+    /**
+     * 超管账号
+     */
+    public static final String ADMIN = "admin";
 
 }

@@ -1,55 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.tool.box</groupId>
-		<artifactId>tool-box-cloud</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>com.tool.box</groupId>
+        <artifactId>tool-box-cloud</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-	<groupId>com.tool.box</groupId>
-	<artifactId>tool-box-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>tool-box-api</name>
-	<packaging>jar</packaging>
-	<description>Demo project for Spring Boot</description>
+    <groupId>com.tool.box</groupId>
+    <artifactId>tool-box-api</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>tool-box-api</name>
+    <packaging>jar</packaging>
+    <description>Demo project for Spring Boot</description>
 
-	<properties>
-		<java.version>8</java.version>
-	</properties>
+    <properties>
+        <java.version>8</java.version>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.tool.box</groupId>
-			<artifactId>tool-box-contract</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.tool.box</groupId>
-			<artifactId>tool-box-auth</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.tool.box</groupId>
-			<artifactId>tool-box-task</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>easyexcel</artifactId>
-			<version>3.3.1</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>com.tool.box</groupId>
+            <artifactId>tool-box-auth</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tool.box</groupId>
+            <artifactId>tool-box-quartz</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>3.3.1</version>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

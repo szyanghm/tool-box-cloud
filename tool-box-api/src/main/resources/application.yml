@@ -6,9 +6,11 @@ spring:
   application:
     # 服务名
     name: tool-box-api
+  profiles:
+    active: dev
   config:
     import:
-      - optional:nacos:${spring.application.name}-dev.yml
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
   main:
     allow-bean-definition-overriding: true
   cloud:

@@ -1,8 +1,10 @@
 package com.tool.box.config;
 
 import com.tool.box.common.Contents;
+import com.tool.box.common.DataStatic;
 import com.tool.box.filter.JwtFilter;
 import com.tool.box.shiro.CustomShiroFilterFactoryBean;
+import com.tool.box.shiro.ShiroMethodInterceptor;
 import com.tool.box.shiro.ShiroRealm;
 import com.tool.box.utils.SystemUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
@@ -89,9 +92,16 @@ public class ShiroConfig {
     @Bean
     @ConditionalOnMissingBean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
-            DefaultWebSecurityManager defaultWebSecurityManager) {
+            DefaultWebSecurityManager defaultWebSecurityManager, Environment environment) {
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
         advisor.setSecurityManager(defaultWebSecurityManager);
+        //获取当前运行环境
+        String profile = environment.getRequiredProperty("spring.profiles.active");
+        //判断是否可以跳过shiro
+        if (!systemConfig.enabled && DataStatic.profileDataList.contains(profile)) {
+            //运行跳过shiro权限验证方法
+            advisor.setAdvice(new ShiroMethodInterceptor().skipPermissionHandler());
+        }
         return advisor;
     }
 

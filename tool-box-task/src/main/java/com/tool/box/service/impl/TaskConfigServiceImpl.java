@@ -59,4 +59,6 @@ public class TaskConfigServiceImpl
     public QuartzJobTask getJobTask(String id) {
         return baseMapper.getJobTask(id);
     }
+
+
 }
