@@ -42,6 +42,14 @@ public interface ITaskConfigService extends IService<TaskConfig> {
     /**
      * 按任务状态查询执行的任务
      *
+     * @param id 根据jobId查询任务
+     * @return 任务列表
+     */
+    List<QuartzJobTask> findList(String id);
+
+    /**
+     * 按任务状态查询执行的任务
+     *
      * @param id 主键id
      * @return 任务列表
      */

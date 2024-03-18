@@ -43,10 +43,17 @@
             #{state}
         </foreach>
     </select>
+
+    <select id="findList" resultType="com.tool.box.common.QuartzJobTask">
+        <include refid="getJobTaskListSql"></include>
+        AND tc.job_id = #{id}
+    </select>
+
     <select id="getJobTask" resultType="com.tool.box.common.QuartzJobTask">
         <include refid="getJobTaskListSql"></include>
         <if test="id !=null and id !=''">
             AND tc.id = #{id}
         </if>
     </select>
+
 </mapper>

@@ -56,6 +56,11 @@ public class TaskConfigServiceImpl
     }
 
     @Override
+    public List<QuartzJobTask> findList(String id) {
+        return baseMapper.findList(id);
+    }
+
+    @Override
     public QuartzJobTask getJobTask(String id) {
         return baseMapper.getJobTask(id);
     }
