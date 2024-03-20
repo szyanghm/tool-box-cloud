@@ -88,6 +88,8 @@ public enum SystemCodeEnum implements ErrorType {
 
     FILE_TYPE_NOT(100062, "文件类型未定义不能上传..."),
 
+    IMAGE_TO_BASE64_EXCEPTION(100063, "image转base64异常"),
+
     NORMAL_MESSAGE(100086, "Normal message"),
 
     FLOW_DEPLOY_ERROR(5001, "流程部署失败!"),

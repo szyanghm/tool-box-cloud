@@ -29,7 +29,7 @@ public class UserDetail extends BaseModel<UserDetail> {
     private String fullName;
 
     @ApiModelProperty("性别")
-    private String gender;
+    private String sex;
 
     @ApiModelProperty("出生日期")
     private Integer birthday;

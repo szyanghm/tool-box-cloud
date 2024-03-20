@@ -91,4 +91,8 @@ public class Contents {
      */
     public static final String PROFILE = "spring.profiles.active";
 
+    public static final String IS_Y = "Y";
+
+    public static final String IS_N = "N";
+
 }
