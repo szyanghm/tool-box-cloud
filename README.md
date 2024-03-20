@@ -9,3 +9,6 @@ ${nacos_discovery_group} 作用于：在共享注册中心的时候做到服务�
 windows版nacos启动命令：./startup.cmd -m standalone
 windows版nacos停止命令：./shutdown.cmd
 git查看远程仓库命令： git remote -v 
+
+
+备份地址：https://github.com/Jinhx128/springboot-demo?tab=readme-ov-file
