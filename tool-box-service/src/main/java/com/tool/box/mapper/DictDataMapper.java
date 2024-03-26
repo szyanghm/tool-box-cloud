@@ -1,7 +1,7 @@
 package com.tool.box.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tool.box.model.SysDictData;
+import com.tool.box.model.DictData;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  * @since 2024-03-04
  */
 @Repository
-public interface SysDictDataMapper extends BaseMapper<SysDictData> {
+public interface DictDataMapper extends BaseMapper<DictData> {
 
 }

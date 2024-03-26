@@ -152,5 +152,15 @@ public class SystemUtils {
         return userInfo;
     }
 
+    /**
+     * 拼接错误信息
+     *
+     * @param msg      自定义消息
+     * @param errorMsg 异常信息
+     * @return 错误信息
+     */
+    public static String getErrorMsg(String msg, String errorMsg) {
+        return msg + "\n" + errorMsg;
+    }
 
 }

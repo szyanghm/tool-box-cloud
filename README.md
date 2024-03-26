@@ -8,6 +8,7 @@ ${nacos_discovery_group} 作用于：在共享注册中心的时候做到服务�
 
 windows版nacos启动命令：./startup.cmd -m standalone
 windows版nacos停止命令：./shutdown.cmd
+windows版minio启动命令: minio.exe server D:\my_project\project\minio\home
 git查看远程仓库命令： git remote -v 
 
 

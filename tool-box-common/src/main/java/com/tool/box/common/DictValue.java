@@ -11,7 +11,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class DictData {
+public class DictValue {
 
     @ApiModelProperty("字典标签")
     private String dictLabel;

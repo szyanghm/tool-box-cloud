@@ -1,15 +1,26 @@
-package com.tool.box.vo;
+package com.tool.box.model;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
- * @Author v_haimiyang
- * @Date 2024/3/19 17:04
- * @Version 1.0
+ * 字典数据表
+ *
+ * @author v_haimiyang
+ * @since 2024-03-04
  */
-@Data
-public class SysDictDataVO {
+@Getter
+@Setter
+@Accessors(chain = true)
+@ToString
+@TableName("t_dict_data")
+@ApiModel(value = "SysDictData对象", description = "字典数据表")
+public class DictData extends BaseModel<DictData> {
 
     @ApiModelProperty("sys_dict_type字典类型")
     private String dictType;
@@ -37,4 +48,5 @@ public class SysDictDataVO {
 
     @ApiModelProperty("备注")
     private String remark;
+
 }

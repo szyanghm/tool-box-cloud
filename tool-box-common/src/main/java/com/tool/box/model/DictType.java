@@ -18,9 +18,9 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @ToString
-@TableName("sys_dict_type")
+@TableName("t_dict_type")
 @ApiModel(value = "SysDictType对象", description = "字典类型表")
-public class SysDictType extends BaseModel<SysDictType> {
+public class DictType extends BaseModel<DictType> {
 
     @ApiModelProperty("字典名称")
     private String dictName;

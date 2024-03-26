@@ -21,9 +21,9 @@ public enum SystemCodeEnum implements ErrorType {
     SYSTEM_ERROR(-1, "系统异常"),
     OPERATE_ERROR(5500, "操作失败"),
 
-    CONTENT_TYPE_ERROR(40001,"Content-Type设置错误"),
-    REQUEST_METHOD_ERROR(40002,"请求方式错误"),
-    REQUEST_PARAMETER_ERROR(40003,"请求参数错误"),
+    CONTENT_TYPE_ERROR(40001, "Content-Type设置错误"),
+    REQUEST_METHOD_ERROR(40002, "请求方式错误"),
+    REQUEST_PARAMETER_ERROR(40003, "请求参数错误"),
     TASK_START_EXCEPTION(6000, "定时任务启动异常"),
 
     TASK_CREATE_EXCEPTION(6001, "创建定时任务失败"),
@@ -82,13 +82,23 @@ public enum SystemCodeEnum implements ErrorType {
 
     RECEIVE_PONG_MESSAGE_ADDRESS(100016, "receive pong message, address,获取Channel的远程IP地址"),
 
-    UPLOAD_FILE_SIZE_LIMIT(100060, "上传文件大小超过限制"),
+    UPLOADING_FILES_CANNOT_EXCEED_5M(100060, "文件大小不能超过5M"),
 
     UPLOAD_NOT_FOUND(100061, "上传的文件对象不存在..."),
 
-    FILE_TYPE_NOT(100062, "文件类型未定义不能上传..."),
+    FILE_TYPE_NOT(100062, "文件类型未定义不能上传"),
 
     IMAGE_TO_BASE64_EXCEPTION(100063, "image转base64异常"),
+
+    REMOVE_BUCKET_INFO_FAIL(100064, "根据存储桶删除信息失败"),
+
+    GET_BY_NAME_BUCKET_INFO_FAIL(100065, "根据存储桶名称获取信息失败"),
+
+    CREATE_BUCKET_FAIL(100066, "创建存储桶失败"),
+
+    CHECK_BUCKET_IT_EXIST_FAIL(100067,"检查存储桶是否存在失败"),
+
+    FILE_UPLOAD_FAILED(100068,"文件上传失败,请重新上传或联系管理员"),
 
     NORMAL_MESSAGE(100086, "Normal message"),
 

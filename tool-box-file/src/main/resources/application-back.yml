@@ -1,0 +1,16 @@
+shiro:
+  filter:
+    chain:
+      #true开启拦截，false关闭拦截
+      enabled: true
+      definitions: /login = anon
+
+jwt:
+  secret: adsfadfdsfd
+  expire: 60000
+task:
+  enabled: true
+logging:
+  config: classpath:logback-dev.xml
+  file:
+    path: D:\my_project\project\tool-box-cloud\logs\tool-box-api-logs\

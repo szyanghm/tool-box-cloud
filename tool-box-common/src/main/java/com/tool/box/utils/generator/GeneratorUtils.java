@@ -34,11 +34,11 @@ public class GeneratorUtils {
     /**
      * 代码生成的路径
      */
-    private final static String PACKAGE_ADDR = "D:\\my_project\\tool-box-cloud\\tool-box-common\\src\\main\\java\\com\\tool\\box\\utils\\generator\\test";
+    private final static String PACKAGE_ADDR = "D:\\my_project\\project\\test";
     /**
      * xxMapper.xml文件生成的路径
      */
-    private final static String XML_ADDR = "D:\\my_project\\tool-box-cloud\\tool-box-common\\src\\main\\java\\com\\tool\\box\\utils\\generator\\mapper";
+    private final static String XML_ADDR = "D:\\my_project\\project\\test\\mapper";
     public static void main(String[] args) {
         FastAutoGenerator.create(MYSQL_URL, MYSQL_ACCOUNT, MYSQL_PASSWORD)
                 .globalConfig(builder -> {
@@ -53,7 +53,7 @@ public class GeneratorUtils {
                             .pathInfo(Collections.singletonMap(OutputFile.xml, XML_ADDR)); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("t_permissions") // 设置需要生成的表名
+                    builder.addInclude("t_oss_file") // 设置需要生成的表名
                             .addTablePrefix("t_")
                             .entityBuilder().addIgnoreColumns("id", "create_by", "create_time", "update_by", "update_time", "is_delete")
                     ; // 设置过滤表前缀

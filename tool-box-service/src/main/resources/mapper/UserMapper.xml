@@ -5,4 +5,6 @@
     <select id="getPassword" resultType="java.lang.String">
         select `password` from t_user where is_delete = 0
     </select>
+
+
 </mapper>

@@ -1,9 +1,9 @@
 package com.tool.box.config;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tool.box.service.ISysDictDataService;
+import com.tool.box.service.IDictDataService;
 import com.tool.box.utils.RedisUtils;
-import com.tool.box.vo.SysDictDataVO;
+import com.tool.box.vo.DictDataVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -24,13 +24,13 @@ public class DataInitConfig {
     @Resource
     private RedisUtils redisUtils;
     @Resource
-    private ISysDictDataService sysDictDataService;
+    private IDictDataService sysDictDataService;
 
     /**
      * 字典数据缓存
      */
     public void initDictData() {
-        Map<String, List<SysDictDataVO>> map = sysDictDataService.getDictMap();
+        Map<String, List<DictDataVO>> map = sysDictDataService.getDictMap();
         for (String str : map.keySet()) {
             redisUtils.set(str, JSONObject.toJSONString(map.get(str)));
         }
