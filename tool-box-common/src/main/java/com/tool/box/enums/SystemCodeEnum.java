@@ -103,6 +103,8 @@ public enum SystemCodeEnum implements ErrorType {
     MINIO_GETPRESIGNEDOBJECTURL_IS_FAIL(100069,"获取文件外链地址失败"),
 
     MINIO_DOWN_LOAD_FILE_EXCEPTION(100070,"文件下载异常"),
+    MINIO_REMOVE_FILES_FAIL(100071,"批量删除文件失败"),
+    MINIO_REMOVE_FILE_FAIL(100072,"删除文件失败"),
 
     NORMAL_MESSAGE(100086, "Normal message"),
 

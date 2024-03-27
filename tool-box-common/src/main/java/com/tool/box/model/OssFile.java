@@ -22,6 +22,12 @@ import lombok.experimental.Accessors;
 @ApiModel(value = "OssFile对象", description = "附件表")
 public class OssFile extends BaseModel<OssFile> {
 
+    @ApiModelProperty("业务附件key")
+    private String fileKey;
+
+    @ApiModelProperty("业务附件类型")
+    private String fileType;
+
     @ApiModelProperty("文件名")
     private String fileName;
 

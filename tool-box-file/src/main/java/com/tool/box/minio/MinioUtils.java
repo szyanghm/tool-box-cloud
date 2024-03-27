@@ -215,8 +215,8 @@ public class MinioUtils {
             return true;
         } catch (Exception e) {
             log.error("minio removeFile fail, fileName:{}, Exception:{}", fileName, e);
+            throw new InternalApiException(SystemCodeEnum.MINIO_REMOVE_FILE_FAIL);
         }
-        return false;
     }
 
     /**
@@ -233,8 +233,8 @@ public class MinioUtils {
             return true;
         } catch (Exception e) {
             log.error("minio removeFiles fail, fileNames:{}, Exception:{}", fileNames, e);
+            throw new InternalApiException(SystemCodeEnum.MINIO_REMOVE_FILES_FAIL);
         }
-        return false;
     }
 
     /**
