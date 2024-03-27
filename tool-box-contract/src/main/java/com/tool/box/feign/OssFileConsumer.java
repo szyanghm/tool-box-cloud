@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @Date 2023/5/24 17:37
  * @Version 1.0
  */
-@FeignClient(name = "tool-box-service", contextId = "oss-validation", path = "/oss"
+@FeignClient(name = "tool-box-file", contextId = "oss-validation", path = "/file/oss"
         , configuration = NotBreakerConfiguration.class)
 public interface OssFileConsumer {
 

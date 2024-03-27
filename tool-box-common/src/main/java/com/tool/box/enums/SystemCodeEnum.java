@@ -92,13 +92,17 @@ public enum SystemCodeEnum implements ErrorType {
 
     REMOVE_BUCKET_INFO_FAIL(100064, "根据存储桶删除信息失败"),
 
-    GET_BY_NAME_BUCKET_INFO_FAIL(100065, "根据存储桶名称获取信息失败"),
+    GET_BY_NAME_BUCKET_INFO_FAIL(100065, "根据存储桶文件名获取信息失败"),
 
     CREATE_BUCKET_FAIL(100066, "创建存储桶失败"),
 
     CHECK_BUCKET_IT_EXIST_FAIL(100067,"检查存储桶是否存在失败"),
 
     FILE_UPLOAD_FAILED(100068,"文件上传失败,请重新上传或联系管理员"),
+
+    MINIO_GETPRESIGNEDOBJECTURL_IS_FAIL(100069,"获取文件外链地址失败"),
+
+    MINIO_DOWN_LOAD_FILE_EXCEPTION(100070,"文件下载异常"),
 
     NORMAL_MESSAGE(100086, "Normal message"),
 

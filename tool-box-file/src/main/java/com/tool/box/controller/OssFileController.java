@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 附件操作-控制器
@@ -50,7 +51,7 @@ public class OssFileController {
 
     @RequestMapping(value = "/getUrl")
     public ResultVO getUrl(@RequestParam("fileName") String fileName) {
-        String url = minioUtils.getUrl("mini-tool", fileName, 50000);
+        String url = minioUtils.getUrl("mini-tool", fileName, 60, TimeUnit.SECONDS);
         return ResultVO.success(url);
     }
 }

@@ -4,9 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
+import com.tool.box.utils.DateUtils;
 import com.tool.box.utils.SystemUtils;
 import com.tool.box.vo.OssFileVO;
 import io.minio.*;
@@ -25,6 +27,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 /**
@@ -49,16 +52,6 @@ public class MinioUtils {
     private MinioProperties ossProperties;
 
     /**
-     * 格式化时间
-     */
-    private static final String DATE_FORMAT = "yyyyMMdd";
-
-    /**
-     * 字符集
-     */
-    private static final String ENCODING = "UTF-8";
-
-    /**
      * 存储桶是否存在
      *
      * @param bucketName 存储桶名称
@@ -69,8 +62,8 @@ public class MinioUtils {
             return client.bucketExists(BucketExistsArgs.builder().bucket(getBucketName(bucketName)).build());
         } catch (Exception e) {
             log.error("minio bucketExists Exception:{}", e);
+            throw new InternalApiException(SystemCodeEnum.CHECK_BUCKET_IT_EXIST_FAIL);
         }
-        return false;
     }
 
     /**
@@ -86,6 +79,7 @@ public class MinioUtils {
             }
         } catch (Exception e) {
             log.error("minio makeBucket Exception:{}", e);
+            throw new InternalApiException(SystemCodeEnum.CREATE_BUCKET_FAIL);
         }
     }
 
@@ -110,9 +104,9 @@ public class MinioUtils {
             ossFile.setContentType(stat.contentType());
             return ossFile;
         } catch (Exception e) {
-            log.error(SystemUtils.getErrorMsg(SystemCodeEnum.FILE_UPLOAD_FAILED.getMsg(), e.getMessage()));
+            log.error(SystemUtils.getErrorMsg(SystemCodeEnum.GET_BY_NAME_BUCKET_INFO_FAIL.getMsg(), e.getMessage()));
+            throw new InternalApiException(SystemCodeEnum.GET_BY_NAME_BUCKET_INFO_FAIL);
         }
-        return null;
     }
 
     /**
@@ -173,8 +167,8 @@ public class MinioUtils {
                     "application/octet" + "-stream");
         } catch (Exception e) {
             log.error("minio upLoadFile Exception:{}", e);
+            throw new InternalApiException(SystemCodeEnum.FILE_UPLOAD_FAILED);
         }
-        return null;
     }
 
     /**
@@ -252,19 +246,22 @@ public class MinioUtils {
     public void downloadFile(HttpServletResponse response, String fileName, String filePath) {
         GetObjectResponse is = null;
         try {
-            GetObjectArgs getObjectArgs =
-                    GetObjectArgs.builder().bucket(ossProperties.getBucketName()).object(filePath)
-                            .build();
+            GetObjectArgs getObjectArgs = GetObjectArgs.builder()
+                    .bucket(ossProperties.getBucketName())
+                    .object(filePath)
+                    .build();
             is = client.getObject(getObjectArgs);
             // 设置文件ContentType类型，这样设置，会自动判断下载文件类型
             response.setContentType("application/x-msdownload");
-            response.setCharacterEncoding(ENCODING);
+            response.setCharacterEncoding(CharsetUtil.UTF_8);
             // 设置文件头：最后一个参数是设置下载的文件名并编码为UTF-8
-            response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, ENCODING));
+            response.setHeader("Content-Disposition", "attachment;fileName="
+                    + URLEncoder.encode(fileName, CharsetUtil.UTF_8));
             IoUtil.copy(is, response.getOutputStream());
             log.info("minio downloadFile success, filePath:{}", filePath);
         } catch (Exception e) {
             log.error("minio downloadFile Exception:{}", e);
+            throw new InternalApiException(SystemCodeEnum.MINIO_DOWN_LOAD_FILE_EXCEPTION);
         } finally {
             IoUtil.close(is);
         }
@@ -286,6 +283,50 @@ public class MinioUtils {
                             .object(fileName).expiry(expires).build());
         } catch (Exception e) {
             log.error("minio getPresignedObjectUrl is fail, fileName:{}", fileName);
+            throw new InternalApiException(SystemCodeEnum.MINIO_GETPRESIGNEDOBJECTURL_IS_FAIL);
+        }
+        return link;
+    }
+
+    /**
+     * 获取文件外链
+     *
+     * @param bucketName bucket名称
+     * @param fileName   文件名称
+     * @param expires    过期时间
+     * @return url
+     */
+    public String getUrl(String bucketName, String fileName, Integer expires, TimeUnit unit) {
+        String link = "";
+        try {
+            link = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.GET)
+                    .bucket(getBucketName(bucketName))
+                    .object(fileName)
+                    .expiry(expires, unit)
+                    .build());
+        } catch (Exception e) {
+            log.error("minio getPresignedObjectUrl is fail, fileName:{}", fileName);
+            throw new InternalApiException(SystemCodeEnum.MINIO_GETPRESIGNEDOBJECTURL_IS_FAIL);
+        }
+        return link;
+    }
+
+    /**
+     * 获取文件外链
+     *
+     * @param bucketName bucket名称
+     * @param fileName   文件名称
+     * @return url
+     */
+    public String getUrl(String bucketName, String fileName) {
+        String link = "";
+        try {
+            link = client.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(getBucketName(bucketName))
+                            .object(fileName).build());
+        } catch (Exception e) {
+            log.error("minio getPresignedObjectUrl is fail, fileName:{}", fileName);
+            throw new InternalApiException(SystemCodeEnum.MINIO_GETPRESIGNEDOBJECTURL_IS_FAIL);
         }
         return link;
     }
@@ -309,7 +350,7 @@ public class MinioUtils {
      * @return string 上传的文件夹名称/yyyyMMdd/原始文件名_时间戳.文件后缀名
      */
     private String getFilePath(String folderName, String originalFilename, String suffix) {
-        return StrPool.SLASH + String.join(StrPool.SLASH, folderName, DateUtil.date().toString(DATE_FORMAT),
+        return StrPool.SLASH + String.join(StrPool.SLASH, folderName, DateUtil.date().toString(DateUtils.DATE_NUM_PATTERN),
                 originalFilename) + StrPool.C_UNDERLINE + DateUtil.current() + StrPool.DOT + suffix;
     }
 
@@ -324,7 +365,7 @@ public class MinioUtils {
     }
 
     public static void main(String[] args) {
-        String str = Base64Util.encode("http://127.0.0.1:9000/mini-tool//test/20240325/1711350880483_1711350880772.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20240326%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240326T014725Z&X-Amz-Expires=50000&X-Amz-SignedHeaders=host&X-Amz-Signature=115f9d25cd77959f5011c44e5c36bf05162bddec5228867cda99b5ffb41ba277");
+        String str = Base64Util.encode("http://127.0.0.1:9000/mini-tool//test/20240325/1711350880483_1711350880772.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20240326%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240326T092159Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&X-Amz-Signature=325464cd1e5c47e90815bb1fca2fd84f97e96d5d419cfd66c001b78a0390aaca");
         System.out.println(str);
     }
 

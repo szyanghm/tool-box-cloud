@@ -21,8 +21,11 @@ public class DateUtils extends PropertyEditorSupport {
     private static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
     public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
+    public static final String DATE_NUM_PATTERN = "yyyyMMdd";
     public static final String yyyyMMddHHmmss = "yyyyMMddHHmmss";
     private static final String DEFAULT_TIME_PATTERN = "HH:mm:ss";
+
+
 
     private static String[] parsePatterns = {"yyyy-MM-dd", "yyyy年MM月dd日",
             "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy/MM/dd",
