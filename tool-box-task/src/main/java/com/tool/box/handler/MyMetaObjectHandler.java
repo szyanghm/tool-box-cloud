@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * mybatis-plus-新增/更新自动填充
@@ -45,8 +45,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         LoginUser user = getUser();
         log.info("start insert fill ....");
         // 起始版本 3.3.0(推荐使用)
-        this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
-        this.strictInsertFill(metaObject, "updateTime", Date.class, new Date());
+        this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
         this.strictInsertFill(metaObject, "createBy", String.class, user.getAccount());
         this.strictInsertFill(metaObject, "updateBy", String.class, user.getAccount());
         this.strictInsertFill(metaObject, "isDelete", Integer.class, Contents.NUM_0);
@@ -62,8 +62,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         LoginUser user = getUser();
         log.info("start update fill ....");
-        this.strictUpdateFill(metaObject, "createdTime", Date.class, new Date());
-        this.strictUpdateFill(metaObject, "updatedTime", Date.class, new Date());
+        this.strictUpdateFill(metaObject, "createdTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictUpdateFill(metaObject, "updatedTime", LocalDateTime.class, LocalDateTime.now());
         this.strictUpdateFill(metaObject, "createdBy", String.class, user.getAccount());
         this.strictUpdateFill(metaObject, "updatedBy", String.class, user.getAccount());
         log.info("end update fill ....");
