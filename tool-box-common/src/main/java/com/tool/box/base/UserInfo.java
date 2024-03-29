@@ -35,8 +35,11 @@ public class UserInfo implements Serializable {
     @ApiModelProperty("姓名")
     private String fullName;
 
+    @ApiModelProperty("用户头像")
+    private String userAvatar;
+
     @ApiModelProperty("性别")
-    private String gender;
+    private String sex;
 
     @ApiModelProperty("出生日期")
     @JsonFormat(pattern = DateUtils.DEFAULT_DATE_PATTERN, timezone = Contents.GMT8)

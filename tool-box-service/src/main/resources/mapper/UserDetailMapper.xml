@@ -7,7 +7,8 @@
             tud.`account` ,
             tu.role_code,
             tud.`full_name`,
-            tud.`gender`,
+            tof.file_path as userAvatar,
+            tud.`sex`,
             tud.`birthday`,
             tud.`height`,
             tud.`phone`,
@@ -20,9 +21,12 @@
             t_user_detail tud
                 inner join t_user tu on
                 tud.account = tu.account
+                left join t_oss_file tof on
+                tof.file_key = tud.user_avatar
         where
             tu.is_delete = 0
           and tud.is_delete = 0
+          and tof.is_delete = 0
           and tud.account = #{account}
     </select>
 </mapper>

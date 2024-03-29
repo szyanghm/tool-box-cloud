@@ -1,20 +1,24 @@
 package com.tool.box.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
+import com.tool.box.common.Contents;
 import com.tool.box.dto.LoginDTO;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
+import com.tool.box.feign.OssFileConsumer;
 import com.tool.box.jwt.JwtToken;
 import com.tool.box.model.User;
-import com.tool.box.service.IPermissionsService;
 import com.tool.box.service.IUserDetailService;
 import com.tool.box.service.IUserInfoService;
 import com.tool.box.service.IUserService;
 import com.tool.box.utils.JwtUtils;
+import com.tool.box.utils.RedisUtils;
 import com.tool.box.utils.SystemUtils;
 import com.tool.box.utils.TokenUtils;
 import com.tool.box.vo.ResultVO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -39,7 +43,9 @@ public class UserInfoServiceImpl implements IUserInfoService {
     @Resource
     private IUserDetailService userDetailService;
     @Resource
-    private IPermissionsService permissionsService;
+    private RedisUtils redisUtils;
+    @Resource
+    private OssFileConsumer ossFileConsumer;
 
     @Override
     public LoginUser getLoginUser(String account) {
@@ -52,7 +58,18 @@ public class UserInfoServiceImpl implements IUserInfoService {
 
     @Override
     public UserInfo getUserInfo(String account) {
-        UserInfo userInfo = userDetailService.getByAccount(account);
+        String str = redisUtils.get(account + Contents.USERINFO);
+        UserInfo userInfo;
+        if (StringUtils.isNotBlank(str)) {
+            userInfo = JSONObject.parseObject(str, UserInfo.class);
+        } else {
+            userInfo = userDetailService.getByAccount(account);
+            ResultVO<String> resultVO = ossFileConsumer.getUrl(userInfo.getUserAvatar());
+            if (resultVO.isSuccess()) {
+                userInfo.setUserAvatar(resultVO.getData());
+            }
+            redisUtils.set(account + Contents.USERINFO, JSONObject.toJSONString(userInfo));
+        }
         return userInfo;
     }
 

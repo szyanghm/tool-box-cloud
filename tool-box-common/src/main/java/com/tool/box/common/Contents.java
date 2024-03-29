@@ -99,6 +99,8 @@ public class Contents {
 
     public static final String AVATAR_SUFFIX = StrPool.C_UNDERLINE + "avatar";
 
+    public static final String USERINFO = StrPool.C_UNDERLINE + "userinfo";
+
     public static final String AVATAR_FILE = "avatar" + StrPool.C_UNDERLINE + "file";
 
 }
