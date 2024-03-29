@@ -1,9 +1,10 @@
 package com.tool.box.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
 import com.tool.box.model.UserDetail;
+import com.tool.box.vo.ResultVO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -23,4 +24,11 @@ public interface IUserDetailService extends IService<UserDetail> {
      */
     UserInfo getByAccount(String account);
 
+    /**
+     * 上传用户头像
+     *
+     * @param file 附件
+     * @return 上传结果
+     */
+    ResultVO updateUserAvatar(MultipartFile file);
 }

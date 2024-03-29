@@ -1,5 +1,6 @@
 package com.tool.box.controller;
 
+import com.tool.box.exception.InternalApiException;
 import com.tool.box.minio.MinioUtils;
 import com.tool.box.vo.OssFileVO;
 import com.tool.box.vo.ResultVO;
@@ -34,10 +35,29 @@ public class OssFileController {
 
     @RequestMapping(value = "/upload", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
             , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResultVO mediaImgUpload(@RequestPart MultipartFile file) {
+    public ResultVO<OssFileVO> upload(@RequestPart MultipartFile file) {
         System.out.println(file.getOriginalFilename());
-        OssFileVO vo = minioUtils.upLoadFile("test", String.valueOf(System.currentTimeMillis()), file);
-        return ResultVO.success(vo);
+        try {
+            OssFileVO vo = minioUtils.upLoadFile("system", String.valueOf(System.currentTimeMillis()), file);
+            return ResultVO.success(vo);
+        } catch (InternalApiException e) {
+            return new ResultVO<>(e.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 删除附件
+     *
+     * @param filePath 附件路径
+     * @return 删除结果
+     */
+    @RequestMapping(value = "/delete")
+    public ResultVO<?> delete(@RequestParam("filePath") String filePath) {
+        try {
+            return ResultVO.success(minioUtils.removeFile(filePath));
+        } catch (InternalApiException e) {
+            return new ResultVO<>(e.getCode(), e.getMessage());
+        }
     }
 
     @RequestMapping(value = "/uploads", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}

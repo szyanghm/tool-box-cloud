@@ -6,7 +6,6 @@ import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.tool.box.common.Contents;
-import com.tool.box.common.DataStatic;
 import com.tool.box.config.SystemConfig;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
@@ -15,7 +14,6 @@ import com.tool.box.utils.RedisUtils;
 import com.tool.box.utils.SystemUtils;
 import com.tool.box.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -148,12 +146,6 @@ public class WebLogAspect {
             List<String> list = Arrays.asList(arr);
             //获取token
             String token = request.getHeader(Contents.X_ACCESS_TOKEN);
-            //获取当前运行环境
-            String profile = systemConfig.getEnvironment().getRequiredProperty(Contents.PROFILE);
-            if (!systemConfig.enabled && DataStatic.profileDataList.contains(profile)
-                    && StringUtils.isBlank(token)) {
-                token = tokenUtils.getAuthToken(Contents.ADMIN);
-            }
             synchronized (this) {
                 //通过token获取上一次的参数
                 String backParams = redisUtils.get(token);

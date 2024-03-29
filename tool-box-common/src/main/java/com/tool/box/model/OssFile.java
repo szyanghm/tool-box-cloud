@@ -41,7 +41,7 @@ public class OssFile extends BaseModel<OssFile> {
     private String domain;
 
     @ApiModelProperty("文件大小")
-    private String fileSize;
+    private long fileSize;
 
     @ApiModelProperty("文件类型")
     private String contentType;

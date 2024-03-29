@@ -34,6 +34,9 @@ public class UserDetail extends BaseModel<UserDetail> {
     @ApiModelProperty("出生日期")
     private Integer birthday;
 
+    @ApiModelProperty("用户头像")
+    private String userAvatar;
+
     @ApiModelProperty("身高(单位cm)")
     private Integer height;
 

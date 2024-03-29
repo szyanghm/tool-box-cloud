@@ -1,6 +1,7 @@
 package com.tool.box.feign;
 
 import com.tool.box.decode.NotBreakerConfiguration;
+import com.tool.box.vo.OssFileVO;
 import com.tool.box.vo.ResultVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -23,7 +24,10 @@ public interface OssFileConsumer {
     //上传文件
     @RequestMapping(value = "/upload", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
             , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResultVO upload(@RequestPart MultipartFile file);
+    ResultVO<OssFileVO> upload(@RequestPart MultipartFile file);
+
+    @RequestMapping(value = "/delete")
+    ResultVO<?> delete(@RequestParam("filePath") String filePath);
 
     @RequestMapping(value = "/uploads", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
             , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

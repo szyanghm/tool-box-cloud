@@ -13,15 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 public class LocalProvider {
 
     private static final ThreadLocal<ContextProvider> CONTEXT_PROVIDER = new ThreadLocal<>();
-    private static final ThreadLocal<UserInfo> USER_INFO = new ThreadLocal<>();
+    private static final ThreadLocal<LoginUser> USER_INFO = new ThreadLocal<>();
 
     public static void init(HttpServletRequest request, HttpServletResponse response,
-            UserInfo userInfo) {
+                            LoginUser userInfo) {
         CONTEXT_PROVIDER.set(new ContextProvider(request, response));
         USER_INFO.set(userInfo);
     }
 
-    public static UserInfo getUser() {
+    public static LoginUser getUser() {
         return USER_INFO.get();
     }
 

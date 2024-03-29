@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -30,5 +29,8 @@ public interface UserInfoConsumer {
     @PostMapping(value = "/getLoginUser")
     LoginUser getLoginUser(@RequestParam("account") String account);
 
+    @RequestMapping(value = "/updateUserAvatar", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
+            , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResultVO updateUserAvatar(MultipartFile file);
 
 }

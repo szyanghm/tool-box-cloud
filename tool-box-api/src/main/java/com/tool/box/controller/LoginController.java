@@ -48,8 +48,6 @@ public class LoginController {
      */
     @PostMapping(value = "/login")
     public ResultVO<?> login(@RequestBody @Validated LoginDTO dto) {
-        String password = new SimpleHash(Sha256Hash.ALGORITHM_NAME, dto.getPassword(), ByteSource.Util.bytes("tool"), 1024).toBase64();
-        dto.setPassword(password);
         return resultUserInfoConsumer.login(dto);
     }
 

@@ -96,7 +96,7 @@ public class ShiroConfig {
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
         advisor.setSecurityManager(defaultWebSecurityManager);
         //获取当前运行环境
-        String profile = environment.getRequiredProperty("spring.profiles.active");
+        String profile = environment.getRequiredProperty(Contents.PROFILE);
         //判断是否可以跳过shiro
         if (!systemConfig.enabled && DataStatic.profileDataList.contains(profile)) {
             //运行跳过shiro权限验证方法

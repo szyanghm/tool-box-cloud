@@ -147,7 +147,6 @@ public class SystemUtils {
         LoginUser userInfo = new LoginUser();
         userInfo.setAccount(user.getAccount());
         userInfo.setRoleCode(user.getRoleCode());
-        userInfo.setSalt(user.getSalt());
         userInfo.setStatus(user.getStatus());
         return userInfo;
     }

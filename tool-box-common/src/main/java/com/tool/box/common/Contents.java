@@ -1,5 +1,7 @@
 package com.tool.box.common;
 
+import cn.hutool.core.text.StrPool;
+
 /**
  * 标准常量
  *
@@ -94,5 +96,9 @@ public class Contents {
     public static final String IS_Y = "Y";
 
     public static final String IS_N = "N";
+
+    public static final String AVATAR_SUFFIX = StrPool.C_UNDERLINE + "avatar";
+
+    public static final String AVATAR_FILE = "avatar" + StrPool.C_UNDERLINE + "file";
 
 }

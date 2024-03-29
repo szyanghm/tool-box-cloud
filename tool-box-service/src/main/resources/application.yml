@@ -6,6 +6,8 @@ spring:
     name: tool-box-service
   profiles:
     active: dev
+  main:
+    allow-bean-definition-overriding: true
   config:
     import:
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml

@@ -16,10 +16,12 @@ import com.tool.box.utils.SystemUtils;
 import com.tool.box.utils.TokenUtils;
 import com.tool.box.vo.ResultVO;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 测试表 服务实现类
@@ -63,7 +65,10 @@ public class UserInfoServiceImpl implements IUserInfoService {
         if (user.getStatus() == 1) {
             return ResultVO.error(SystemCodeEnum.USER_LOCK_ING);
         }
-        if (!user.getPassword().equals(dto.getPassword())) {
+        String password = new SimpleHash(Sha256Hash.ALGORITHM_NAME, dto.getPassword()
+                , ByteSource.Util.bytes(user.getSalt())
+                , 1024).toBase64();
+        if (!user.getPassword().equals(password)) {
             return ResultVO.error(SystemCodeEnum.PASSWORD_ERROR);
         }
         LoginUser loginUser = SystemUtils.getUserInfo(user);

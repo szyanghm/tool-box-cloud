@@ -9,6 +9,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
 import com.tool.box.utils.DateUtils;
+import com.tool.box.utils.FileUtils;
 import com.tool.box.utils.SystemUtils;
 import com.tool.box.vo.OssFileVO;
 import io.minio.*;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -95,11 +97,11 @@ public class MinioUtils {
                     StatObjectArgs.builder().bucket(getBucketName(ossProperties.getBucketName())).object(fileName)
                             .build());
             OssFileVO ossFile = new OssFileVO();
-            ossFile.setName(ObjectUtil.isEmpty(stat.object()) ? fileName : stat.object());
-            ossFile.setFilePath(ossFile.getName());
+            ossFile.setFileName(ObjectUtil.isEmpty(stat.object()) ? fileName : stat.object());
+            ossFile.setFilePath(ossFile.getFilePath());
             ossFile.setDomain(getOssHost(ossProperties.getBucketName()));
             ossFile.setHash(String.valueOf(stat.hashCode()));
-            ossFile.setSize(stat.size());
+            ossFile.setFileSize(stat.size());
             ossFile.setPutTime(DateUtil.date(stat.lastModified().toLocalDateTime()));
             ossFile.setContentType(stat.contentType());
             return ossFile;
@@ -132,7 +134,18 @@ public class MinioUtils {
             throw new InternalApiException(SystemCodeEnum.FILE_TYPE_NOT);
         }
         try {
-            return upLoadFile(folderName, fileName, suffix, file.getInputStream());
+            OssFileVO vo = new OssFileVO();
+            vo.setFileSize(file.getSize());
+            vo.setContentType(file.getContentType());
+            vo.setHash(FileUtils.md5HashCode(file.getInputStream()));
+            OssFileVO ossFileVO = upLoadFile(folderName, fileName, suffix, file.getInputStream());
+            vo.setFilePath(ossFileVO.getFilePath());
+            vo.setOriginalName(ossFileVO.getOriginalName());
+            vo.setFileName(ossFileVO.getFileName());
+            vo.setDomain(ossFileVO.getDomain());
+            vo.setOriginalName(file.getOriginalFilename());
+            vo.setPutTime(new Date());
+            return vo;
         } catch (Exception e) {
             log.error(SystemUtils.getErrorMsg(SystemCodeEnum.FILE_UPLOAD_FAILED.getMsg(), e.getMessage()));
             throw new InternalApiException(SystemCodeEnum.FILE_UPLOAD_FAILED);
@@ -188,12 +201,11 @@ public class MinioUtils {
             makeBucket(bucketName);
         }
         OssFileVO file = new OssFileVO();
-        String originalName = fileName;
-        String filePath = getFilePath(folderName, fileName, suffix);
+        fileName = getFileName(fileName, suffix);
+        String filePath = getFilePath(folderName) + fileName;
         client.putObject(PutObjectArgs.builder().bucket(getBucketName(bucketName)).object(filePath)
                 .stream(stream, stream.available(), -1).contentType(contentType).build());
-        file.setOriginalName(originalName);
-        file.setName(filePath);
+        file.setFileName(fileName);
         file.setDomain(getOssHost(bucketName));
         file.setFilePath(filePath);
         stream.close();
@@ -344,14 +356,19 @@ public class MinioUtils {
     /**
      * 根据规则生成文件路径
      *
-     * @param folderName       上传的文件夹名称
-     * @param originalFilename 原始文件名
-     * @param suffix           文件后缀名
+     * @param folderName 上传的文件夹名称
      * @return string 上传的文件夹名称/yyyyMMdd/原始文件名_时间戳.文件后缀名
      */
-    private String getFilePath(String folderName, String originalFilename, String suffix) {
-        return StrPool.SLASH + String.join(StrPool.SLASH, folderName, DateUtil.date().toString(DateUtils.DATE_NUM_PATTERN),
-                originalFilename) + StrPool.C_UNDERLINE + DateUtil.current() + StrPool.DOT + suffix;
+    private String getFilePath(String folderName) {
+        return StrPool.SLASH + String.join(StrPool.SLASH, folderName, DateUtil.date().toString(DateUtils.DATE_NUM_PATTERN));
+    }
+
+    private String getFileName(String originalFilename, String suffix) {
+        return originalFilename +
+                StrPool.C_UNDERLINE +
+                DateUtils.format(new Date(), DateUtils.yyyyMMddHHmmss) +
+                StrPool.DOT +
+                suffix;
     }
 
     /**

@@ -148,12 +148,6 @@ public class WebLogAspect {
             List<String> list = Arrays.asList(arr);
             //获取token
             String token = request.getHeader(Contents.X_ACCESS_TOKEN);
-            //获取当前运行环境
-            String profile = systemConfig.getEnvironment().getRequiredProperty(Contents.PROFILE);
-            if (!systemConfig.enabled && DataStatic.profileDataList.contains(profile)
-                    && StringUtils.isBlank(token)) {
-                token = tokenUtils.getAuthToken(Contents.ADMIN);
-            }
             synchronized (this) {
                 //通过token获取上一次的参数
                 String backParams = redisUtils.get(token);

@@ -1,7 +1,5 @@
 package com.tool.box.controller;
 
-import com.tool.box.base.LocalProvider;
-import com.tool.box.base.UserInfo;
 import com.tool.box.common.Contents;
 import com.tool.box.dto.LoginDTO;
 import com.tool.box.feign.result.LoginConsumer;
@@ -74,8 +72,7 @@ public class LoginController {
     @RequiresPermissions(value = {"op:read"})
     @PostMapping(value = "/getUserInfo")
     public ResultVO getUserInfo() {
-        UserInfo userInfo = LocalProvider.getUser();
-        return ResultVO.success(userInfo);
+        return ResultVO.success();
     }
 
 }

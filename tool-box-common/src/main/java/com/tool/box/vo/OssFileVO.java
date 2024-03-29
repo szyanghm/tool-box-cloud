@@ -1,5 +1,8 @@
 package com.tool.box.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tool.box.common.Contents;
+import com.tool.box.utils.DateUtils;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,6 +18,11 @@ public class OssFileVO {
     /**
      * 文件地址
      */
+    private String fileKey;
+
+    /**
+     * 文件地址
+     */
     private String filePath;
     /**
      * 域名地址
@@ -23,7 +31,7 @@ public class OssFileVO {
     /**
      * 文件名
      */
-    private String name;
+    private String fileName;
     /**
      * 原始文件名
      */
@@ -35,10 +43,11 @@ public class OssFileVO {
     /**
      * 文件大小
      */
-    private long size;
+    private long fileSize;
     /**
      * 文件上传时间
      */
+    @JsonFormat(timezone = Contents.GMT8, pattern = DateUtils.DEFAULT_DATE_PATTERN)
     private Date putTime;
     /**
      * 文件contentType
