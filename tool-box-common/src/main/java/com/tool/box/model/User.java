@@ -1,6 +1,7 @@
 package com.tool.box.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,25 +20,17 @@ import lombok.experimental.Accessors;
 @TableName("t_user")
 public class User extends BaseModel<User> {
 
-    /**
-     * 账号
-     */
+    @ApiModelProperty("账号")
     private String account;
-    /**
-     * 密码
-     */
+    @ApiModelProperty("手机号码")
+    private String phone;
+    @ApiModelProperty("密码")
     private String password;
-    /**
-     * 角色
-     */
+    @ApiModelProperty("角色")
     private String roleCode;
-    /**
-     * 密码加盐
-     */
+    @ApiModelProperty("密码加盐")
     private String salt;
-    /**
-     * 0未锁定/1锁定
-     */
+    @ApiModelProperty("0未锁定/1锁定")
     private int status;
 
 }

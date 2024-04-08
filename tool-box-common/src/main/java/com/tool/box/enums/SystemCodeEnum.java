@@ -64,15 +64,25 @@ public enum SystemCodeEnum implements ErrorType {
 
     USER_LOCK_ING(600008, "user is lock...."),
 
-    USER_NOT_PERMISSIONS(600009, "用户无权限"),
+    USER_ACCOUNT_LOCK_ING(600009, "账号已经被锁定时，请在1小时后再试"),
 
-    INSUFFICIENT_ACCESS_TO_RESOURCES(600010, "访问资源权限不足!"),
+    USER_NOT_PERMISSIONS(600010, "用户无权限"),
 
-    SECURITY_MANAGER_NOT_CONFIGURED(600011, "SecurityManager property must be set."),
+    INSUFFICIENT_ACCESS_TO_RESOURCES(600011, "访问资源权限不足!"),
 
-    WEB_SECURITY_MANAGER_NOT_IMPLEMENTED(600012, "The security manager does not implement the WebSecurityManager interface."),
+    SECURITY_MANAGER_NOT_CONFIGURED(600012, "SecurityManager property must be set."),
 
-    USER_LOGIN_EXPIRED(600013, "登录已过期，请重新登录"),
+    WEB_SECURITY_MANAGER_NOT_IMPLEMENTED(600013, "The security manager does not implement the WebSecurityManager interface."),
+
+    USER_LOGIN_EXPIRED(600014, "登录已过期，请重新登录"),
+
+    USER_PHONE_USED(600015, "手机号已被绑定"),
+
+    USER_PHONE_ERROR(600016, "手机号填写错误"),
+
+    ACCOUNT_ALREADY_EXISTS(600017, "账号已存在"),
+
+    TOO_MANY_ERRORS(600017, "错误次数过多,请稍后再试"),
 
     LOGIN_OUT_FAIL(600020, "退出登录失败，token为空"),
 

@@ -45,8 +45,8 @@ public class DecodeConfiguration {
                 String bodyStr = Util.toString(response.body().asReader(Util.UTF_8));
                 ResultVO resultVO = JSONObject.parseObject(bodyStr, ResultVO.class);
                 if (!Objects.equals(SystemCodeEnum.OK.getCode(), resultVO.getCode())) {
-                    log.info(" 【===feign远程调用Server Exception===】,{}", resultVO.getMsg());
-                    throw new InternalApiException(resultVO.getCode(), resultVO.getMsg());
+                    log.info(" 【===feign远程调用Server Exception===】,{}", resultVO.getMessage());
+                    throw new InternalApiException(resultVO.getCode(), resultVO.getMessage());
                 }
                 log.info("脱壳后的结果:" + JSONObject.toJSONString(resultVO.getData()));
                 if (ObjectUtil.isEmpty(resultVO.getData())) {

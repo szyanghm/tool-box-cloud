@@ -3,30 +3,27 @@
 <mapper namespace="com.tool.box.mapper.UserDetailMapper">
 
     <select id="getByAccount" resultType="com.tool.box.base.UserInfo" parameterType="java.lang.String">
-        select
-            tud.`account` ,
-            tu.role_code,
-            tud.`full_name`,
-            tof.file_path as userAvatar,
-            tud.`sex`,
-            tud.`birthday`,
-            tud.`height`,
-            tud.`phone`,
-            tud.`is_house`,
-            tud.`is_car`,
-            tud.`we_chat`,
-            tud.`home_address`,
-            tud.`office_address`
-        from
-            t_user_detail tud
-                inner join t_user tu on
-                tud.account = tu.account
-                left join t_oss_file tof on
-                tof.file_key = tud.user_avatar
-        where
-            tu.is_delete = 0
-          and tud.is_delete = 0
-          and tof.is_delete = 0
+        select tu.`account`,
+               tu.role_code,
+               tud.`full_name`,
+               tof.file_path as userAvatar,
+               tud.`sex`,
+               tud.`birthday`,
+               tud.`height`,
+               tu.`phone`,
+               tud.`is_house`,
+               tud.`is_car`,
+               tud.`we_chat`,
+               tud.`home_address`,
+               tud.`office_address`
+        from t_user tu
+                 left join t_user_detail tud on
+                    tud.account = tu.account
+                and tud.is_delete = 0
+                 left join t_oss_file tof on
+                    tof.file_key = tud.user_avatar
+                and tof.is_delete = 0
+        where tu.is_delete = 0
           and tud.account = #{account}
     </select>
 </mapper>

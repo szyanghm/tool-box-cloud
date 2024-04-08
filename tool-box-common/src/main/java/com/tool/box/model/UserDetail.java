@@ -40,9 +40,6 @@ public class UserDetail extends BaseModel<UserDetail> {
     @ApiModelProperty("身高(单位cm)")
     private Integer height;
 
-    @ApiModelProperty("手机号码")
-    private String phone;
-
     @ApiModelProperty("是否有房(N否/Y是)")
     private String isHouse;
 

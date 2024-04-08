@@ -287,8 +287,8 @@ public class QuartzJobUtils {
             if (ObjectUtil.isNotNull(object)) {
                 resultVO = (ResultVO) object;
             }
-            taskConfig.setTaskMsg(resultVO.getMsg());
-            log.info(resultVO.getMsg());
+            taskConfig.setTaskMsg(resultVO.getMessage());
+            log.info(resultVO.getMessage());
             log.info("----------定时任务执行结束----------");
         } catch (InternalApiException e) {
             log.error(e.getMessage());

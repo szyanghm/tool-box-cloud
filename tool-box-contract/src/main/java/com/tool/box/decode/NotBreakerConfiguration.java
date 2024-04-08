@@ -1,6 +1,6 @@
 package com.tool.box.decode;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.tool.box.exception.InternalApiException;
 import feign.Response;
 import feign.Util;
@@ -36,7 +36,8 @@ public class NotBreakerConfiguration {
             if (response.status() != HttpStatus.OK.value()) {
                 try {
                     String json = Util.toString(response.body().asReader());
-                    exception = JSONUtil.toBean(json, InternalApiException.class);
+                    InternalApiException apiException = JSONObject.parseObject(json, InternalApiException.class);
+                    exception = apiException;
                     log.info(" 【===feign远程调用Server Exception===】,{}", exception.getMessage());
                 } catch (IOException e) {
                     exception = new InternalApiException(response.status(), e.getMessage());

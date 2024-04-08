@@ -14,6 +14,14 @@ public class Contents {
     public final static int NUM_0 = 0;
     public final static int NUM_1 = 1;
     public final static int NUM_5 = 5;
+    /**
+     * 每分钟最大请求次数
+     */
+    public static final int MAX_REQUESTS = 60;
+    /**
+     * 每个账号登录最大出错次数
+     */
+    public static final int MAX_LOGIN = 10;
     public final static int NUM_2000 = 2000;
 
     /**
@@ -27,23 +35,11 @@ public class Contents {
     /**
      * 登录用户Token令牌缓存KEY前缀
      */
-    public static String PREFIX_USER_TOKEN = "prefix_user_token:";
+    public static String PREFIX_USER_TOKEN = "prefix_user_token" + StrPool.COLON;
     /**
      * 登录用户Token令牌缓存时间KEY前缀
      */
-    public static String PREFIX_USER_TOKEN_TIME = "prefix_user_token_time:";
-    /**
-     * 符号：左花括号 }
-     */
-    public static final String LEFT_CURLY_BRACKET = "{";
-    /**
-     * 符号：右花括号 }
-     */
-    public static final String RIGHT_CURLY_BRACKET = "}";
-    /**
-     * 符号：井号 #
-     */
-    public static final String WELL_NUMBER = "#";
+    public static String PREFIX_USER_TOKEN_TIME = "prefix_user_token_time" + StrPool.COLON;
     /**
      * 符号：/**
      */
@@ -101,6 +97,13 @@ public class Contents {
 
     public static final String USERINFO = StrPool.C_UNDERLINE + "userinfo";
 
+
     public static final String AVATAR_FILE = "avatar" + StrPool.C_UNDERLINE + "file";
+
+    public static final String CHECK_PARAMS_TOKEN = X_ACCESS_TOKEN + StrPool.COLON;
+
+    public static final String error_num = "_error_num:key";
+
+    public static final String IP_KEY = "ip_key:";
 
 }

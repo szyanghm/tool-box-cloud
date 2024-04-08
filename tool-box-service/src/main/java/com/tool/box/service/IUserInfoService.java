@@ -3,6 +3,7 @@ package com.tool.box.service;
 import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
 import com.tool.box.dto.LoginDTO;
+import com.tool.box.dto.UserRegisterDTO;
 import com.tool.box.vo.ResultVO;
 
 /**
@@ -31,6 +32,14 @@ public interface IUserInfoService {
      * @return 用户信息
      */
     UserInfo getUserInfo(String account);
+
+    /**
+     * 用户注册
+     *
+     * @param dto 入参
+     * @return 注册结果
+     */
+    ResultVO<?> register(UserRegisterDTO dto);
 
     /**
      * 登录

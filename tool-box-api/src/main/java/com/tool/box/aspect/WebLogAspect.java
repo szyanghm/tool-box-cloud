@@ -1,22 +1,12 @@
 package com.tool.box.aspect;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import com.tool.box.common.Contents;
-import com.tool.box.common.DataStatic;
-import com.tool.box.config.SystemConfig;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
 import com.tool.box.utils.HttpUtils;
-import com.tool.box.utils.RedisUtils;
 import com.tool.box.utils.SystemUtils;
-import com.tool.box.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -25,12 +15,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,13 +30,6 @@ import java.util.Map;
 @Component
 @Slf4j
 public class WebLogAspect {
-
-    @Resource
-    private RedisUtils redisUtils;
-    @Resource
-    private TokenUtils tokenUtils;
-    @Resource
-    private SystemConfig systemConfig;
 
     ThreadLocal<Long> startTime = new ThreadLocal<Long>();
     Map<Object, Object> params = Maps.newLinkedHashMap();
@@ -87,8 +66,6 @@ public class WebLogAspect {
             }
             params.put("【request args】", object); // 请求参数
         }
-        //校验重复提交
-        verifyResubmit(url, joinPoint, request);
     }
 
     /**
@@ -126,44 +103,6 @@ public class WebLogAspect {
             throw new InternalApiException(SystemCodeEnum.SYSTEM_BUSY);
         }
         return result;
-    }
-
-    /**
-     * 防抖校验重复提交
-     * 只有带保存和更新权限的接口才进行校验
-     *
-     * @param url       请求接口地址
-     * @param joinPoint aop入参
-     * @param request   http请求体
-     */
-    private void verifyResubmit(String url, JoinPoint joinPoint, HttpServletRequest request) {
-        if (!url.contains("login") && CollectionUtil.isNotEmpty(params)) {
-            Method method = SystemUtils.getCurrentMethod(joinPoint);
-            //当需要新增和更新权限的时候才需要进行校验
-            RequiresPermissions permissions = method.getAnnotation(RequiresPermissions.class);
-            if (ObjectUtil.isNull(permissions)) {
-                return;
-            }
-            String[] arr = permissions.value();
-            List<String> list = Arrays.asList(arr);
-            //获取token
-            String token = request.getHeader(Contents.X_ACCESS_TOKEN);
-            synchronized (this) {
-                //通过token获取上一次的参数
-                String backParams = redisUtils.get(token);
-                //当前请求参数
-                String currentParams = SecureUtil.md5(JSONObject.toJSONString(params));
-                //参数对比
-                if (!currentParams.equals(backParams)
-                        && (list.contains(Contents.OP_WRITE_ADD) || list.contains(Contents.OP_WRITE_UPDATE))) {
-                    //将token作为key,缓存请求参数
-                    redisUtils.set(token, currentParams, 2L);
-                } else {
-                    //参数重复表示重复提交
-                    throw new InternalApiException(SystemCodeEnum.SYSTEM_BUSY_RESUBMIT);
-                }
-            }
-        }
     }
 }
 

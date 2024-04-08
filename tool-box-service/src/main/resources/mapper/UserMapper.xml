@@ -2,9 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tool.box.mapper.UserMapper">
 
+    <select id="initUser" resultType="com.tool.box.common.InitUser">
+        select `account`,`phone` from t_user where is_delete = 0
+    </select>
+
     <select id="getPassword" resultType="java.lang.String">
         select `password` from t_user where is_delete = 0
     </select>
+
 
 
 </mapper>

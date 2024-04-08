@@ -27,26 +27,26 @@ public class ResultVO<T> {
     public static final String SUCCESSFUL_MSG = "处理成功";
 
     private Integer code;
-    private String msg;
+    private String message;
     private String time;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public ResultVO() {
         this.code = SUCCESSFUL_CODE;
-        this.msg = SUCCESSFUL_MSG;
+        this.message = SUCCESSFUL_MSG;
         this.time = DateUtils.getCurrentDateTime();
     }
 
     public ResultVO(ErrorType errorType) {
         this.code = errorType.getCode();
-        this.msg = errorType.getMsg();
+        this.message = errorType.getMsg();
         this.time = DateUtils.getCurrentDateTime();
     }
 
     public ResultVO(ErrorType errorType, T data) {
         this.code = errorType.getCode();
-        this.msg = errorType.getMsg();
+        this.message = errorType.getMsg();
         this.data = data;
         this.time = DateUtils.getCurrentDateTime();
     }
@@ -56,12 +56,12 @@ public class ResultVO<T> {
      * 内部使用，用于构造成功的结果
      *
      * @param code
-     * @param msg
+     * @param message
      * @param data
      */
-    private ResultVO(Integer code, String msg, T data) {
+    private ResultVO(Integer code, String message, T data) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
         this.data = data;
         this.time = DateUtils.getCurrentDateTime();
     }
@@ -70,11 +70,11 @@ public class ResultVO<T> {
      * 内部使用，用于构造成功的结果
      *
      * @param code
-     * @param msg
+     * @param message
      */
-    public ResultVO(Integer code, String msg) {
+    public ResultVO(Integer code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
         this.time = DateUtils.getCurrentDateTime();
     }
 
