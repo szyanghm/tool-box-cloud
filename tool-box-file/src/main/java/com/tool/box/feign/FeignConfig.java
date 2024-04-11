@@ -6,6 +6,10 @@ import feign.RequestInterceptor;
 import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
@@ -22,6 +26,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Component
 public class FeignConfig {
+
+    @Autowired
+    private ObjectFactory<HttpMessageConverters> messageConverters;
 
     @Bean
     public RequestInterceptor requestInterceptor() {
@@ -43,7 +50,7 @@ public class FeignConfig {
     @Primary
     @Scope("prototype")
     public Encoder multipartFormEncoder() {
-        return new SpringFormEncoder();
+        return new SpringFormEncoder(new SpringEncoder(messageConverters));
     }
 
     @Bean

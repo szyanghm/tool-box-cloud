@@ -3,7 +3,9 @@
 <mapper namespace="com.tool.box.mapper.MenuMapper">
     <select id="findMenuList" resultType="com.tool.box.vo.MenuVO">
         SELECT
-        DISTINCT(m.menu_code),
+        m.id,
+        m.source,
+        m.menu_code,
         m.parent_code,
         m.`menu_name`,
         m.`level`,

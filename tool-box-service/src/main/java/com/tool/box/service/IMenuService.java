@@ -22,4 +22,12 @@ public interface IMenuService extends IService<Menu> {
      * @return 菜单列表
      */
     List<MenuVO> findMenuList(MenuDTO dto);
+
+    /**
+     * 查询菜单列表
+     *
+     * @param dto 入参
+     * @return 菜单列表
+     */
+    List<MenuVO> findList(MenuDTO dto);
 }

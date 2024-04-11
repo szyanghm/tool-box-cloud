@@ -4,6 +4,7 @@ import com.tool.box.decode.NotBreakerConfiguration;
 import com.tool.box.dto.MenuDTO;
 import com.tool.box.vo.ResultVO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,4 +22,6 @@ public interface MenuConsumer {
     @PostMapping(value = "/list")
     ResultVO<?> getMenu(@RequestBody MenuDTO dto);
 
+    @PostMapping(value = "/findList")
+    ResultVO<?> findList(@RequestBody @Validated MenuDTO dto);
 }

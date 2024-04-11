@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.tool.box.common.Contents;
 import com.tool.box.common.SystemUrl;
-import com.tool.box.dto.LoginDTO;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
 import com.tool.box.utils.HttpUtils;
@@ -127,14 +126,6 @@ public class WebLogAspect {
         return result;
     }
 
-    private void verifyLogin(String url, String ip, Object obj) {
-        if (url.contains(SystemUrl.login_url) && ObjectUtil.isNotNull(obj)) {
-            String str = String.valueOf(obj);
-            LoginDTO dto = JSONObject.parseObject(str, LoginDTO.class);
-            setErrorNum(ip + dto.getAccount());
-        }
-    }
-
     /**
      * 防抖校验重复提交
      * 只有带保存和更新权限的接口才进行校验
@@ -195,25 +186,6 @@ public class WebLogAspect {
         if (count >= Contents.MAX_REQUESTS) {
             //参数重复表示重复提交
             throw new InternalApiException(SystemCodeEnum.SYSTEM_BUSY);
-        }
-    }
-
-    /**
-     * 限制同一个账号登录的时候出错次数
-     *
-     * @param account 账号
-     */
-    public void setErrorNum(String account) {
-        long count = redisUtils.incr(account + Contents.error_num);
-        if (count >= Contents.MAX_LOGIN) {
-            redisUtils.expire(account + Contents.error_num, 1, TimeUnit.HOURS); // 如果是第一次访问，设置过期时间
-        }
-    }
-
-    public void isErrorNum(String account) {
-        long count = redisUtils.incr(account + Contents.error_num);
-        if (count >= Contents.MAX_LOGIN) {
-            throw new InternalApiException(SystemCodeEnum.USER_ACCOUNT_LOCK_ING);
         }
     }
 }

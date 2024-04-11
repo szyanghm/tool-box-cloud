@@ -24,6 +24,6 @@
                     tof.file_key = tud.user_avatar
                 and tof.is_delete = 0
         where tu.is_delete = 0
-          and tud.account = #{account}
+          and tu.account = #{account}
     </select>
 </mapper>

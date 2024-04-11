@@ -79,6 +79,7 @@ public class TokenUtils {
      */
     public Boolean del(String account) {
         redisUtil.del(Contents.PREFIX_USER_TOKEN_TIME + account);
+        redisUtil.del(Contents.USERINFO + account);
         return redisUtil.del(Contents.PREFIX_USER_TOKEN + account);
     }
 

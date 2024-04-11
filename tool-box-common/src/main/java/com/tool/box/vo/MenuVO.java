@@ -12,6 +12,17 @@ import java.util.List;
 @Data
 public class MenuVO {
 
+    /**
+     * 唯一id
+     */
+    private String id;
+    /**
+     * 系统来源划分
+     */
+    private String source;
+    /**
+     * 菜单唯一code
+     */
     private String menuCode;
 
     /**

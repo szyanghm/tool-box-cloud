@@ -5,7 +5,6 @@ import com.tool.box.feign.result.MenuConsumer;
 import com.tool.box.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,8 +25,16 @@ public class MenuController {
     private MenuConsumer menuConsumer;
 
     @PostMapping(value = "/list")
-    public ResultVO<?> getMenu(@RequestBody MenuDTO dto) {
+    public ResultVO<?> getMenu() {
+        MenuDTO dto = new MenuDTO();
         dto.setSource("api");
         return menuConsumer.getMenu(dto);
+    }
+
+    @PostMapping(value = "/findList")
+    public ResultVO<?> findList() {
+        MenuDTO dto = new MenuDTO();
+        dto.setSource("api");
+        return menuConsumer.findList(dto);
     }
 }

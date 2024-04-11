@@ -1,5 +1,6 @@
 package com.tool.box.aspect;
 
+import cn.hutool.core.text.StrPool;
 import com.tool.box.common.Contents;
 import com.tool.box.common.validata.LoginLimit;
 import com.tool.box.dto.LoginDTO;
@@ -53,7 +54,7 @@ public class LoginLimitAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String ip = HttpUtils.getIpAddr(request);
 
-        String key = "login_fail_count:" + ip + ":" + dto.getAccount();
+        String key = ip + StrPool.COLON + dto.getAccount();
         isErrorNum(key, limit);
         Object result;
         try {
@@ -70,19 +71,19 @@ public class LoginLimitAspect {
     }
 
     /**
-     * 限制同一个账号登录的时候出错次数
+     * 限制同一个ip,同一个账号登录的时候出错次数
      *
      * @param account 账号
      */
     public void setErrorNum(String account, int limit) {
-        long count = redisUtils.incr(account + Contents.error_num);
+        long count = redisUtils.incr(Contents.LOGIN_FAIL_COUNT + account);
         if (count >= limit) {
-            redisUtils.expire(account + Contents.error_num, 1, TimeUnit.HOURS); // 如果是第一次访问，设置过期时间
+            redisUtils.expire(Contents.LOGIN_FAIL_COUNT + account, 1, TimeUnit.HOURS);
         }
     }
 
     public void isErrorNum(String account, int limit) {
-        String str = redisUtils.get(account + Contents.error_num);
+        String str = redisUtils.get(Contents.LOGIN_FAIL_COUNT + account);
         if (StringUtils.isNotBlank(str)) {
             int count = Integer.parseInt(str);
             if (count >= limit) {

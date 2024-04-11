@@ -30,4 +30,9 @@ public class MenuController {
     public ResultVO<?> getMenu(@RequestBody @Validated MenuDTO dto) {
         return ResultVO.success(menuService.findMenuList(dto));
     }
+
+    @PostMapping(value = "/findList")
+    public ResultVO<?> findList(@RequestBody @Validated MenuDTO dto) {
+        return ResultVO.success(menuService.findList(dto));
+    }
 }

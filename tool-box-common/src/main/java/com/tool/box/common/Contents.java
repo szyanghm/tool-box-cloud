@@ -95,14 +95,14 @@ public class Contents {
 
     public static final String AVATAR_SUFFIX = StrPool.C_UNDERLINE + "avatar";
 
-    public static final String USERINFO = StrPool.C_UNDERLINE + "userinfo";
+    public static final String USERINFO = "userinfo" + StrPool.COLON;
 
 
     public static final String AVATAR_FILE = "avatar" + StrPool.C_UNDERLINE + "file";
 
     public static final String CHECK_PARAMS_TOKEN = X_ACCESS_TOKEN + StrPool.COLON;
 
-    public static final String error_num = "_error_num:key";
+    public static final String LOGIN_FAIL_COUNT = "login_fail_count:";
 
     public static final String IP_KEY = "ip_key:";
 

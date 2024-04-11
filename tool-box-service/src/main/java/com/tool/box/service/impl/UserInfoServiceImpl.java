@@ -18,6 +18,7 @@ import com.tool.box.service.IUserInfoService;
 import com.tool.box.service.IUserService;
 import com.tool.box.utils.*;
 import com.tool.box.vo.ResultVO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
@@ -35,6 +36,7 @@ import java.util.List;
  * @author v_haimiyang
  * @since 2023-04-20
  */
+@Slf4j
 @Service
 public class UserInfoServiceImpl implements IUserInfoService {
 
@@ -60,7 +62,7 @@ public class UserInfoServiceImpl implements IUserInfoService {
 
     @Override
     public UserInfo getUserInfo(String account) {
-        String str = redisUtils.get(account + Contents.USERINFO);
+        String str = redisUtils.get(Contents.USERINFO + account);
         UserInfo userInfo;
         if (StringUtils.isNotBlank(str)) {
             userInfo = JSONObject.parseObject(str, UserInfo.class);
@@ -70,7 +72,7 @@ public class UserInfoServiceImpl implements IUserInfoService {
             if (resultVO.isSuccess()) {
                 userInfo.setUserAvatar(resultVO.getData());
             }
-            redisUtils.set(account + Contents.USERINFO, JSONObject.toJSONString(userInfo));
+            redisUtils.set(Contents.USERINFO + account, JSONObject.toJSONString(userInfo));
         }
         return userInfo;
     }
@@ -128,6 +130,7 @@ public class UserInfoServiceImpl implements IUserInfoService {
         // 设置超时时间
         tokenUtils.setToken(token, loginUser.getAccount());
         SecurityUtils.getSubject().login(new JwtToken(token));
+        log.info("用户账号:" + dto.getAccount() + "登录成功");
         return ResultVO.success(token);
     }
 
