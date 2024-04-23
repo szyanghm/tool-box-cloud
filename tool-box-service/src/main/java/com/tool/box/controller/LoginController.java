@@ -57,7 +57,7 @@ public class LoginController {
     @RequestMapping(value = SystemUrl.logout_url)
     public ResultVO<Object> logout() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        //用户退出逻辑
+        //用户退出逻辑  GOODS_DOWN
         String token = request.getHeader(Contents.X_ACCESS_TOKEN);
         String account = JwtUtils.getAccount(token);
         tokenUtils.del(account);

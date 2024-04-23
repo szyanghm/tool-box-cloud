@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 /**
  * 用户信息表
  *
@@ -32,10 +34,10 @@ public class UserDetail extends BaseModel<UserDetail> {
     private String sex;
 
     @ApiModelProperty("出生日期")
-    private Integer birthday;
+    private Date birthday;
 
-    @ApiModelProperty("用户头像")
-    private String userAvatar;
+    @ApiModelProperty("用户头像，关联附件表file_key")
+    private String fileKey;
 
     @ApiModelProperty("身高(单位cm)")
     private Integer height;

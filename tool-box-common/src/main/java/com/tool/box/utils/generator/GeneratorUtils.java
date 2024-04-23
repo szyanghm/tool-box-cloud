@@ -53,7 +53,7 @@ public class GeneratorUtils {
                             .pathInfo(Collections.singletonMap(OutputFile.xml, XML_ADDR)); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("t_oss_file") // 设置需要生成的表名
+                    builder.addInclude("t_goods_info") // 设置需要生成的表名
                             .addTablePrefix("t_")
                             .entityBuilder().addIgnoreColumns("id", "create_by", "create_time", "update_by", "update_time", "is_delete")
                     ; // 设置过滤表前缀

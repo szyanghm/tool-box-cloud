@@ -11,5 +11,9 @@ windows版nacos停止命令：./shutdown.cmd
 windows版minio启动命令: minio.exe server D:\my_project\project\minio\home
 git查看远程仓库命令： git remote -v 
 
+minio启动命令：minio.exe server D:\my_project\project\minio\home
+minio账号：minioadmin
+minio密码：minioadmin
+
 
 备份地址：https://github.com/Jinhx128/springboot-demo?tab=readme-ov-file

@@ -1,5 +1,6 @@
 package com.tool.box.minio;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
@@ -98,7 +99,7 @@ public class MinioUtils {
                             .build());
             OssFileVO ossFile = new OssFileVO();
             ossFile.setFileName(ObjectUtil.isEmpty(stat.object()) ? fileName : stat.object());
-            ossFile.setFilePath(ossFile.getFilePath());
+            ossFile.setFileKey(ossFile.getFileKey());
             ossFile.setDomain(getOssHost(ossProperties.getBucketName()));
             ossFile.setHash(String.valueOf(stat.hashCode()));
             ossFile.setFileSize(stat.size());
@@ -106,7 +107,7 @@ public class MinioUtils {
             ossFile.setContentType(stat.contentType());
             return ossFile;
         } catch (Exception e) {
-            log.error(SystemUtils.getErrorMsg(SystemCodeEnum.GET_BY_NAME_BUCKET_INFO_FAIL.getMsg(), e.getMessage()));
+            log.error(SystemUtils.getErrorMsg(SystemCodeEnum.GET_BY_NAME_BUCKET_INFO_FAIL.getMessage(), e.getMessage()));
             throw new InternalApiException(SystemCodeEnum.GET_BY_NAME_BUCKET_INFO_FAIL);
         }
     }
@@ -139,15 +140,17 @@ public class MinioUtils {
             vo.setContentType(file.getContentType());
             vo.setHash(FileUtils.md5HashCode(file.getInputStream()));
             OssFileVO ossFileVO = upLoadFile(folderName, fileName, suffix, file.getInputStream());
-            vo.setFilePath(ossFileVO.getFilePath());
+            vo.setFileKey(ossFileVO.getFileKey());
             vo.setOriginalName(ossFileVO.getOriginalName());
             vo.setFileName(ossFileVO.getFileName());
             vo.setDomain(ossFileVO.getDomain());
             vo.setOriginalName(file.getOriginalFilename());
             vo.setPutTime(new Date());
+            String fileUrl = getUrl("mini-tool", vo.getFileKey());
+            vo.setFileUrl(fileUrl);
             return vo;
         } catch (Exception e) {
-            log.error(SystemUtils.getErrorMsg(SystemCodeEnum.FILE_UPLOAD_FAILED.getMsg(), e.getMessage()));
+            log.error(SystemUtils.getErrorMsg(SystemCodeEnum.FILE_UPLOAD_FAILED.getMessage(), e.getMessage()));
             throw new InternalApiException(SystemCodeEnum.FILE_UPLOAD_FAILED);
         }
     }
@@ -207,7 +210,8 @@ public class MinioUtils {
                 .stream(stream, stream.available(), -1).contentType(contentType).build());
         file.setFileName(fileName);
         file.setDomain(getOssHost(bucketName));
-        file.setFilePath(filePath);
+        //将filePath通过base64编码转成fileKey
+        file.setFileKey(Base64.encode(filePath, CharsetUtil.UTF_8));
         stream.close();
         log.info("minio upLoadFile success, filePath:{}", filePath);
         return file;
@@ -216,17 +220,19 @@ public class MinioUtils {
     /**
      * 删除文件
      *
-     * @param fileName 存储桶对象名称
+     * @param fileKy 附件key唯一
      */
-    public boolean removeFile(String fileName) {
+    public boolean removeFile(String fileKy) {
         try {
+            fileKy = Base64.decodeStr(fileKy);
             client.removeObject(
-                    RemoveObjectArgs.builder().bucket(getBucketName(ossProperties.getBucketName())).object(fileName)
+                    RemoveObjectArgs.builder().bucket(getBucketName(ossProperties.getBucketName()))
+                            .object(fileKy)
                             .build());
-            log.info("minio removeFile success, fileName:{}", fileName);
+            log.info("minio removeFile success, fileName:{}", fileKy);
             return true;
         } catch (Exception e) {
-            log.error("minio removeFile fail, fileName:{}, Exception:{}", fileName, e);
+            log.error("minio removeFile fail, fileName:{}, Exception:{}", fileKy, e);
             throw new InternalApiException(SystemCodeEnum.MINIO_REMOVE_FILE_FAIL);
         }
     }
@@ -234,17 +240,17 @@ public class MinioUtils {
     /**
      * 批量删除文件
      *
-     * @param fileNames 存储桶对象名称集合
+     * @param fileKeys 存储桶对象名称集合
      */
-    public boolean removeFiles(List<String> fileNames) {
+    public boolean removeFiles(List<String> fileKeys) {
         try {
-            Stream<DeleteObject> stream = fileNames.stream().map(DeleteObject::new);
+            Stream<DeleteObject> stream = fileKeys.stream().map(DeleteObject::new);
             client.removeObjects(RemoveObjectsArgs.builder().bucket(getBucketName(ossProperties.getBucketName()))
                     .objects(stream::iterator).build());
-            log.info("minio removeFiles success, fileNames:{}", fileNames);
+            log.info("minio removeFiles success, fileNames:{}", fileKeys);
             return true;
         } catch (Exception e) {
-            log.error("minio removeFiles fail, fileNames:{}, Exception:{}", fileNames, e);
+            log.error("minio removeFiles fail, fileNames:{}, Exception:{}", fileKeys, e);
             throw new InternalApiException(SystemCodeEnum.MINIO_REMOVE_FILES_FAIL);
         }
     }

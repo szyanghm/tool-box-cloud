@@ -106,4 +106,6 @@ public class Contents {
 
     public static final String IP_KEY = "ip_key:";
 
+    public static final String CAROUSEL_KEY = StrPool.COLON + "carouselKey" + StrPool.COLON;
+
 }

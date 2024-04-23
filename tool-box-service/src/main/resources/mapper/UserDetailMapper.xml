@@ -6,7 +6,7 @@
         select tu.`account`,
                tu.role_code,
                tud.`full_name`,
-               tof.file_path as userAvatar,
+               tud.file_key as userAvatar,
                tud.`sex`,
                tud.`birthday`,
                tud.`height`,
@@ -20,9 +20,6 @@
                  left join t_user_detail tud on
                     tud.account = tu.account
                 and tud.is_delete = 0
-                 left join t_oss_file tof on
-                    tof.file_key = tud.user_avatar
-                and tof.is_delete = 0
         where tu.is_delete = 0
           and tu.account = #{account}
     </select>

@@ -40,13 +40,13 @@ public class ResultVO<T> {
 
     public ResultVO(ErrorType errorType) {
         this.code = errorType.getCode();
-        this.message = errorType.getMsg();
+        this.message = errorType.getMessage();
         this.time = DateUtils.getCurrentDateTime();
     }
 
     public ResultVO(ErrorType errorType, T data) {
         this.code = errorType.getCode();
-        this.message = errorType.getMsg();
+        this.message = errorType.getMessage();
         this.data = data;
         this.time = DateUtils.getCurrentDateTime();
     }

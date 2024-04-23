@@ -1,10 +1,14 @@
 package com.tool.box.utils;
 
+import cn.hutool.core.text.StrPool;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -62,5 +66,34 @@ public class FileUtils {
             e.printStackTrace();
             return "";
         }
+    }
+
+    /**
+     * MultipartFile转File
+     *
+     * @param file MultipartFile
+     * @return File
+     */
+    public static File multipartFileToFile(MultipartFile file) {
+        File convFile;
+        if (file.equals("") || file.getSize() <= 0) {
+            throw new InternalApiException(SystemCodeEnum.FILE_IS_EMPTY_OR_ITS_SIZE_IS_ZERO);
+        }
+        try {
+            InputStream inputStream = file.getInputStream();
+            convFile = new File(file.getOriginalFilename());
+            FileOutputStream fos = new FileOutputStream(convFile);
+            int bytesRead = 0;
+            byte[] buffer = new byte[8192];
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                fos.write(buffer, 0, bytesRead);
+            }
+            fos.close();
+            inputStream.close();
+        } catch (IOException e) {
+            log.error(SystemCodeEnum.MULTIPART_FILE_TO_FILE_EXCEPTION.getMessage(), StrPool.COLON, e.getMessage());
+            throw new InternalApiException(SystemCodeEnum.MULTIPART_FILE_TO_FILE_EXCEPTION);
+        }
+        return convFile;
     }
 }

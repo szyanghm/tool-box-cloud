@@ -25,6 +25,9 @@ public class OssFile extends BaseModel<OssFile> {
     @ApiModelProperty("业务附件key")
     private String fileKey;
 
+    @ApiModelProperty("附件地址")
+    private String fileUrl;
+
     @ApiModelProperty("业务附件类型")
     private String fileType;
 
@@ -33,9 +36,6 @@ public class OssFile extends BaseModel<OssFile> {
 
     @ApiModelProperty("原始文件名")
     private String originalName;
-
-    @ApiModelProperty("文件地址")
-    private String filePath;
 
     @ApiModelProperty("域名地址")
     private String domain;

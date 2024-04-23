@@ -5,7 +5,10 @@ import com.tool.box.base.LoginUser;
 import com.tool.box.common.Contents;
 import com.tool.box.common.DataStatic;
 import com.tool.box.config.SystemConfig;
+import com.tool.box.enums.SystemCodeEnum;
+import com.tool.box.exception.InternalApiException;
 import com.tool.box.utils.TokenUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,6 +23,7 @@ import java.io.IOException;
  * @Date 2024/3/28 11:07
  * @Version 1.0
  */
+@Slf4j
 @Configuration
 public class AuthInterceptor implements HandlerInterceptor {
 
@@ -38,10 +42,12 @@ public class AuthInterceptor implements HandlerInterceptor {
                 && StringUtils.isBlank(token)) {
             token = tokenUtils.getAuthToken(Contents.ADMIN);
         }
-        if (StringUtils.isNotBlank(token)) {
-            LoginUser user = tokenUtils.checkJwtTokenRefresh(token);
-            LocalProvider.init(request, response, user);
+        if (StringUtils.isBlank(token)) {
+            log.error("登录token:" + token);
+            throw new InternalApiException(SystemCodeEnum.USER_LOGIN_EXPIRED);
         }
+        LoginUser user = tokenUtils.checkJwtTokenRefresh(token);
+        LocalProvider.init(request, response, user);
         return true;
     }
 

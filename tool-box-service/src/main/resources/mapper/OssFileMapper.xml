@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tool.box.mapper.OssFileMapper">
 
+
+    <delete id="deleteByFileKey" parameterType="java.util.List">
+        delete from t_oss_file where file_key in
+        <foreach collection="list" item="iem" open="(" separator="," close=")">
+            #{iem}
+        </foreach>
+    </delete>
 </mapper>

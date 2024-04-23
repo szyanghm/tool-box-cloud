@@ -13,6 +13,10 @@ import lombok.Data;
 public class LoginUser {
 
     /**
+     * 用户id
+     */
+    private String userId;
+    /**
      * 账号
      */
     private String account;

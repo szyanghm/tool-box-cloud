@@ -5,7 +5,9 @@ import com.tool.box.base.LoginUser;
 import com.tool.box.common.Contents;
 import com.tool.box.common.QuartzJobTask;
 import com.tool.box.enums.SystemCodeEnum;
+import com.tool.box.model.OssFile;
 import com.tool.box.model.User;
+import com.tool.box.vo.OssFileVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -93,7 +95,7 @@ public class SystemUtils {
     }
 
     public static String getMsg(SystemCodeEnum systemCodeEnum, String msg) {
-        return systemCodeEnum.getMsg() + "==>>:" + msg;
+        return systemCodeEnum.getMessage() + "==>>:" + msg;
     }
 
     /**
@@ -161,5 +163,27 @@ public class SystemUtils {
     public static String getErrorMsg(String msg, String errorMsg) {
         return msg + "\n" + errorMsg;
     }
+
+    /**
+     * OssFileVO转OssFile
+     *
+     * @param vo OssFileVO入参
+     * @return OssFile对象
+     */
+    public static OssFile getOssFile(OssFileVO vo) {
+        OssFile ossFile = new OssFile();
+        ossFile.setFileKey(vo.getFileKey());
+        ossFile.setFileUrl(vo.getFileUrl());
+        ossFile.setFileName(vo.getFileName());
+        ossFile.setDomain(vo.getDomain());
+        ossFile.setFileSize(vo.getFileSize());
+        ossFile.setContentType(vo.getContentType());
+        ossFile.setOriginalName(vo.getOriginalName());
+        ossFile.setHash(vo.getHash());
+        ossFile.setFileType(Contents.AVATAR_FILE);
+        return ossFile;
+    }
+
+
 
 }

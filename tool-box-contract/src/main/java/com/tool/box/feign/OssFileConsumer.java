@@ -1,5 +1,6 @@
 package com.tool.box.feign;
 
+import com.tool.box.common.CommonKV;
 import com.tool.box.decode.NotBreakerConfiguration;
 import com.tool.box.vo.OssFileVO;
 import com.tool.box.vo.ResultVO;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * tool-box-service服务：feign客户端(自动脱壳：ResultVO)
@@ -26,13 +29,15 @@ public interface OssFileConsumer {
             , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResultVO<OssFileVO> upload(@RequestPart MultipartFile file);
 
-    @RequestMapping(value = "/delete")
-    ResultVO<?> delete(@RequestParam("filePath") String filePath);
-
     @RequestMapping(value = "/uploads", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
             , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResultVO uploads(@RequestPart MultipartFile[] files);
+    ResultVO<List<OssFileVO>> uploads(@RequestPart MultipartFile[] files);
+
+    @RequestMapping(value = "/delete")
+    ResultVO<?> delete(@RequestParam("fileKy") String fileKy);
 
     @RequestMapping(value = "/getUrl")
-    ResultVO getUrl(@RequestParam("fileName") String fileName);
+    ResultVO getUrl(@RequestParam("fileKy") String fileKy);
+    @RequestMapping(value = "/getUrls")
+    ResultVO<List<CommonKV>> getUrls(@RequestParam("fileKys") List<String> fileKys);
 }

@@ -16,14 +16,17 @@ import java.util.Date;
 public class OssFileVO {
 
     /**
-     * 文件地址
+     * 主键id
+     */
+    private String id;
+    /**
+     * 文件key
      */
     private String fileKey;
-
     /**
-     * 文件地址
+     * 附件地址
      */
-    private String filePath;
+    private String fileUrl;
     /**
      * 域名地址
      */

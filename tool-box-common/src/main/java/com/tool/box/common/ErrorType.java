@@ -21,5 +21,5 @@ public interface ErrorType {
      *
      * @return
      */
-    String getMsg();
+    String getMessage();
 }

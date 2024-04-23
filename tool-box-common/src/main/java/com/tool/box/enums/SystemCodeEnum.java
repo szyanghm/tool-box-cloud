@@ -116,6 +116,10 @@ public enum SystemCodeEnum implements ErrorType {
     MINIO_REMOVE_FILES_FAIL(100071,"批量删除文件失败"),
     MINIO_REMOVE_FILE_FAIL(100072,"删除文件失败"),
 
+    MULTIPART_FILE_TO_FILE_EXCEPTION(100073,"MultipartFile转File异常"),
+
+    FILE_IS_EMPTY_OR_ITS_SIZE_IS_ZERO(100074,"File is empty or its size is zero, please check!"),
+
     NORMAL_MESSAGE(100086, "Normal message"),
 
     FLOW_DEPLOY_ERROR(5001, "流程部署失败!"),
@@ -137,6 +141,6 @@ public enum SystemCodeEnum implements ErrorType {
     /**
      * 错误类型描述信息
      */
-    private final String msg;
+    private final String message;
 
 }

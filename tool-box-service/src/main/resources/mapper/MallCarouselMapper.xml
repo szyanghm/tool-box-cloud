@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tool.box.mapper.MallCarouselMapper">
+
+    <select id="findPage" resultType="com.tool.box.vo.MallCarouselVO"
+            parameterType="com.baomidou.mybatisplus.extension.plugins.pagination.Page">
+        select
+            tmc.`id`,
+            tmc.`carousel_key`,
+            tof.file_url as carouselImage,
+            tmc.`redirect_url`,
+            tmc.`level`
+        from
+            t_mall_carousel tmc
+            left join t_oss_file tof on tmc.file_key = tof.file_key and tof.is_delete = 0
+        where
+            tmc.is_delete = 0
+    </select>
+</mapper>

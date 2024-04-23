@@ -47,13 +47,13 @@ public class QuartzJobTaskService {
             String applicationName = configuration.applicationName;
             if (!configuration.taskEnabled) {
                 quartzJobUtils.schedulerDeleteAll(applicationName);
-                log.error(applicationName + SystemCodeEnum.TASK_NOT_ENABLED.getMsg());
+                log.error(applicationName + SystemCodeEnum.TASK_NOT_ENABLED.getMessage());
                 return;
             }
             List<QuartzJobTask> list = quartzJobTaskConsumer.findJobTaskList(applicationName);
             quartzJobUtils.refreshAllJobs(list);
         } catch (Exception e) {
-            log.error(SystemCodeEnum.TASK_FEIGN_SERVICE_FAIL.getMsg());
+            log.error(SystemCodeEnum.TASK_FEIGN_SERVICE_FAIL.getMessage());
         }
     }
 
@@ -71,7 +71,7 @@ public class QuartzJobTaskService {
             try {
                 quartzJobTaskConsumer.updateTaskConfig(dto);
             } catch (Exception e) {
-                log.error(SystemCodeEnum.TASK_FEIGN_SERVICE_FAIL.getMsg());
+                log.error(SystemCodeEnum.TASK_FEIGN_SERVICE_FAIL.getMessage());
             }
         }
     }

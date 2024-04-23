@@ -13,15 +13,25 @@ import lombok.Data;
 public class SystemUrl {
 
     /**
-     * 登录接口
+     * 登录接口地址
      */
     public static final String login_url = "/login";
     /**
-     * 注册接口
+     * 注册接口地址
      */
     public static final String register_url = "/register";
     /**
-     * 登出接口
+     * 登出接口地址
      */
     public static final String logout_url = "/logout";
+
+    /**
+     * 列表查询接口地址
+     */
+    public static final String findList = "/findList";
+
+    /**
+     * 分页列表查询接口地址
+     */
+    public static final String findPage = "/findPage";
 }

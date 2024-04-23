@@ -22,9 +22,9 @@ public class InternalApiException extends RuntimeException {
     private String message;
 
     public InternalApiException(SystemCodeEnum systemCodeEnum) {
-        super(systemCodeEnum.getMsg());
+        super(systemCodeEnum.getMessage());
         this.code = systemCodeEnum.getCode();
-        this.message = systemCodeEnum.getMsg();
+        this.message = systemCodeEnum.getMessage();
     }
 
 

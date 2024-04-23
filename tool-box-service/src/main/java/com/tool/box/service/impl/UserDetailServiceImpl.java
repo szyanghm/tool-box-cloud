@@ -1,10 +1,11 @@
 package com.tool.box.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tool.box.base.LocalProvider;
 import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
-import com.tool.box.common.Contents;
 import com.tool.box.feign.OssFileConsumer;
 import com.tool.box.mapper.UserDetailMapper;
 import com.tool.box.model.UserDetail;
@@ -45,10 +46,17 @@ public class UserDetailServiceImpl extends ServiceImpl<UserDetailMapper, UserDet
             return resultVO;
         }
         OssFileVO vo = resultVO.getData();
-        LoginUser user = LocalProvider.getUser();
-        String fileKey = user.getAccount() + Contents.AVATAR_SUFFIX;
-        vo.setFileKey(fileKey);
-        ossFileService.updateFile(vo);
+        LoginUser loginUser = LocalProvider.getUser();
+        String backFileKey = "";
+        UserDetail userDetail = baseMapper.selectOne(new QueryWrapper<UserDetail>().lambda()
+                .eq(UserDetail::getAccount, loginUser.getAccount())
+        );
+        if (ObjectUtil.isNotNull(userDetail)) {
+            backFileKey = userDetail.getFileKey();
+            userDetail.setFileKey(vo.getFileKey());
+            baseMapper.updateById(userDetail);
+        }
+        ossFileService.updateFile(vo, backFileKey);
         return ResultVO.success();
     }
 }
