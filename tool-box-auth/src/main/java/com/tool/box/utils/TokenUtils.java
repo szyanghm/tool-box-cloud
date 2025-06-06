@@ -1,15 +1,22 @@
 package com.tool.box.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tool.box.base.LocalProvider;
 import com.tool.box.base.LoginUser;
 import com.tool.box.common.Contents;
 import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
+import com.tool.box.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * token操作工具类
@@ -106,10 +113,11 @@ public class TokenUtils {
         }
         //如果redis取不到表示用户过期了
         String authToken = this.getAuthToken(account);
-        if (StringUtils.isBlank(authToken)) {
+        if (StringUtils.isBlank(authToken) || !token.equals(authToken)) {
             throw new InternalApiException(SystemCodeEnum.USER_LOGIN_EXPIRED);
         }
         LoginUser loginUser = JwtUtils.getToken(authToken);
+        LocalProvider.initUser(loginUser);
         // 拿到了，校验token有效性
         if (!this.verifyExpired(account)) {
             //token续期
@@ -126,5 +134,26 @@ public class TokenUtils {
         return loginUser;
     }
 
+    /**
+     * @param code
+     * @param errorMsg
+     */
+    public void responseError(ServletResponse response, Integer code, String errorMsg) {
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        // issues/I4YH95浏览器显示乱码问题
+        httpServletResponse.setHeader("Content-type", "application/json;charset=UTF-8");
+        ResultVO jsonResult = new ResultVO(code, errorMsg);
+        OutputStream os = null;
+        try {
+            os = httpServletResponse.getOutputStream();
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.setStatus(code);
+            os.write(new ObjectMapper().writeValueAsString(jsonResult).getBytes("UTF-8"));
+            os.flush();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

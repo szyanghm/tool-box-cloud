@@ -33,6 +33,12 @@ public interface LoginConsumer {
     @RequestMapping(value = SystemUrl.logout_url)
     ResultVO<Object> logout();
 
+    /**
+     * 用户注册
+     *
+     * @param dto 用户注册信息
+     * @return 注册结果
+     */
     @PostMapping(value = SystemUrl.register_url)
     ResultVO<?> register(@RequestBody @Validated UserRegisterDTO dto);
 

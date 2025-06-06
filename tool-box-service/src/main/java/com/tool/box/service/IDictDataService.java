@@ -29,7 +29,7 @@ public interface IDictDataService extends IService<DictData> {
      * @param dictType 字典类型
      * @return 字典数据
      */
-    List<DictValue> getDict(String dictType);
+    List<DictDataVO> getDictData(String dictType);
 
 
     /**

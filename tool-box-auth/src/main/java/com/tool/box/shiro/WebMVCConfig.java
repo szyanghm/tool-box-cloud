@@ -12,14 +12,14 @@ import org.springframework.web.servlet.config.annotation.*;
 @Configuration
 public class WebMVCConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authenticationInterceptor()).addPathPatterns("/**");
-    }
-    @Bean
-    public AuthInterceptor authenticationInterceptor() {
-        return new AuthInterceptor();
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(authenticationInterceptor()).addPathPatterns("/**");
+//    }
+//    @Bean
+//    public AuthInterceptor authenticationInterceptor() {
+//        return new AuthInterceptor();
+//    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

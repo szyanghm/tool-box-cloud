@@ -1,6 +1,6 @@
 package com.tool.box.common;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,12 +13,12 @@ import lombok.Data;
 @Data
 public class DictValue {
 
-    @ApiModelProperty("字典标签")
+    @Schema(description = "字典标签")
     private String dictLabel;
 
-    @ApiModelProperty("字典键值")
+    @Schema(description = "字典键值")
     private String dictValue;
 
-    @ApiModelProperty("字典排序")
+    @Schema(description = "字典排序")
     private Integer dictSort;
 }

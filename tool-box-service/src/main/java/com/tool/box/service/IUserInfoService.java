@@ -7,9 +7,7 @@ import com.tool.box.dto.UserRegisterDTO;
 import com.tool.box.vo.ResultVO;
 
 /**
- * <p>
- * 测试表 服务类
- * </p>
+ * 用户表 服务类
  *
  * @author v_haimiyang
  * @since 2023-04-20

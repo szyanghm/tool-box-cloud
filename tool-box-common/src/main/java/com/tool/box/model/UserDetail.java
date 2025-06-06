@@ -1,8 +1,8 @@
 package com.tool.box.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,40 +21,40 @@ import java.util.Date;
 @Accessors(chain = true)
 @ToString
 @TableName("t_user_detail")
-@ApiModel(value = "UserDetail对象", description = "用户信息表")
+@Tag(name = "UserDetail对象", description = "用户信息表")
 public class UserDetail extends BaseModel<UserDetail> {
 
-    @ApiModelProperty("账号(唯一)")
+    @Schema(description = "账号(唯一)")
     private String account;
 
-    @ApiModelProperty("姓名")
+    @Schema(description = "姓名")
     private String fullName;
 
-    @ApiModelProperty("性别")
+    @Schema(description = "性别")
     private String sex;
 
-    @ApiModelProperty("出生日期")
+    @Schema(description = "出生日期")
     private Date birthday;
 
-    @ApiModelProperty("用户头像，关联附件表file_key")
+    @Schema(description = "用户头像，关联附件表file_key")
     private String fileKey;
 
-    @ApiModelProperty("身高(单位cm)")
+    @Schema(description = "身高(单位cm)")
     private Integer height;
 
-    @ApiModelProperty("是否有房(N否/Y是)")
+    @Schema(description = "是否有房(N否/Y是)")
     private String isHouse;
 
-    @ApiModelProperty("是否有车(N否/Y是)")
+    @Schema(description = "是否有车(N否/Y是)")
     private String isCar;
 
-    @ApiModelProperty("微信号")
+    @Schema(description = "微信号")
     private String weChat;
 
-    @ApiModelProperty("家庭地址")
+    @Schema(description = "家庭地址")
     private String homeAddress;
 
-    @ApiModelProperty("工作地址")
+    @Schema(description = "工作地址")
     private String officeAddress;
 
 }

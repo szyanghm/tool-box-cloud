@@ -1,7 +1,8 @@
 package com.tool.box.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.tool.box.base.LoginUser;
 import com.tool.box.base.UserInfo;
 import com.tool.box.common.Contents;
@@ -62,17 +63,14 @@ public class UserInfoServiceImpl implements IUserInfoService {
 
     @Override
     public UserInfo getUserInfo(String account) {
-        String str = redisUtils.get(Contents.USERINFO + account);
-        UserInfo userInfo;
-        if (StringUtils.isNotBlank(str)) {
-            userInfo = JSONObject.parseObject(str, UserInfo.class);
-        } else {
+        UserInfo userInfo = redisUtils.get(Contents.USERINFO + account);
+        if (ObjectUtil.isNull(userInfo)) {
             userInfo = userDetailService.getByAccount(account);
             ResultVO<String> resultVO = ossFileConsumer.getUrl(userInfo.getUserAvatar());
             if (resultVO.isSuccess()) {
                 userInfo.setUserAvatar(resultVO.getData());
             }
-            redisUtils.set(Contents.USERINFO + account, JSONObject.toJSONString(userInfo));
+            redisUtils.set(Contents.USERINFO + account, userInfo);
         }
         return userInfo;
     }
@@ -80,6 +78,10 @@ public class UserInfoServiceImpl implements IUserInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<?> register(UserRegisterDTO dto) {
+        userService.update(null,new LambdaUpdateWrapper<User>()
+                .setSql("status = status + 1" )
+                .eq(User::getAccount, "a456789")
+        );
         List<String> phones = redisUtils.range("user_phone");
         List<String> accounts = redisUtils.range("user_account");
         if (accounts.contains(dto.getAccount())) {
@@ -96,6 +98,8 @@ public class UserInfoServiceImpl implements IUserInfoService {
             user.setPhone(dto.getPhone());
         }
         user.setAccount(dto.getAccount());
+        user.setCreateBy("system");
+        user.setUpdateBy("system");
         String salt = IdUtil.fastSimpleUUID();
         String password = new SimpleHash(Sha256Hash.ALGORITHM_NAME, dto.getPassword()
                 , ByteSource.Util.bytes(salt)

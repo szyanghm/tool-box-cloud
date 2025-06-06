@@ -20,6 +20,8 @@ public class MenuDTO {
     /**
      * api:后台管理、mini:小程序
      */
-    @EnumValue(strValues = {"api", "mini"}, isRequire = true)
+    @EnumValue(strValues = {"/api", "/mini"}, isRequire = true)
     private String source;
+
+
 }

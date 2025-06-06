@@ -1,6 +1,6 @@
 package com.tool.box.vo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,18 +13,18 @@ import lombok.Data;
 @Data
 public class MallCarouselVO {
 
-    @ApiModelProperty("主键唯一id")
+    @Schema(description = "主键唯一id")
     private String id;
 
-    @ApiModelProperty("轮播图key")
+    @Schema(description = "轮播图key")
     private String carouselKey;
 
-    @ApiModelProperty("轮播图")
+    @Schema(description = "轮播图")
     private String carouselImage;
 
-    @ApiModelProperty("点击后的跳转地址(默认不跳转)")
+    @Schema(description = "点击后的跳转地址(默认不跳转)")
     private String redirectUrl;
 
-    @ApiModelProperty("排序值(字段越大越靠前)")
+    @Schema(description = "排序值(字段越大越靠前)")
     private Integer level;
 }

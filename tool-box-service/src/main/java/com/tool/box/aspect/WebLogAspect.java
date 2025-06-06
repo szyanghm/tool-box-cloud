@@ -107,9 +107,11 @@ public class WebLogAspect {
     }
 
     /**
-     * 环绕
+     * AOP切面环绕
      *
-     * @return 参数
+     * @param proceedingJoinPoint 切面参数
+     * @return 响应报文
+     * @throws Throwable 切面异常
      */
     @Around("webLog()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -157,14 +159,16 @@ public class WebLogAspect {
                 //通过token获取上一次的参数
                 String backParams = redisUtils.get(Contents.CHECK_PARAMS_TOKEN + token);
                 //当前请求参数
+                log.info("verifyResubmit params:{}", JSONObject.toJSONString(params));
                 String currentParams = SecureUtil.md5(JSONObject.toJSONString(params));
+                log.info("token:{},backParams:{},currentParams:{}", token, backParams, currentParams);
                 //参数对比
                 if (!currentParams.equals(backParams)
                         && (list.contains(Contents.OP_WRITE_ADD)
                         || list.contains(Contents.OP_WRITE_UPDATE)
                         || url.contains(SystemUrl.register_url))) {
                     //将token作为key,缓存请求参数
-                    redisUtils.set(Contents.CHECK_PARAMS_TOKEN + token, currentParams, 2L);
+                    redisUtils.set(Contents.CHECK_PARAMS_TOKEN + token, currentParams, 1L);
                 } else {
                     //参数重复表示重复提交
                     throw new InternalApiException(SystemCodeEnum.SYSTEM_BUSY_RESUBMIT);
@@ -174,7 +178,8 @@ public class WebLogAspect {
     }
 
     /**
-     * 限制同一个ip的访问次数
+     * 限制同一个ip的1分钟之内的访问次数
+     * 1分钟之内不能超过60次
      *
      * @param ip ip地址
      */

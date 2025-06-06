@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 @Slf4j
 @RestController
 @RequestMapping("/user")
-public class UserInfoController {
+public class UserController {
 
     @Resource
     private IUserInfoService userInfoService;

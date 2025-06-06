@@ -48,8 +48,11 @@ import java.util.Set;
 @Configuration
 public class ShiroConfig {
 
+    //    @Resource
+//    private JedisConnectionFactory jedisConnectionFactory;
     @Resource
     private LettuceConnectionFactory lettuceConnectionFactory;
+
     @Resource
     private SystemConfig systemConfig;
 
@@ -121,6 +124,35 @@ public class ShiroConfig {
         redisCacheManager.setExpire(2000);
         return redisCacheManager;
     }
+
+    /**
+     * 配置shiro redisManager
+     * 使用的是shiro-redis开源插件
+     *
+     * @return redis管理器
+     */
+//    @Bean
+//    public IRedisManager redisManager() {
+//        IRedisManager manager;
+//        log.info("===============(2)创建RedisManager,连接Redis..");
+//        if (jedisConnectionFactory.isRedisClusterAware()) {
+//            RedisClusterManager redisManager = new RedisClusterManager();
+//            // 从JedisConnectionFactory获取原生JedisCluster实例
+//            JedisCluster jedisCluster = (JedisCluster) jedisConnectionFactory.getClusterConnection().getNativeConnection();
+//            redisManager.setJedisCluster(jedisCluster);
+//            // 配置集群密码（根据实际配置）
+//            redisManager.setPassword(jedisConnectionFactory.getPassword());
+//            manager = redisManager;
+//        } else {
+//            RedisManager redisManager = new RedisManager();
+//            RedisStandaloneConfiguration standaloneConfig = jedisConnectionFactory.getStandaloneConfiguration();
+//            redisManager.setHost(standaloneConfig.getHostName() + ":" + standaloneConfig.getPort());
+//            redisManager.setDatabase(standaloneConfig.getDatabase());
+//            redisManager.setPassword(standaloneConfig.getPassword().toString());
+//            manager = redisManager;
+//        }
+//        return manager;
+//    }
 
     /**
      * 配置shiro redisManager

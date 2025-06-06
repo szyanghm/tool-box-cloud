@@ -1,5 +1,7 @@
 server:
   port: 19080
+  servlet:
+    context-path: /mini
 spring:
   main:
     allow-bean-definition-overriding: true

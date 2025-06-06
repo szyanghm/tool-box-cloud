@@ -1,6 +1,6 @@
 package com.tool.box.common;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,12 +13,12 @@ import lombok.Data;
 @Data
 public class EmailSender {
 
-    @ApiModelProperty(value = "邮件服务器域名")
+    @Schema(description = "邮件服务器域名")
     private String host;
-    @ApiModelProperty(value = "端口")
+    @Schema(description = "端口")
     private int port = -1;
-    @ApiModelProperty(value = "发件方邮箱")
+    @Schema(description = "发件方邮箱")
     private String username;
-    @ApiModelProperty(value = "发件方授权码")
+    @Schema(description = "发件方授权码")
     private String password;
 }

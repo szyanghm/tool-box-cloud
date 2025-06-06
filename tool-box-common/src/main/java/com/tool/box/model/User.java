@@ -1,7 +1,7 @@
 package com.tool.box.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,17 +20,17 @@ import lombok.experimental.Accessors;
 @TableName("t_user")
 public class User extends BaseModel<User> {
 
-    @ApiModelProperty("账号")
+    @Schema(description = "账号")
     private String account;
-    @ApiModelProperty("手机号码")
+    @Schema(description = "手机号码")
     private String phone;
-    @ApiModelProperty("密码")
+    @Schema(description = "密码")
     private String password;
-    @ApiModelProperty("角色")
+    @Schema(description = "角色")
     private String roleCode;
-    @ApiModelProperty("密码加盐")
+    @Schema(description = "密码加盐")
     private String salt;
-    @ApiModelProperty("0未锁定/1锁定")
+    @Schema(description = "0未锁定/1锁定")
     private int status;
 
 }

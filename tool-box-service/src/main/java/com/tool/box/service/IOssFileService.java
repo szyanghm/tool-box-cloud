@@ -40,7 +40,7 @@ public interface IOssFileService extends IService<OssFile> {
     /**
      * 删除文件服务附件
      *
-     * @param filePath 附件路径
+     * @param fileKey 附件唯一标识
      */
-    void deleteOssFile(String filePath);
+    void deleteOssFile(String fileKey);
 }

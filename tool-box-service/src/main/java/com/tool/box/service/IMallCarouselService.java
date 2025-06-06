@@ -25,6 +25,12 @@ public interface IMallCarouselService extends IService<MallCarousel> {
      */
     IPage<MallCarouselVO> findPage(MallCarouselDTO dto);
 
+    /**
+     * 新增轮播图
+     *
+     * @param bo 入参
+     * @return 原fileKey
+     */
     List<String> add(MallCarouselBO bo);
 
     void deleteByCarouselKey(String carouselKey);

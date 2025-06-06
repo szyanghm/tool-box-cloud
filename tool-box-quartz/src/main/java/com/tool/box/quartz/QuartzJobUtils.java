@@ -80,6 +80,10 @@ public class QuartzJobUtils {
         }
         schedulerDeleteAll(configuration.applicationName);
         for (QuartzJobTask job : list) {
+            if (!CommonEnum.R.getValue().equals(job.getState())) {
+                //STATE:任务状态为S时，表示暂停不需要启动
+                continue;
+            }
             execute(job);
         }
     }
@@ -256,14 +260,18 @@ public class QuartzJobUtils {
     /**
      * 定时任务核心
      *
-     * @param context quartz上下文信息
+     * @param scheduleJob quartz上下文信息
      */
-    public static TaskConfig execute(JobExecutionContext context) {
+    public static TaskConfig execute(JobDataMap scheduleJob) {
         TaskConfig taskConfig = new TaskConfig();
         try {
             log.info("----------定时任务执行开始----------");
-            JobDataMap scheduleJob = context.getMergedJobDataMap();
             BaseTaskHeadDTO dto = QuartzJobUtils.findMethod(scheduleJob);
+//            JobDataMap scheduleJob = context.getMergedJobDataMap();
+//            log.info("taskId:{},classPath:{},methodName:{},paramClass:{},method:{},param:{},state:{}"
+//                    , scheduleJob.get("taskId"), scheduleJob.get("classPath")
+//                    , scheduleJob.get("methodName"), scheduleJob.get("paramClass")
+//                    , scheduleJob.get("method"), scheduleJob.get("parameter"),scheduleJob.get("state"));
             Method method;
             Object bean;
             Object object;

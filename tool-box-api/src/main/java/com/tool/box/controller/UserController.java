@@ -2,7 +2,7 @@ package com.tool.box.controller;
 
 import com.tool.box.base.UserInfo;
 import com.tool.box.common.Contents;
-import com.tool.box.feign.result.UserInfoConsumer;
+import com.tool.box.feign.result.UserConsumer;
 import com.tool.box.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.Logical;
@@ -28,7 +28,7 @@ import javax.annotation.Resource;
 public class UserController {
 
     @Resource
-    private UserInfoConsumer userInfoConsumer;
+    private UserConsumer userInfoConsumer;
 
     /**
      * 获取用户信息

@@ -78,7 +78,7 @@ public class QuartzJobTaskController {
     }
 
     @PostMapping(value = "/refreshAll")
-    @RequiresPermissions(value = {Contents.OP_WRITE_ADD, Contents.OP_WRITE_UPDATE}, logical = Logical.OR)
+//    @RequiresPermissions(value = {Contents.OP_WRITE_ADD, Contents.OP_WRITE_UPDATE}, logical = Logical.OR)
     public void refreshAllJobs() {
         quartzJobTaskService.refreshAllJobs();
     }

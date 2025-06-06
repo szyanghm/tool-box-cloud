@@ -1,12 +1,10 @@
 package com.tool.box.utils;
 
-import com.sun.jmx.snmp.Timestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -24,7 +22,6 @@ public class DateUtils extends PropertyEditorSupport {
     public static final String DATE_NUM_PATTERN = "yyyyMMdd";
     public static final String yyyyMMddHHmmss = "yyyyMMddHHmmss";
     private static final String DEFAULT_TIME_PATTERN = "HH:mm:ss";
-
 
 
     private static String[] parsePatterns = {"yyyy-MM-dd", "yyyy年MM月dd日",
@@ -78,10 +75,6 @@ public class DateUtils extends PropertyEditorSupport {
             }
             return dateSdf.format(date);
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(format(yyyymmddhhmmss.get()));
     }
 
     public static String format(Date date, String pattern) {
@@ -175,10 +168,13 @@ public class DateUtils extends PropertyEditorSupport {
      * @return
      */
     public static String getCurrentTime(String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        return sdf.format(timestamp);
+        return DateUtils.format(new Date(), format);
     }
+
+    public static void main(String[] args) {
+        System.out.println(getCurrentTime());
+    }
+
 
     /**
      * 获取当前的月份

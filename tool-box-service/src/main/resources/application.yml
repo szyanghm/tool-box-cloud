@@ -1,6 +1,9 @@
 server:
   port: 19881
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   application:
     # 服务名
     name: tool-box-service

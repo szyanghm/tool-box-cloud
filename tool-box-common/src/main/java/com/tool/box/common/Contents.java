@@ -88,6 +88,10 @@ public class Contents {
      * 环境配置key
      */
     public static final String PROFILE = "spring.profiles.active";
+    /**
+     * 服务根路径配置key
+     */
+    public static final String CONTEXT_PATH = "server.servlet.context-path";
 
     public static final String IS_Y = "Y";
 

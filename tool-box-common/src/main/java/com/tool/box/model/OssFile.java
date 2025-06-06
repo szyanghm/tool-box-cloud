@@ -1,8 +1,8 @@
 package com.tool.box.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,34 +19,34 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ToString
 @TableName("t_oss_file")
-@ApiModel(value = "OssFile对象", description = "附件表")
+@Tag(name = "OssFile对象", description = "附件表")
 public class OssFile extends BaseModel<OssFile> {
 
-    @ApiModelProperty("业务附件key")
+    @Schema(description = "业务附件key")
     private String fileKey;
 
-    @ApiModelProperty("附件地址")
+    @Schema(description = "附件地址")
     private String fileUrl;
 
-    @ApiModelProperty("业务附件类型")
+    @Schema(description = "业务附件类型")
     private String fileType;
 
-    @ApiModelProperty("文件名")
+    @Schema(description = "文件名")
     private String fileName;
 
-    @ApiModelProperty("原始文件名")
+    @Schema(description = "原始文件名")
     private String originalName;
 
-    @ApiModelProperty("域名地址")
+    @Schema(description = "域名地址")
     private String domain;
 
-    @ApiModelProperty("文件大小")
+    @Schema(description = "文件大小")
     private long fileSize;
 
-    @ApiModelProperty("文件类型")
+    @Schema(description = "文件类型")
     private String contentType;
 
-    @ApiModelProperty("文件hash值")
+    @Schema(description = "文件hash值")
     private String hash;
 
 }

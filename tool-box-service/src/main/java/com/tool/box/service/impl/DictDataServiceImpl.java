@@ -9,11 +9,13 @@ import com.tool.box.common.DictValue;
 import com.tool.box.mapper.DictDataMapper;
 import com.tool.box.model.DictData;
 import com.tool.box.service.IDictDataService;
+import com.tool.box.utils.RedisUtils;
 import com.tool.box.vo.DictDataVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,8 @@ public class DictDataServiceImpl
         extends ServiceImpl<DictDataMapper, DictData>
         implements IDictDataService {
 
+    @Resource
+    private RedisUtils redisUtils;
 
     @Override
     public Map<String, List<DictDataVO>> getDictMap() {
@@ -53,21 +57,8 @@ public class DictDataServiceImpl
     }
 
     @Override
-    public List<DictValue> getDict(String dictType) {
-        List<DictData> list = baseMapper.selectList(new QueryWrapper<DictData>().lambda()
-                .eq(DictData::getDictType, dictType)
-        );
-        List<DictValue> dataList = new ArrayList<>();
-        if (CollectionUtil.isEmpty(list)) {
-            return dataList;
-        }
-        for (DictData dictData : list) {
-            DictValue data = new DictValue();
-            data.setDictLabel(dictData.getDictLabel());
-            data.setDictValue(dictData.getDictValue());
-            dataList.add(data);
-        }
-        return dataList;
+    public List<DictDataVO> getDictData(String dictType) {
+        return redisUtils.range(dictType);
     }
 
     @Override

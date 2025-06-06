@@ -1,4 +1,18 @@
 spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 50000
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+redisson:
+  config: |
+    singleServerConfig:
+      address: "redis://${spring.redis.host}:${spring.redis.port}"
   #数据库配置
   datasource:
     # 数据库监控

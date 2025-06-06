@@ -53,8 +53,8 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
         //删除原附件
         if (CollectionUtil.isNotEmpty(bo.getBackFileKeys())) {
             deleteByFileKey(bo.getBackFileKeys());
-            for (String filePath : bo.getBackFileKeys()) {
-                deleteOssFile(filePath);
+            for (String fileKey : bo.getBackFileKeys()) {
+                deleteOssFile(fileKey);
             }
         }
     }
@@ -67,7 +67,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
 
     @Async
     @Override
-    public void deleteOssFile(String filePath) {
-        ossFileConsumer.delete(filePath);
+    public void deleteOssFile(String fileKey) {
+        ossFileConsumer.delete(fileKey);
     }
 }

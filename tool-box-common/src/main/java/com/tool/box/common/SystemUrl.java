@@ -34,4 +34,8 @@ public class SystemUrl {
      * 分页列表查询接口地址
      */
     public static final String findPage = "/findPage";
+    /**
+     * 获取字典
+     */
+    public static final String getDictData = "/getDictData";
 }

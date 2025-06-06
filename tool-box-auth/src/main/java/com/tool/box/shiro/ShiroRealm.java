@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +43,8 @@ public class ShiroRealm extends AuthorizingRealm {
     @Resource
     private TokenUtils tokenUtils;
 
+    @Resource
+    private HttpServletResponse response;
 
     /**
      * 必须重写此方法，不然Shiro会报错

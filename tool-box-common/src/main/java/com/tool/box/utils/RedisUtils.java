@@ -1,8 +1,11 @@
 package com.tool.box.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -11,15 +14,21 @@ import java.util.concurrent.TimeUnit;
  * @Date 2023/8/10 17:15
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class RedisUtils {
 
-    private StringRedisTemplate redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
-    public RedisUtils(StringRedisTemplate redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    @Resource(name = "redisTemplateALL")
+    private RedisTemplate<String, Object> redisTemplateArr;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
+    public RedisUtils(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
     }
-
 
     /**
      * 写入缓存
@@ -28,7 +37,7 @@ public class RedisUtils {
      * @param value redis值
      * @return 是否成功
      */
-    public boolean set(final String key, String value) {
+    public <T> boolean set(final String key, T value) {
         boolean result = false;
         try {
             redisTemplate.opsForValue().set(key, value);
@@ -39,6 +48,10 @@ public class RedisUtils {
         return result;
     }
 
+    public <T> T get(String key) {
+        return (T) redisTemplate.opsForValue().get(key);
+    }
+
     /**
      * 写入缓存设置时效时间
      *
@@ -47,7 +60,7 @@ public class RedisUtils {
      * @param expireTime 秒
      * @return 是否成功
      */
-    public boolean set(String key, String value, Long expireTime) {
+    public <T> boolean set(String key, T value, Long expireTime) {
         boolean result = false;
         try {
             redisTemplate.opsForValue().set(key, value, expireTime, TimeUnit.SECONDS);
@@ -67,7 +80,7 @@ public class RedisUtils {
      * @param timeUnit   时间单位
      * @return 是否成功
      */
-    public boolean set(String key, String value, Long expireTime, TimeUnit timeUnit) {
+    public <T> boolean set(String key, T value, Long expireTime, TimeUnit timeUnit) {
         boolean result = false;
         try {
             redisTemplate.opsForValue().set(key, value, expireTime, timeUnit);
@@ -87,23 +100,18 @@ public class RedisUtils {
     }
 
     public Long incr(String key, long num) {
-        return redisTemplate.opsForValue().increment(key, num);
+        return stringRedisTemplate.opsForValue().increment(key, num);
     }
 
     public Long incr(String key, long num, long time, TimeUnit timeUnit) {
-        redisTemplate.expire(key, time, timeUnit);
-        return redisTemplate.opsForValue().increment(key, num);
-    }
-
-
-    public String get(String key) {
-        return redisTemplate.opsForValue().get(key);
+        stringRedisTemplate.expire(key, time, timeUnit);
+        return stringRedisTemplate.opsForValue().increment(key, num);
     }
 
     public Boolean leftPushAllStr(String key, String[] val) {
         boolean result = false;
         try {
-            redisTemplate.opsForList().leftPushAll(key, val);
+            stringRedisTemplate.opsForList().leftPushAll(key, val);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,8 +119,37 @@ public class RedisUtils {
         return result;
     }
 
-    public List<String> range(String key) {
-        return redisTemplate.opsForList().range(key, 0, -1);
+    public <T> Boolean leftPushAll(String key, List<T> list) {
+        boolean result = false;
+        try {
+            delete(key);
+            redisTemplateArr.opsForList().leftPushAll(key, list.toArray());
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public <T> List<T> range(String key) {
+        return (List<T>) redisTemplateArr.opsForList().range(key, 0, -1);
+    }
+
+    public void trim(String key) {
+        redisTemplateArr.opsForList().trim(key, 0, 0);
+    }
+
+    public void remove(String key) {
+        Long count = redisTemplateArr.opsForList().remove(key, 0, redisTemplateArr.opsForList().size(key));
+        log.info("共移除了{}个元素", count);
+    }
+
+    public void delete(String key) {
+        redisTemplateArr.delete(key);
+    }
+
+    public List<String> rangeStr(String key) {
+        return stringRedisTemplate.opsForList().range(key, 0, -1);
     }
 
     public Boolean del(String key) {

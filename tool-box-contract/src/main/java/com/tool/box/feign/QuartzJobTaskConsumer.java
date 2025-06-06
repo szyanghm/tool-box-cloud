@@ -1,5 +1,6 @@
 package com.tool.box.feign;
 
+import com.tool.box.common.QuartzJobMap;
 import com.tool.box.common.QuartzJobTask;
 import com.tool.box.dto.TaskMsgDTO;
 import com.tool.box.vo.ResultVO;
@@ -33,5 +34,23 @@ public interface QuartzJobTaskConsumer {
      */
     @PostMapping(value = "/updateTaskConfig")
     ResultVO<?> updateTaskConfig(@RequestBody TaskMsgDTO dto);
+
+    /**
+     * 获取锁
+     *
+     * @param jobMap 加锁对象
+     * @return 获取结果
+     */
+    @PostMapping(value = "/getLock")
+    ResultVO<?> getLock(@RequestBody QuartzJobMap jobMap);
+
+    /**
+     * 释放锁
+     *
+     * @param jobMap 加锁对象
+     * @return 释放结果
+     */
+    @PostMapping(value = "/releaseLock")
+    ResultVO<?> releaseLock(@RequestBody QuartzJobMap jobMap);
 
 }

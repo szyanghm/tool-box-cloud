@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @FeignClient(name = "tool-box-service", contextId = "decode-validation", path = "/user"
         , configuration = NotBreakerConfiguration.class)
-public interface UserInfoConsumer {
+public interface UserConsumer {
 
 
     @PostMapping(value = "/getUserInfo")

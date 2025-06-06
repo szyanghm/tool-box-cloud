@@ -38,12 +38,16 @@ public class NotBreakerConfiguration {
                     String json = Util.toString(response.body().asReader());
                     InternalApiException apiException = JSONObject.parseObject(json, InternalApiException.class);
                     exception = apiException;
-                    log.info(" 【===feign远程调用Server Exception===】,{}", exception.getMessage());
+                    log.info("【===feign远程调用Server Exception===】,{}", exception.getMessage());
                 } catch (IOException e) {
                     exception = new InternalApiException(response.status(), e.getMessage());
                 }
             }
             return exception;
         }
+
+
+
+
     }
 }

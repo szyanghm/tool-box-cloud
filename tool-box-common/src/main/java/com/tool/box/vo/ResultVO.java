@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -21,7 +22,7 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @Accessors(chain = true)
-public class ResultVO<T> {
+public class ResultVO<T> implements Serializable {
 
     public static final Integer SUCCESSFUL_CODE = 2000;
     public static final String SUCCESSFUL_MSG = "处理成功";

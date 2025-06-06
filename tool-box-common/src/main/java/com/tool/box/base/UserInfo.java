@@ -5,7 +5,7 @@ import com.tool.box.common.Contents;
 import com.tool.box.common.validata.DataMasking;
 import com.tool.box.enums.DataMaskingTypeEnum;
 import com.tool.box.utils.DateUtils;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,45 +26,45 @@ import java.util.Date;
 public class UserInfo implements Serializable {
 
 
-    @ApiModelProperty("账号(唯一)")
+    @Schema(description = "账号(唯一)")
     private String account;
 
-    @ApiModelProperty("角色")
+    @Schema(description = "角色")
     private String roleCode;
 
-    @ApiModelProperty("姓名")
+    @Schema(description = "姓名")
     private String fullName;
 
-    @ApiModelProperty("用户头像")
+    @Schema(description = "用户头像")
     private String userAvatar;
 
-    @ApiModelProperty("性别")
+    @Schema(description = "性别")
     private String sex;
 
-    @ApiModelProperty("出生日期")
+    @Schema(description = "出生日期")
     @JsonFormat(pattern = DateUtils.DEFAULT_DATE_PATTERN, timezone = Contents.GMT8)
     private Date birthday;
 
-    @ApiModelProperty("身高(单位cm)")
+    @Schema(description = "身高(单位cm)")
     private Integer height;
 
-    @ApiModelProperty("手机号码")
+    @Schema(description = "手机号码")
     @DataMasking(type = DataMaskingTypeEnum.MOBILE_PHONE)
     private String phone;
 
-    @ApiModelProperty("是否有房(N否/Y是)")
+    @Schema(description = "是否有房(N否/Y是)")
     private String isHouse;
 
-    @ApiModelProperty("是否有车(N否/Y是)")
+    @Schema(description = "是否有车(N否/Y是)")
     private String isCar;
 
-    @ApiModelProperty("微信号")
+    @Schema(description = "微信号")
     private String weChat;
 
-    @ApiModelProperty("家庭地址")
+    @Schema(description = "家庭地址")
     private String homeAddress;
 
-    @ApiModelProperty("工作地址")
+    @Schema(description = "工作地址")
     private String officeAddress;
 
 }

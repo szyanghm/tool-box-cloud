@@ -21,8 +21,16 @@ public class LocalProvider {
         USER_INFO.set(userInfo);
     }
 
+    public static void initUser(LoginUser userInfo) {
+        USER_INFO.set(userInfo);
+    }
+
     public static LoginUser getUser() {
         return USER_INFO.get();
+    }
+
+    public static void remove() {
+        USER_INFO.remove();
     }
 
     public static void destroy() {

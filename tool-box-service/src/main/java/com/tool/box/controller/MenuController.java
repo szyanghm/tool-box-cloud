@@ -26,11 +26,23 @@ public class MenuController {
     @Resource
     private IMenuService menuService;
 
+    /**
+     * 菜单接口
+     *
+     * @param dto 入参
+     * @return 菜单
+     */
     @PostMapping(value = "/list")
     public ResultVO<?> getMenu(@RequestBody @Validated MenuDTO dto) {
         return ResultVO.success(menuService.findMenuList(dto));
     }
 
+    /**
+     * 菜单管理列表
+     *
+     * @param dto 入参
+     * @return 菜单列表
+     */
     @PostMapping(value = "/findList")
     public ResultVO<?> findList(@RequestBody @Validated MenuDTO dto) {
         return ResultVO.success(menuService.findList(dto));

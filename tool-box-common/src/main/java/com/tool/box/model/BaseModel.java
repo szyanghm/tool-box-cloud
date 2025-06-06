@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,7 +26,7 @@ public class BaseModel<T extends Model<T>> extends Model<T> {
     /**
      * 主键ID
      */
-    @ApiModelProperty(value = "主键")
+    @Schema(description = "主键")
     @TableId(type = IdType.AUTO)
     private Long id;
 

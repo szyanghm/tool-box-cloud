@@ -4,6 +4,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 通过上下文反射获取bean
@@ -33,5 +37,13 @@ public class ApplicationContextUtils implements ApplicationContextAware {
     public static <T> T getBean(String name, Class<T> clazz) {
         return context.getBean(name, clazz);
     }
+
+    /**
+     * 获取HttpServletResponse
+     */
+    public static HttpServletResponse getHttpServletResponse() {
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+    }
+
 
 }

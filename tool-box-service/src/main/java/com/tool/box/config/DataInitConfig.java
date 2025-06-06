@@ -1,6 +1,5 @@
 package com.tool.box.config;
 
-import com.alibaba.fastjson.JSONObject;
 import com.tool.box.common.InitUser;
 import com.tool.box.service.IDictDataService;
 import com.tool.box.service.IUserService;
@@ -38,7 +37,7 @@ public class DataInitConfig {
     public void initDictData() {
         Map<String, List<DictDataVO>> map = sysDictDataService.getDictMap();
         for (String str : map.keySet()) {
-            redisUtils.set(str, JSONObject.toJSONString(map.get(str)));
+            redisUtils.leftPushAll(str, map.get(str));
         }
     }
 
@@ -52,8 +51,8 @@ public class DataInitConfig {
                 phones.add(initUser.getPhone());
             }
         }
-        redisUtils.leftPushAllStr("user_phone", phones.toArray(new String[0]));
-        redisUtils.leftPushAllStr("user_account", accounts.toArray(new String[0]));
+        redisUtils.leftPushAll("user_phone", phones);
+        redisUtils.leftPushAll("user_account", accounts);
     }
 
     /**

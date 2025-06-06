@@ -1,5 +1,7 @@
 package com.tool.box.controller;
 
+import com.tool.box.common.Contents;
+import com.tool.box.config.SystemConfig;
 import com.tool.box.dto.MenuDTO;
 import com.tool.box.feign.result.MenuConsumer;
 import com.tool.box.vo.ResultVO;
@@ -22,19 +24,24 @@ import javax.annotation.Resource;
 public class MenuController {
 
     @Resource
+    private SystemConfig systemConfig;
+
+    @Resource
     private MenuConsumer menuConsumer;
 
     @PostMapping(value = "/list")
     public ResultVO<?> getMenu() {
         MenuDTO dto = new MenuDTO();
-        dto.setSource("api");
+        String contextPath = systemConfig.getEnvironment().getRequiredProperty(Contents.CONTEXT_PATH);
+        dto.setSource(contextPath);
         return menuConsumer.getMenu(dto);
     }
 
     @PostMapping(value = "/findList")
     public ResultVO<?> findList() {
         MenuDTO dto = new MenuDTO();
-        dto.setSource("api");
+        String contextPath = systemConfig.getEnvironment().getRequiredProperty(Contents.CONTEXT_PATH);
+        dto.setSource(contextPath);
         return menuConsumer.findList(dto);
     }
 }

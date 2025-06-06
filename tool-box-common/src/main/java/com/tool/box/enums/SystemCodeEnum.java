@@ -66,7 +66,7 @@ public enum SystemCodeEnum implements ErrorType {
 
     USER_ACCOUNT_LOCK_ING(600009, "账号已经被锁定时，请在1小时后再试"),
 
-    USER_NOT_PERMISSIONS(600010, "用户无权限"),
+    USER_NOT_PERMISSIONS(600010, "没有权限，请联系管理员授权"),
 
     INSUFFICIENT_ACCESS_TO_RESOURCES(600011, "访问资源权限不足!"),
 
@@ -82,7 +82,7 @@ public enum SystemCodeEnum implements ErrorType {
 
     ACCOUNT_ALREADY_EXISTS(600017, "账号已存在"),
 
-    TOO_MANY_ERRORS(600017, "错误次数过多,请稍后再试"),
+    TOO_MANY_ERRORS(600018, "错误次数过多,请稍后再试"),
 
     LOGIN_OUT_FAIL(600020, "退出登录失败，token为空"),
 

@@ -1,7 +1,7 @@
 package com.tool.box.dto;
 
 import com.tool.box.common.validata.CheckUserName;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -16,13 +16,13 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class UserRegisterDTO {
 
-    @ApiModelProperty("账号")
+    @Schema(description = "账号")
     @NotBlank(message = "账号不允许为空")
     @CheckUserName
     private String account;
-    @ApiModelProperty("手机号")
+    @Schema(description = "手机号")
     private String phone;
-    @ApiModelProperty("密码")
+    @Schema(description = "密码")
     @NotBlank(message = "密码不允许为空")
     private String password;
 

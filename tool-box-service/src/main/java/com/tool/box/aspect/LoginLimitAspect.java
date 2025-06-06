@@ -8,7 +8,6 @@ import com.tool.box.enums.SystemCodeEnum;
 import com.tool.box.exception.InternalApiException;
 import com.tool.box.utils.HttpUtils;
 import com.tool.box.utils.RedisUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -24,6 +23,8 @@ import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 登录错误次数限制
+ *
  * @Author v_haimiyang
  * @Date 2024/4/7 16:54
  * @Version 1.0
@@ -83,12 +84,9 @@ public class LoginLimitAspect {
     }
 
     public void isErrorNum(String account, int limit) {
-        String str = redisUtils.get(Contents.LOGIN_FAIL_COUNT + account);
-        if (StringUtils.isNotBlank(str)) {
-            int count = Integer.parseInt(str);
-            if (count >= limit) {
-                throw new InternalApiException(SystemCodeEnum.USER_ACCOUNT_LOCK_ING);
-            }
+        Integer count = redisUtils.get(Contents.LOGIN_FAIL_COUNT + account);
+        if (count >= limit) {
+            throw new InternalApiException(SystemCodeEnum.USER_ACCOUNT_LOCK_ING);
         }
     }
 

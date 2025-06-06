@@ -1,6 +1,6 @@
 package com.tool.box.common;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,9 +13,9 @@ import lombok.Data;
 @Data
 public class InitUser {
 
-    @ApiModelProperty("账号")
+    @Schema(description = "账号")
     private String account;
-    @ApiModelProperty("手机号码")
+    @Schema(description = "手机号码")
     private String phone;
 
 }

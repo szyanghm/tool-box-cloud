@@ -4,10 +4,16 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tool.box.base.LoginUser;
 import com.tool.box.config.SystemConfig;
+import com.tool.box.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
@@ -77,5 +83,30 @@ public class JwtUtils {
     private static byte[] getSecretKey() {
         return SystemConfig.secret.getBytes(StandardCharsets.UTF_8);
     }
+
+    /**
+     *
+     * @param response
+     * @param code
+     * @param errorMsg
+     */
+    public static void responseError(ServletResponse response, Integer code, String errorMsg) {
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        // issues/I4YH95浏览器显示乱码问题
+        httpServletResponse.setHeader("Content-type", "text/html;charset=UTF-8");
+        ResultVO jsonResult = new ResultVO(code, errorMsg);
+        OutputStream os = null;
+        try {
+            os = httpServletResponse.getOutputStream();
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.setStatus(code);
+            os.write(new ObjectMapper().writeValueAsString(jsonResult).getBytes("UTF-8"));
+            os.flush();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
